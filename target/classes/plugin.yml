@@ -1,0 +1,9 @@
+name: ConnectionLogger
+main: sk.crafting.connectionlogger.ConnectionLogger
+description: Player connection logger
+author: kikz0r_sk
+version: 1.0
+commands:
+    cl:
+        description: Show connection log
+        usage: /cl <print|stats|reload>
