@@ -30,6 +30,7 @@ public class ConnectionLogger extends JavaPlugin {
         configHandler = new Configuration();
         defaultDatabaseHandler = new DatabaseLogging();
         playerListener = new ConnectListener();
+        cache = new Cache(100);
         logger.info("Pool Size: " + configHandler.getDb_pools());
         if (configHandler.isLogPlayerConnect()) {
             Bukkit.getPluginManager().registerEvents(new ConnectListener(), this);
