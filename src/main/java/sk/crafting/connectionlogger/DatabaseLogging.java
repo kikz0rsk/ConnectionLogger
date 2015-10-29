@@ -15,6 +15,7 @@ import java.util.TimerTask;
 import org.bukkit.entity.Player;
 import sk.crafting.connectionlogger.cache.Cache;
 import sk.crafting.connectionlogger.cache.Log;
+import sk.crafting.connectionlogger.listeners.EventType;
 
 /**
  *
@@ -27,6 +28,7 @@ public class DatabaseLogging extends Timer {
 
     Connection db_connection;
     static HikariDataSource dataSource;
+    private boolean connected = false;
 
     private Timer timer;
 
@@ -68,6 +70,7 @@ public class DatabaseLogging extends Timer {
         if (db_connection == null || db_connection.isClosed()) {
             db_connection = dataSource.getConnection();
             ConnectionLogger.getPluginLogger().info("Connected to database");
+            connected = true;
             StartTimer();
         }
 
@@ -84,7 +87,7 @@ public class DatabaseLogging extends Timer {
 //                + ")";
     }
 
-    public void Add(String type, Calendar time, Player player) {
+    public void Add(EventType type, Calendar time, Player player) {
         PreparedStatement statement = null;
         try {
             Connect();
@@ -93,7 +96,7 @@ public class DatabaseLogging extends Timer {
                         "INSERT INTO " + ConnectionLogger.getConfigHandler().getDb_tableName() + " (time, type, player_name, player_ip, player_hostname, player_port, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)"
                 );
                 statement.setString(1, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time.getTimeInMillis()));
-                statement.setString(2, type);
+                statement.setString(2, type.getMessage());
                 if (player == null) {
                     statement.setString(3, null);
                 } else {
@@ -119,10 +122,13 @@ public class DatabaseLogging extends Timer {
     }
 
     public void AddFromCache(Cache cache) {
+        if (cache.getSize() == 0) {
+            return;
+        }
         PreparedStatement statement = null;
         try {
+            Connect();
             for (Log log : cache.toArray()) {
-                Connect();
                 statement = db_connection.prepareStatement(
                         "INSERT INTO " + ConnectionLogger.getConfigHandler().getDb_tableName() + " (time, type, player_name, player_ip, player_hostname, player_port, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)"
                 );
@@ -139,8 +145,17 @@ public class DatabaseLogging extends Timer {
                 statement.setBoolean(7, false);
                 statement.executeUpdate();
             }
+            cache.Clear();
         } catch (SQLException ex) {
-
+            ConnectionLogger.getPluginLogger().severe("Failed to dump cache to database: " + ex.toString());
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    ConnectionLogger.getPluginLogger().warning("Could not close database statement: " + ex.toString());
+                }
+            }
         }
     }
 
@@ -180,6 +195,7 @@ public class DatabaseLogging extends Timer {
         try {
             if (db_connection != null) {
                 db_connection.close();
+                connected = false;
                 ConnectionLogger.getPluginLogger().info("Connection to database closed");
             }
         } catch (SQLException ex) {
@@ -198,8 +214,6 @@ public class DatabaseLogging extends Timer {
     public void Reload() {
         StopTimer();
         Disconnect();
-        ConnectionLogger.getConfigHandler().SaveDefaultConfig();
-        ConnectionLogger.getConfigHandler().ReloadConfig();
         Init();
         TestConnection();
     }
@@ -244,11 +258,13 @@ public class DatabaseLogging extends Timer {
             public void run() {
                 Disconnect();
             }
-        }, 1000 * 60 * 5);
+        }, 5*60*1000);
     }
 
     private void StopTimer() {
-        timer.cancel();
+        if (timer != null) {
+            timer.cancel();
+        }
     }
 
 }

@@ -47,6 +47,8 @@ public class Commands implements CommandExecutor {
             return true;
         }
         if (args[0].equalsIgnoreCase("reload")) {
+            ConnectionLogger.getConfigHandler().SaveDefaultConfig();
+            ConnectionLogger.getConfigHandler().ReloadConfig();
             ConnectionLogger.getDefaultDatabaseHandler().Reload();
             return true;
         }

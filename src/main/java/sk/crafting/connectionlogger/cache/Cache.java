@@ -37,7 +37,15 @@ public class Cache {
     }
     
     public Log[] toArray() {
-        return cache.toArray(new Log[cache.size()]);
+        synchronized(cache) {
+           return cache.toArray(new Log[cache.size()]); 
+        }
+    }
+
+    public void Clear() {
+        synchronized(cache) {
+            cache.clear();
+        }
     }
     
 }

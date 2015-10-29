@@ -6,4 +6,4 @@ version: 1.0
 commands:
     cl:
         description: Show connection log
-        usage: /cl <print|stats|reload>
+        usage: /cl <print|reload|clear|help> <hours>

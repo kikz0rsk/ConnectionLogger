@@ -41,13 +41,21 @@ public class ConnectionLogger extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (configHandler.isAutoClean()) {
-            defaultDatabaseHandler.Clear();
+        if (defaultDatabaseHandler != null) {
+            if (configHandler.isAutoClean()) {
+                defaultDatabaseHandler.Clear();
+            }
+            if (cache.getSize() > 0) {
+                defaultDatabaseHandler.AddFromCache(cache);
+                if (cache.getSize() > 0) {
+                    logger.warning("Cache is not empty!");
+                }
+            }
+            if (configHandler.isLogPluginShutdown()) {
+                defaultDatabaseHandler.Add(EventType.PLUGIN_SHUTDOWN, Calendar.getInstance(), null);
+            }
+            defaultDatabaseHandler.Disable();
         }
-        if(configHandler.isLogPluginShutdown()) {
-            defaultDatabaseHandler.Add(EventType.PLUGIN_SHUTDOWN.getMessage(), Calendar.getInstance(), null);
-        }
-        defaultDatabaseHandler.Disable();
     }
 
     public static ConnectionLogger getPlugin() {
