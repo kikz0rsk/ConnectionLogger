@@ -138,7 +138,7 @@ public class DatabaseLogging extends Timer {
                 statement.setInt(6, log.getPlayer().getAddress().getPort());
                 statement.setBoolean(7, false);
                 statement.executeUpdate();
-            }xrdcgbuhnjk
+            }
         } catch (SQLException ex) {
 
         }
