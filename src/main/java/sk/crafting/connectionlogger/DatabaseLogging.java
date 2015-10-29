@@ -27,7 +27,6 @@ public class DatabaseLogging extends Timer {
 
     Connection db_connection;
     static HikariDataSource dataSource;
-    private boolean connected = false;
 
     private Timer timer;
 
@@ -70,7 +69,6 @@ public class DatabaseLogging extends Timer {
             if (db_connection == null || db_connection.isClosed()) {
                 db_connection = dataSource.getConnection();
                 ConnectionLogger.getPluginLogger().info("Connected to database");
-                connected = true;
                 StartTimer();
             }
         } catch (Exception ex) {
@@ -198,7 +196,6 @@ public class DatabaseLogging extends Timer {
         try {
             if (db_connection != null) {
                 db_connection.close();
-                connected = false;
                 ConnectionLogger.getPluginLogger().info("Connection to database closed");
             }
         } catch (Exception ex) {
@@ -219,7 +216,7 @@ public class DatabaseLogging extends Timer {
         Disconnect();
         Init();
         TestConnection();
-        if(ConnectionLogger.getCache().getSize() > 0) {
+        if (ConnectionLogger.getCache().getSize() > 0) {
             AddFromCache(ConnectionLogger.getCache());
         }
     }
