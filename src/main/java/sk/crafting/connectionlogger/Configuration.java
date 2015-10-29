@@ -12,22 +12,22 @@ import org.bukkit.configuration.file.YamlConfiguration;
  * @author Red-Eye~kikz0r_sk
  */
 public class Configuration {
-    
+
     File confFile;
     FileConfiguration conf;
-    
-    boolean logPlayerConnect, 
+
+    boolean logPlayerConnect,
             logPlayerDisconnect,
             logPluginShutdown,
             autoClean;
-    
-    String  db_host,
+
+    String db_host,
             db_port,
             db_user,
             db_pass,
             db_name,
             db_tableName;
-    int     db_pools;
+    int db_pools;
 
     public Configuration() {
         confFile = new File(ConnectionLogger.getPlugin().getDataFolder(), "config.yml");
@@ -35,7 +35,7 @@ public class Configuration {
     }
 
     public void SaveDefaultConfig() {
-        if(!(confFile.exists())) {
+        if (!(confFile.exists())) {
             confFile.mkdirs();
             try {
                 Files.copy(getClass().getResourceAsStream("/config.yml"), confFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -45,7 +45,7 @@ public class Configuration {
         }
         ReloadConfig();
     }
-    
+
     private void SaveConfig() {
         try {
             conf.save(confFile);
@@ -116,5 +116,5 @@ public class Configuration {
     public boolean isLogPluginShutdown() {
         return logPluginShutdown;
     }
-    
+
 }

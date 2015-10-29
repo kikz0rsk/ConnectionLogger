@@ -52,8 +52,8 @@ public class Commands implements CommandExecutor {
             ConnectionLogger.getDefaultDatabaseHandler().Reload();
             return true;
         }
-        if(args[0].equalsIgnoreCase("dumpcache")) {
-            if(ConnectionLogger.getCache().getSize() == 0) {
+        if (args[0].equalsIgnoreCase("dumpcache")) {
+            if (ConnectionLogger.getCache().getSize() == 0) {
                 sender.sendMessage(ChatColor.GRAY + "Cache is empty");
                 return true;
             }
