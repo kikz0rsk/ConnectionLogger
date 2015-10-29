@@ -7,8 +7,8 @@ logging:
     # Log plugin shutdown
     plugin-shutdown: false
 auto-cleaning:
-    # Clean logs at server shutdown
-    server-shutdown: false
+    # Clean logs at plugin shutdown
+    plugin-shutdown: false
 # MySQL Credentials - Please Fill Correctly
 database:
     host: ""

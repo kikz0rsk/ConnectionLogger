@@ -5,7 +5,6 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,6 +14,7 @@ import java.util.TimerTask;
 import org.bukkit.entity.Player;
 import sk.crafting.connectionlogger.cache.Cache;
 import sk.crafting.connectionlogger.cache.Log;
+import sk.crafting.connectionlogger.listeners.EventType;
 
 /**
  *
@@ -64,11 +64,15 @@ public class DatabaseLogging extends Timer {
         }
     }
 
-    private void Connect() throws SQLException {
-        if (db_connection == null || db_connection.isClosed()) {
-            db_connection = dataSource.getConnection();
-            ConnectionLogger.getPluginLogger().info("Connected to database");
-            StartTimer();
+    private void Connect() throws Exception {
+        try {
+            if (db_connection == null || db_connection.isClosed()) {
+                db_connection = dataSource.getConnection();
+                ConnectionLogger.getPluginLogger().info("Connected to database");
+                StartTimer();
+            }
+        } catch (Exception ex) {
+            throw ex;
         }
 
 //        String sql = "CREATE TABLE IF NOT EXISTS " + db_tableName
@@ -84,7 +88,7 @@ public class DatabaseLogging extends Timer {
 //                + ")";
     }
 
-    public void Add(String type, Calendar time, Player player) {
+    public void Add(EventType type, Calendar time, Player player) {
         PreparedStatement statement = null;
         try {
             Connect();
@@ -93,7 +97,7 @@ public class DatabaseLogging extends Timer {
                         "INSERT INTO " + ConnectionLogger.getConfigHandler().getDb_tableName() + " (time, type, player_name, player_ip, player_hostname, player_port, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)"
                 );
                 statement.setString(1, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time.getTimeInMillis()));
-                statement.setString(2, type);
+                statement.setString(2, type.getMessage());
                 if (player == null) {
                     statement.setString(3, null);
                 } else {
@@ -105,13 +109,13 @@ public class DatabaseLogging extends Timer {
                 statement.setBoolean(7, false);
             }
             statement.executeUpdate();
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             ConnectionLogger.getPluginLogger().severe("Failed to add entry to database: " + ex.toString());
         } finally {
             if (statement != null) {
                 try {
                     statement.close();
-                } catch (SQLException ex) {
+                } catch (Exception ex) {
                     ConnectionLogger.getPluginLogger().warning("Could not close database statement: " + ex.toString());
                 }
             }
@@ -119,10 +123,13 @@ public class DatabaseLogging extends Timer {
     }
 
     public void AddFromCache(Cache cache) {
+        if (cache.getSize() == 0) {
+            return;
+        }
         PreparedStatement statement = null;
         try {
+            Connect();
             for (Log log : cache.toArray()) {
-                Connect();
                 statement = db_connection.prepareStatement(
                         "INSERT INTO " + ConnectionLogger.getConfigHandler().getDb_tableName() + " (time, type, player_name, player_ip, player_hostname, player_port, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)"
                 );
@@ -139,8 +146,17 @@ public class DatabaseLogging extends Timer {
                 statement.setBoolean(7, false);
                 statement.executeUpdate();
             }
-        } catch (SQLException ex) {
-
+            cache.Clear();
+        } catch (Exception ex) {
+            ConnectionLogger.getPluginLogger().severe("Failed to dump cache to database: " + ex.toString());
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (Exception ex) {
+                    ConnectionLogger.getPluginLogger().warning("Could not close database statement: " + ex.toString());
+                }
+            }
         }
     }
 
@@ -149,7 +165,7 @@ public class DatabaseLogging extends Timer {
         try {
             Connect();
             ConnectionLogger.getPluginLogger().info("Connection to database works!");
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             ConnectionLogger.getPluginLogger().info("Connection to database failed: " + ex.toString());
         }
     }
@@ -163,13 +179,13 @@ public class DatabaseLogging extends Timer {
             );
             statement.setBoolean(1, true);
             statement.executeUpdate();
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             ConnectionLogger.getPluginLogger().severe("Failed to send SQL: " + ex.toString());
         } finally {
             if (statement != null) {
                 try {
                     statement.close();
-                } catch (SQLException ex) {
+                } catch (Exception ex) {
                     ConnectionLogger.getPluginLogger().warning("Could not close database statement: " + ex.toString());
                 }
             }
@@ -182,7 +198,7 @@ public class DatabaseLogging extends Timer {
                 db_connection.close();
                 ConnectionLogger.getPluginLogger().info("Connection to database closed");
             }
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             ConnectionLogger.getPluginLogger().warning("Failed to close connection to database: " + ex.toString());
         }
     }
@@ -198,10 +214,11 @@ public class DatabaseLogging extends Timer {
     public void Reload() {
         StopTimer();
         Disconnect();
-        ConnectionLogger.getConfigHandler().SaveDefaultConfig();
-        ConnectionLogger.getConfigHandler().ReloadConfig();
         Init();
         TestConnection();
+        if (ConnectionLogger.getCache().getSize() > 0) {
+            AddFromCache(ConnectionLogger.getCache());
+        }
     }
 
     public ArrayList<String> Get(Calendar max) {
@@ -223,13 +240,13 @@ public class DatabaseLogging extends Timer {
                 output.add(String.format("ID: %s | Time: %s | Type: %s | Player Name: %s | Player IP: %s | Player Hostname: %s | Player Port: %d", result.getString("ID"), time.substring(0, time.lastIndexOf(".")), result.getString("type"), result.getString("player_name"), result.getString("player_ip"), result.getString("player_hostname"), result.getInt("player_port")));
             }
             return output;
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             ConnectionLogger.getPluginLogger().severe("Failed to send SQL: " + ex.toString());
         } finally {
             if (statement != null) {
                 try {
                     statement.close();
-                } catch (SQLException ex) {
+                } catch (Exception ex) {
                     ConnectionLogger.getPluginLogger().warning("Could not close database statement: " + ex.toString());
                 }
             }
@@ -244,11 +261,13 @@ public class DatabaseLogging extends Timer {
             public void run() {
                 Disconnect();
             }
-        }, 1000 * 60 * 5);
+        }, 5 * 60 * 1000);
     }
 
     private void StopTimer() {
-        timer.cancel();
+        if (timer != null) {
+            timer.cancel();
+        }
     }
 
 }

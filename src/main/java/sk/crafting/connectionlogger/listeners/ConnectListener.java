@@ -13,10 +13,10 @@ import sk.crafting.connectionlogger.tasks.AsyncAddToDatabase;
  * @author Red-Eye~kikz0r_sk
  */
 public class ConnectListener implements Listener {
-    
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void OnPlayerConnect(PlayerJoinEvent event) {
         new AsyncAddToDatabase(EventType.CONNECT, Calendar.getInstance(), event.getPlayer()).runTaskAsynchronously(ConnectionLogger.getPlugin());
     }
-    
+
 }

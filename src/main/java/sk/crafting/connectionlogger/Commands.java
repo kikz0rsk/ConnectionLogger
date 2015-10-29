@@ -47,7 +47,18 @@ public class Commands implements CommandExecutor {
             return true;
         }
         if (args[0].equalsIgnoreCase("reload")) {
+            ConnectionLogger.getConfigHandler().SaveDefaultConfig();
+            ConnectionLogger.getConfigHandler().ReloadConfig();
             ConnectionLogger.getDefaultDatabaseHandler().Reload();
+            return true;
+        }
+        if (args[0].equalsIgnoreCase("dumpcache")) {
+            if (ConnectionLogger.getCache().getSize() == 0) {
+                sender.sendMessage(ChatColor.GRAY + "Cache is empty");
+                return true;
+            }
+            sender.sendMessage(ChatColor.GREEN + "Dumping cache...");
+            ConnectionLogger.getDefaultDatabaseHandler().AddFromCache(ConnectionLogger.getCache());
             return true;
         }
         return false;

@@ -13,31 +13,39 @@ import sk.crafting.connectionlogger.listeners.EventType;
  * @author Red-Eye~kikz0r_sk
  */
 public class Cache {
-    
+
     private final List<Log> cache;
 
     public Cache(int size) {
         cache = Collections.synchronizedList(new ArrayList(size));
     }
-    
+
     public void Add(Log log) {
-        synchronized(cache) {
+        synchronized (cache) {
             cache.add(log);
         }
     }
-    
+
     public void Add(Calendar time, EventType type, Player player) {
         Add(new Log(time, type, player));
     }
-    
+
     public int getSize() {
-        synchronized(cache) {
+        synchronized (cache) {
             return cache.size();
         }
     }
-    
+
     public Log[] toArray() {
-        return cache.toArray(new Log[cache.size()]);
+        synchronized (cache) {
+            return cache.toArray(new Log[cache.size()]);
+        }
     }
-    
+
+    public void Clear() {
+        synchronized (cache) {
+            cache.clear();
+        }
+    }
+
 }

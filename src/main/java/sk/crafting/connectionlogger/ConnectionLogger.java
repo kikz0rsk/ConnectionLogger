@@ -16,20 +16,19 @@ import sk.crafting.connectionlogger.listeners.EventType;
 public class ConnectionLogger extends JavaPlugin {
 
     private static DatabaseLogging defaultDatabaseHandler;
-    static ConnectionLogger plugin;
-    static Logger logger;
-    static Configuration configHandler;
-    static ConnectListener playerListener;
-    static Cache cache;
+    private static ConnectionLogger plugin;
+    private static Logger logger;
+    private static Configuration configHandler;
+    private static Cache cache;
 
     @Override
     public void onEnable() {
         getCommand("cl").setExecutor(new Commands());
+        cache = new Cache(100);
         ConnectionLogger.plugin = this;
         logger = plugin.getLogger();
         configHandler = new Configuration();
         defaultDatabaseHandler = new DatabaseLogging();
-        playerListener = new ConnectListener();
         logger.info("Pool Size: " + configHandler.getDb_pools());
         if (configHandler.isLogPlayerConnect()) {
             Bukkit.getPluginManager().registerEvents(new ConnectListener(), this);
@@ -41,13 +40,21 @@ public class ConnectionLogger extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (configHandler.isAutoClean()) {
-            defaultDatabaseHandler.Clear();
+        if (defaultDatabaseHandler != null) {
+            if (configHandler.isAutoClean()) {
+                defaultDatabaseHandler.Clear();
+            }
+            if (cache.getSize() > 0) {
+                defaultDatabaseHandler.AddFromCache(cache);
+                if (cache.getSize() > 0) {
+                    logger.warning("Cache is not empty!");
+                }
+            }
+            if (configHandler.isLogPluginShutdown()) {
+                defaultDatabaseHandler.Add(EventType.PLUGIN_SHUTDOWN, Calendar.getInstance(), null);
+            }
+            defaultDatabaseHandler.Disable();
         }
-        if(configHandler.isLogPluginShutdown()) {
-            defaultDatabaseHandler.Add(EventType.PLUGIN_SHUTDOWN.getMessage(), Calendar.getInstance(), null);
-        }
-        defaultDatabaseHandler.Disable();
     }
 
     public static ConnectionLogger getPlugin() {

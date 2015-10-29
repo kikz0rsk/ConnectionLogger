@@ -9,7 +9,7 @@ import sk.crafting.connectionlogger.listeners.EventType;
  * @author Red-Eye~kikz0r_sk
  */
 public class Log {
-    
+
     private final Calendar time;
     private final EventType type;
     private final Player player;
@@ -28,7 +28,7 @@ public class Log {
     public EventType getType() {
         return type;
     }
-    
+
     public Player getPlayer() {
         return player;
     }
@@ -36,5 +36,5 @@ public class Log {
     public boolean isDeleted() {
         return deleted;
     }
-    
+
 }
