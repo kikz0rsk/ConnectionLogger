@@ -59,6 +59,7 @@ public class Commands implements CommandExecutor {
             }
             sender.sendMessage(ChatColor.GREEN + "Dumping cache...");
             ConnectionLogger.getDefaultDatabaseHandler().AddFromCache(ConnectionLogger.getCache());
+            return true;
         }
         return false;
     }

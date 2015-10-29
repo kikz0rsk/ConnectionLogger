@@ -25,12 +25,12 @@ public class ConnectionLogger extends JavaPlugin {
     @Override
     public void onEnable() {
         getCommand("cl").setExecutor(new Commands());
+        cache = new Cache(100);
         ConnectionLogger.plugin = this;
         logger = plugin.getLogger();
         configHandler = new Configuration();
         defaultDatabaseHandler = new DatabaseLogging();
         playerListener = new ConnectListener();
-        cache = new Cache(100);
         logger.info("Pool Size: " + configHandler.getDb_pools());
         if (configHandler.isLogPlayerConnect()) {
             Bukkit.getPluginManager().registerEvents(new ConnectListener(), this);
