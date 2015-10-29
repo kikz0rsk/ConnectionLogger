@@ -219,6 +219,9 @@ public class DatabaseLogging extends Timer {
         Disconnect();
         Init();
         TestConnection();
+        if(ConnectionLogger.getCache().getSize() > 0) {
+            AddFromCache(ConnectionLogger.getCache());
+        }
     }
 
     public ArrayList<String> Get(Calendar max) {
