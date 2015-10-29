@@ -16,11 +16,11 @@ import sk.crafting.connectionlogger.listeners.EventType;
 public class ConnectionLogger extends JavaPlugin {
 
     private static DatabaseLogging defaultDatabaseHandler;
-    static ConnectionLogger plugin;
-    static Logger logger;
-    static Configuration configHandler;
-    static ConnectListener playerListener;
-    static Cache cache;
+    private static ConnectionLogger plugin;
+    private static Logger logger;
+    private static Configuration configHandler;
+    private static ConnectListener playerListener;
+    private static Cache cache;
 
     @Override
     public void onEnable() {
