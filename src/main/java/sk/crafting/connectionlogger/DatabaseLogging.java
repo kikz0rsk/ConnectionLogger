@@ -125,22 +125,24 @@ public class DatabaseLogging {
         PreparedStatement statement = null;
         try {
             Connect();
-            for (Log log : cache.toArray()) {
-                statement = db_connection.prepareStatement(
-                        "INSERT INTO " + ConnectionLogger.getConfigHandler().getDb_tableName() + " (time, type, player_name, player_ip, player_hostname, player_port, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)"
-                );
-                statement.setString(1, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(log.getTime().getTimeInMillis()));
-                statement.setString(2, log.getType().getMessage());
-                if (log.getPlayer() == null) {
-                    statement.setString(3, null);
-                } else {
-                    statement.setString(3, log.getPlayer().getName());
+            synchronized (lock) {
+                for (Log log : cache.toArray()) {
+                    statement = db_connection.prepareStatement(
+                            "INSERT INTO " + ConnectionLogger.getConfigHandler().getDb_tableName() + " (time, type, player_name, player_ip, player_hostname, player_port, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)"
+                    );
+                    statement.setString(1, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(log.getTime().getTimeInMillis()));
+                    statement.setString(2, log.getType().getMessage());
+                    if (log.getPlayer() == null) {
+                        statement.setString(3, null);
+                    } else {
+                        statement.setString(3, log.getPlayer().getName());
+                    }
+                    statement.setString(4, log.getPlayer().getAddress().getAddress().getHostAddress());
+                    statement.setString(5, log.getPlayer().getAddress().getHostName());
+                    statement.setInt(6, log.getPlayer().getAddress().getPort());
+                    statement.setBoolean(7, false);
+                    statement.executeUpdate();
                 }
-                statement.setString(4, log.getPlayer().getAddress().getAddress().getHostAddress());
-                statement.setString(5, log.getPlayer().getAddress().getHostName());
-                statement.setInt(6, log.getPlayer().getAddress().getPort());
-                statement.setBoolean(7, false);
-                statement.executeUpdate();
             }
             cache.Clear();
         } catch (Exception ex) {

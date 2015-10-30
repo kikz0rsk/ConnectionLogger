@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import org.bukkit.entity.Player;
+import sk.crafting.connectionlogger.ConnectionLogger;
 
 import sk.crafting.connectionlogger.listeners.EventType;
 
@@ -26,6 +27,9 @@ public class Cache {
 
     public void Add(Log log) {
         synchronized (cache) {
+            if(cache.size() >= ConnectionLogger.getConfigHandler().getCacheSize()) {
+                ConnectionLogger.getDefaultDatabaseHandler().AddFromCache(this);
+            }
             cache.add(log);
         }
     }
