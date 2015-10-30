@@ -9,6 +9,12 @@ logging:
 auto-cleaning:
     # Clean logs at plugin shutdown
     plugin-shutdown: false
+# Cache where players logs are stored before we send them to database.
+# If connection to database is not available, here are stored until we seccessully connect to database
+# Default: 50
+# If you have small memory, you should set it to low value
+cache:
+    cache-size: 50
 # MySQL Credentials - Please Fill Correctly
 database:
     host: ""

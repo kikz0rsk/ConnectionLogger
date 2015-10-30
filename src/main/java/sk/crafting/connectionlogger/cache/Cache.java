@@ -17,7 +17,11 @@ public class Cache {
     private final List<Log> cache;
 
     public Cache(int size) {
-        cache = Collections.synchronizedList(new ArrayList(size));
+        cache = Collections.synchronizedList(new ArrayList<Log>(size));
+    }
+
+    public Cache(List<? extends Log> collection) {
+        cache = Collections.synchronizedList(new ArrayList<>(collection));
     }
 
     public void Add(Log log) {
@@ -42,9 +46,21 @@ public class Cache {
         }
     }
 
+    public boolean isEmpty() {
+        synchronized (cache) {
+            return cache.isEmpty();
+        }
+    }
+
     public void Clear() {
         synchronized (cache) {
             cache.clear();
+        }
+    }
+
+    public List<Log> getList() {
+        synchronized (cache) {
+            return cache;
         }
     }
 

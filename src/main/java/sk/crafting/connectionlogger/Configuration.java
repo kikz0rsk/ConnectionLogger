@@ -29,6 +29,8 @@ public class Configuration {
             db_tableName;
     int db_pools;
 
+    int cacheSize;
+
     public Configuration() {
         confFile = new File(ConnectionLogger.getPlugin().getDataFolder(), "config.yml");
         SaveDefaultConfig();
@@ -60,6 +62,7 @@ public class Configuration {
         logPlayerDisconnect = conf.getBoolean("logging.player-disconnect");
         logPluginShutdown = conf.getBoolean("logging.plugin-shutdown");
         autoClean = conf.getBoolean("auto-cleaning.server-shutdown");
+        cacheSize = conf.getInt("cache.cache-size");
         db_host = conf.getString("database.host");
         db_port = conf.getString("database.port");
         db_user = conf.getString("database.user");
@@ -115,6 +118,10 @@ public class Configuration {
 
     public boolean isLogPluginShutdown() {
         return logPluginShutdown;
+    }
+
+    public int getCacheSize() {
+        return cacheSize;
     }
 
 }

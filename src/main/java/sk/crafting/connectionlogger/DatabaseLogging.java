@@ -212,7 +212,7 @@ public class DatabaseLogging extends Timer {
         Disconnect();
         Init();
         TestConnection();
-        if (ConnectionLogger.getCache().getSize() > 0) {
+        if (!ConnectionLogger.getCache().isEmpty()) {
             AddFromCache(ConnectionLogger.getCache());
         }
     }

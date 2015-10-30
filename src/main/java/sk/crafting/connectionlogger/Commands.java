@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
  * @author Red-Eye~kikz0r_sk
  */
 public class Commands implements CommandExecutor {
-
+    
     @Override
     public boolean onCommand(CommandSender sender, Command command, String string, String[] args) {
         if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
@@ -47,13 +47,12 @@ public class Commands implements CommandExecutor {
             return true;
         }
         if (args[0].equalsIgnoreCase("reload")) {
-            ConnectionLogger.getConfigHandler().SaveDefaultConfig();
-            ConnectionLogger.getConfigHandler().ReloadConfig();
-            ConnectionLogger.getDefaultDatabaseHandler().Reload();
+            sender.sendMessage(ChatColor.GREEN + "Reloading ConnectionLogger...");
+            ConnectionLogger.getPlugin().Reload();
             return true;
         }
         if (args[0].equalsIgnoreCase("dumpcache")) {
-            if (ConnectionLogger.getCache().getSize() == 0) {
+            if (ConnectionLogger.getCache().isEmpty()) {
                 sender.sendMessage(ChatColor.GRAY + "Cache is empty");
                 return true;
             }
@@ -63,5 +62,5 @@ public class Commands implements CommandExecutor {
         }
         return false;
     }
-
+    
 }
