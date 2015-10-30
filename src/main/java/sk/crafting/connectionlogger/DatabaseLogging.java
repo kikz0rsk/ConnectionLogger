@@ -20,7 +20,7 @@ import sk.crafting.connectionlogger.listeners.EventType;
  *
  * @author Red-Eye~kikz0r_sk
  */
-public class DatabaseLogging extends Timer {
+public class DatabaseLogging {
 
     static final Object lock = new Object();
     final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -35,7 +35,7 @@ public class DatabaseLogging extends Timer {
         TestConnection();
     }
 
-    private void Init() {
+    private static void Init() {
         synchronized (lock) {
             dataSource = new HikariDataSource();
             dataSource.setJdbcUrl(String.format(
@@ -119,7 +119,7 @@ public class DatabaseLogging extends Timer {
     }
 
     public void AddFromCache(Cache cache) {
-        if (cache.getSize() == 0) {
+        if (cache.isEmpty()) {
             return;
         }
         PreparedStatement statement = null;

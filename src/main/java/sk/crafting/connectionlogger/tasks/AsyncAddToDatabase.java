@@ -25,7 +25,9 @@ public class AsyncAddToDatabase extends BukkitRunnable {
     @Override
     public void run() {
         ConnectionLogger.getCache().Add(time, type, player);
-        ConnectionLogger.getDefaultDatabaseHandler().AddFromCache(ConnectionLogger.getCache());
+        if(!ConnectionLogger.getCachePusher().isScheduled()) {
+            ConnectionLogger.getDefaultDatabaseHandler().AddFromCache(ConnectionLogger.getCache());
+        }
     }
 
 }

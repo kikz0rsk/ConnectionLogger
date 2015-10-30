@@ -9,6 +9,7 @@ import sk.crafting.connectionlogger.cache.Cache;
 import sk.crafting.connectionlogger.listeners.ConnectListener;
 import sk.crafting.connectionlogger.listeners.DisconnectListener;
 import sk.crafting.connectionlogger.listeners.EventType;
+import sk.crafting.connectionlogger.tasks.CachePusher;
 
 /**
  *
@@ -21,6 +22,7 @@ public class ConnectionLogger extends JavaPlugin {
     private static Logger logger;
     private static Configuration configHandler;
     private static Cache cache;
+    private static CachePusher cachePusher;
 
     @Override
     public void onEnable() {
@@ -30,6 +32,7 @@ public class ConnectionLogger extends JavaPlugin {
         configHandler = new Configuration();
         cache = new Cache(configHandler.getCacheSize());
         defaultDatabaseHandler = new DatabaseLogging();
+        cachePusher = new CachePusher();
         logger.log(Level.INFO, "Pool Size: {0}", configHandler.getDb_pools());
         logger.log(Level.INFO, "Cache Size: {0}", configHandler.getCacheSize());
         if (configHandler.isLogPlayerConnect()) {
@@ -58,7 +61,7 @@ public class ConnectionLogger extends JavaPlugin {
             }
             if (!cache.isEmpty()) {
                 defaultDatabaseHandler.AddFromCache(cache);
-                if (cache.getSize() > 0) {
+                if (!cache.isEmpty()) {
                     logger.warning("Cache is not empty!");
                 }
             }
@@ -67,6 +70,10 @@ public class ConnectionLogger extends JavaPlugin {
             }
             defaultDatabaseHandler.Disable();
         }
+    }
+
+    public static CachePusher getCachePusher() {
+        return cachePusher;
     }
 
     public static ConnectionLogger getPlugin() {
