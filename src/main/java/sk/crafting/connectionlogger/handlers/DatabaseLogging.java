@@ -12,7 +12,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 
-import org.bukkit.entity.Player;
 import sk.crafting.connectionlogger.ConnectionLogger;
 import sk.crafting.connectionlogger.cache.Cache;
 import sk.crafting.connectionlogger.cache.Log;
