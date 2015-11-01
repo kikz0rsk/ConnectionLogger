@@ -15,7 +15,7 @@ import sk.crafting.connectionlogger.ConnectionLogger;
 public class ConfigurationHandler {
     
     private FileConfiguration conf;
-    private File file;
+    private final File file;
 
     boolean logPlayerConnect,
             logPlayerDisconnect,

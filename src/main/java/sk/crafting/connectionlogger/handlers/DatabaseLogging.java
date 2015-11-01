@@ -209,8 +209,17 @@ public class DatabaseLogging {
 
     public void Disable() {
         StopTimer();
+        if(ConnectionLogger.getCachePusher().isScheduled()) {
+            ConnectionLogger.getCachePusher().StopTimer();
+        }
+        if(ConnectionLogger.getConfigHandler().isAutoClean()) {
+            Clear();
+        }
         if (ConnectionLogger.getConfigHandler().isLogPluginShutdown()) {
-            //ConnectionLogger.getCache().
+            ConnectionLogger.getCache().Add(new Log(Calendar.getInstance(), EventType.PLUGIN_SHUTDOWN, "", "", "", 0));
+        }
+        if(!(AddFromCache(ConnectionLogger.getCache()))) {
+            ConnectionLogger.getCache().DumpCacheToFile();
         }
         Disconnect();
         if (dataSource != null) {

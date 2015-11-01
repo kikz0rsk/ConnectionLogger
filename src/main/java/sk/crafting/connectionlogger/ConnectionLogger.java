@@ -2,7 +2,6 @@ package sk.crafting.connectionlogger;
 
 import sk.crafting.connectionlogger.handlers.ConfigurationHandler;
 import sk.crafting.connectionlogger.handlers.DatabaseLogging;
-import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
@@ -10,7 +9,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import sk.crafting.connectionlogger.cache.Cache;
 import sk.crafting.connectionlogger.listeners.ConnectListener;
 import sk.crafting.connectionlogger.listeners.DisconnectListener;
-import sk.crafting.connectionlogger.listeners.EventType;
 import sk.crafting.connectionlogger.tasks.CachePusher;
 
 /**
@@ -58,15 +56,6 @@ public class ConnectionLogger extends JavaPlugin {
     @Override
     public void onDisable() {
         if (defaultDatabaseHandler != null) {
-            if (configHandler.isAutoClean()) {
-                defaultDatabaseHandler.Clear();
-            }
-            if (!cache.isEmpty()) {
-                defaultDatabaseHandler.AddFromCache(cache);
-                if (!cache.isEmpty()) {
-                    logger.warning("Cache is not empty!");
-                }
-            }
             defaultDatabaseHandler.Disable();
         }
     }
