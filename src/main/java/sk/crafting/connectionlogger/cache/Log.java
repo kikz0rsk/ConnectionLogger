@@ -12,13 +12,18 @@ public class Log {
 
     private final Calendar time;
     private final EventType type;
-    private final Player player;
-    boolean deleted = false;
+    private final String playerName;
+    private final String playerIp;
+    private final String playerHostname;
+    private final int playerPort;
 
-    public Log(Calendar time, EventType type, Player player) {
+    public Log(Calendar time, EventType type, String playerName, String playerIp, String playerHostname, int playerPort) {
         this.time = time;
         this.type = type;
-        this.player = player;
+        this.playerName = playerName;
+        this.playerIp = playerIp;
+        this.playerHostname = playerHostname;
+        this.playerPort = playerPort;
     }
 
     public Calendar getTime() {
@@ -29,12 +34,20 @@ public class Log {
         return type;
     }
 
-    public Player getPlayer() {
-        return player;
+    public String getPlayerName() {
+        return playerName;
     }
 
-    public boolean isDeleted() {
-        return deleted;
+    public String getPlayerIp() {
+        return playerIp;
+    }
+
+    public String getPlayerHostname() {
+        return playerHostname;
+    }
+
+    public int getPlayerPort() {
+        return playerPort;
     }
 
 }

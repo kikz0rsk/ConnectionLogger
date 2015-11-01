@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import org.bukkit.entity.Player;
 import sk.crafting.connectionlogger.ConnectionLogger;
+import sk.crafting.connectionlogger.handlers.CacheFileDumper;
 
 import sk.crafting.connectionlogger.listeners.EventType;
 
@@ -16,6 +17,7 @@ import sk.crafting.connectionlogger.listeners.EventType;
 public class Cache {
 
     private final List<Log> cache;
+    private CacheFileDumper dumper;
 
     public Cache(int size) {
         cache = Collections.synchronizedList(new ArrayList<Log>(size));
@@ -28,14 +30,24 @@ public class Cache {
     public void Add(Log log) {
         synchronized (cache) {
             if(cache.size() >= ConnectionLogger.getConfigHandler().getCacheSize()) {
-                ConnectionLogger.getDefaultDatabaseHandler().AddFromCache(this);
+                if(!(ConnectionLogger.getDefaultDatabaseHandler().AddFromCache(this))) {
+                    ConnectionLogger.getPluginLogger().warning("Failed to dump cache to database, dumping to file...");
+                    DumpCacheToFile();
+                }
             }
             cache.add(log);
         }
     }
 
     public void Add(Calendar time, EventType type, Player player) {
-        Add(new Log(time, type, player));
+        Add(new Log(time, type, player.getName(), player.getAddress().getAddress().getHostAddress(), player.getAddress().getAddress().getHostName(), player.getAddress().getPort()));
+    }
+    
+    public void DumpCacheToFile() {
+        if(dumper == null) {
+            dumper = new CacheFileDumper();
+        }
+        dumper.Dump(this);
     }
 
     public int getSize() {

@@ -1,5 +1,7 @@
 package sk.crafting.connectionlogger;
 
+import sk.crafting.connectionlogger.handlers.ConfigurationHandler;
+import sk.crafting.connectionlogger.handlers.DatabaseLogging;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +22,7 @@ public class ConnectionLogger extends JavaPlugin {
     private static DatabaseLogging defaultDatabaseHandler;
     private static ConnectionLogger plugin;
     private static Logger logger;
-    private static Configuration configHandler;
+    private static ConfigurationHandler configHandler;
     private static Cache cache;
     private static CachePusher cachePusher;
 
@@ -29,7 +31,7 @@ public class ConnectionLogger extends JavaPlugin {
         getCommand("cl").setExecutor(new Commands());
         ConnectionLogger.plugin = this;
         logger = plugin.getLogger();
-        configHandler = new Configuration();
+        configHandler = new ConfigurationHandler();
         cache = new Cache(configHandler.getCacheSize());
         defaultDatabaseHandler = new DatabaseLogging();
         cachePusher = new CachePusher();
@@ -65,9 +67,6 @@ public class ConnectionLogger extends JavaPlugin {
                     logger.warning("Cache is not empty!");
                 }
             }
-            if (configHandler.isLogPluginShutdown()) {
-                defaultDatabaseHandler.Add(EventType.PLUGIN_SHUTDOWN, Calendar.getInstance(), null);
-            }
             defaultDatabaseHandler.Disable();
         }
     }
@@ -84,7 +83,7 @@ public class ConnectionLogger extends JavaPlugin {
         return logger;
     }
 
-    public static Configuration getConfigHandler() {
+    public static ConfigurationHandler getConfigHandler() {
         return configHandler;
     }
 
