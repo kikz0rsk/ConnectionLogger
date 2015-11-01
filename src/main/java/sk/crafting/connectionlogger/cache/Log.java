@@ -1,7 +1,6 @@
 package sk.crafting.connectionlogger.cache;
 
 import java.util.Calendar;
-import org.bukkit.entity.Player;
 import sk.crafting.connectionlogger.listeners.EventType;
 
 /**

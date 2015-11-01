@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.logging.Level;
+import org.bukkit.ChatColor;
 import sk.crafting.connectionlogger.ConnectionLogger;
 import sk.crafting.connectionlogger.cache.Cache;
 import sk.crafting.connectionlogger.cache.Log;
@@ -27,13 +28,6 @@ public class CacheFileDumper {
 
     public void Dump(Cache cache) {
         file.getParentFile().mkdirs();
-//        if (!file.exists()) {
-//            try {
-//                file.createNewFile();
-//            } catch (IOException ex) {
-//                ConnectionLogger.getPluginLogger().log(Level.SEVERE, "Failed to create cache dump file: {0}", ex.toString());
-//            }
-//        }
         PrintWriter out = null;
         try {
             out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
@@ -50,6 +44,7 @@ public class CacheFileDumper {
                 out.println("=========================================================================");
                 out.println();
             }
+            ConnectionLogger.getPluginLogger().log(Level.INFO, "{0}Successfully dumped to file", ChatColor.GREEN);
         } catch (IOException ex) {
             ConnectionLogger.getPluginLogger().log(Level.SEVERE, "IOException while dumping cache to file: {0}", ex.toString());
         } finally {
