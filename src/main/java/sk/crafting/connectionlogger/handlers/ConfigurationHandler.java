@@ -34,6 +34,7 @@ public class ConfigurationHandler {
 
     public ConfigurationHandler() {
         file = new File(ConnectionLogger.getPlugin().getDataFolder(), "config.yml");
+        file.mkdirs();
         SaveDefaultConfig();
     }
 
