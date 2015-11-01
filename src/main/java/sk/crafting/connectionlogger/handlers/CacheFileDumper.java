@@ -38,7 +38,7 @@ public class CacheFileDumper {
         try {
             out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
             out.println("---------- ConnectionLogger " + ConnectionLogger.getPlugin().getDescription().getVersion() + " CACHE DUMP " + formatter.format(Calendar.getInstance().getTimeInMillis()) + " ----------");
-            for(Log log : cache.getList()) {
+            for (Log log : cache.getList()) {
                 out.println("----------------------------------------------");
                 out.println("Time: " + formatter.format(log.getTime().getTimeInMillis()));
                 out.println("Type: " + log.getType());
@@ -51,7 +51,7 @@ public class CacheFileDumper {
         } catch (IOException ex) {
             ConnectionLogger.getPluginLogger().log(Level.SEVERE, "IOException while dumping cache to file: {0}", ex.toString());
         } finally {
-            if(out != null) {
+            if (out != null) {
                 out.close();
             }
         }

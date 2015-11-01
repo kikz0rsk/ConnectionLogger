@@ -13,7 +13,7 @@ import sk.crafting.connectionlogger.ConnectionLogger;
  * @author Red-Eye~kikz0r_sk
  */
 public class ConfigurationHandler {
-    
+
     private FileConfiguration conf;
     private final File file;
 
@@ -34,11 +34,11 @@ public class ConfigurationHandler {
 
     public ConfigurationHandler() {
         file = new File(ConnectionLogger.getPlugin().getDataFolder(), "config.yml");
-        
+
     }
-    
+
     public void SaveDefaultConfig() {
-        if(!file.exists()) {
+        if (!file.exists()) {
             try {
                 Files.copy(getClass().getResourceAsStream("/config.yml"), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException ex) {
@@ -62,7 +62,7 @@ public class ConfigurationHandler {
         db_tableName = conf.getString("database.table-name");
         db_pools = conf.getInt("database.pools");
     }
-    
+
     public void SaveConfig() {
         try {
             conf.save(file);

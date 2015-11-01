@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
  * @author Red-Eye~kikz0r_sk
  */
 public class Commands implements CommandExecutor {
-    
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String string, String[] args) {
         if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
@@ -61,5 +61,5 @@ public class Commands implements CommandExecutor {
         }
         return false;
     }
-    
+
 }

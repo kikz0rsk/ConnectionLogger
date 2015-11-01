@@ -88,44 +88,6 @@ public class DatabaseLogging {
         }
     }
 
-    /**
-     * @deprecated Not needed
-     */
-    @Deprecated
-    public void Add(EventType type, Calendar time, Player player) {
-        PreparedStatement statement = null;
-        try {
-            Connect();
-            synchronized (lock) {
-                statement = db_connection.prepareStatement(
-                        "INSERT INTO " + ConnectionLogger.getConfigHandler().getDb_tableName() + " (time, type, player_name, player_ip, player_hostname, player_port, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)"
-                );
-                statement.setString(1, new SimpleDateFormat(timeFormat).format(time.getTimeInMillis()));
-                statement.setString(2, type.getMessage());
-                if (player == null) {
-                    statement.setString(3, null);
-                } else {
-                    statement.setString(3, player.getName());
-                }
-                statement.setString(4, player.getAddress().getAddress().getHostAddress());
-                statement.setString(5, player.getAddress().getHostName());
-                statement.setInt(6, player.getAddress().getPort());
-                statement.setBoolean(7, false);
-            }
-            statement.executeUpdate();
-        } catch (Exception ex) {
-            ConnectionLogger.getPluginLogger().severe("Failed to add entry to database: " + ex.toString());
-        } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (Exception ex) {
-                    ConnectionLogger.getPluginLogger().warning("Could not close database statement: " + ex.toString());
-                }
-            }
-        }
-    }
-
     public boolean AddFromCache(Cache cache) {
         if (cache.isEmpty()) {
             return true;

@@ -29,8 +29,8 @@ public class Cache {
 
     public void Add(Log log) {
         synchronized (cache) {
-            if(cache.size() >= ConnectionLogger.getConfigHandler().getCacheSize()) {
-                if(!(ConnectionLogger.getDefaultDatabaseHandler().AddFromCache(this))) {
+            if (cache.size() >= ConnectionLogger.getConfigHandler().getCacheSize()) {
+                if (!(ConnectionLogger.getDefaultDatabaseHandler().AddFromCache(this))) {
                     ConnectionLogger.getPluginLogger().warning("Failed to dump cache to database, dumping to file...");
                     DumpCacheToFile();
                 }
@@ -42,9 +42,9 @@ public class Cache {
     public void Add(Calendar time, EventType type, Player player) {
         Add(new Log(time, type, player.getName(), player.getAddress().getAddress().getHostAddress(), player.getAddress().getAddress().getHostName(), player.getAddress().getPort()));
     }
-    
+
     public void DumpCacheToFile() {
-        if(dumper == null) {
+        if (dumper == null) {
             dumper = new CacheFileDumper();
         }
         dumper.Dump(this);
