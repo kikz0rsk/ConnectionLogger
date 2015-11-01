@@ -1,4 +1,4 @@
-package sk.crafting.connectionlogger;
+package sk.crafting.connectionlogger.handlers;
 
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -10,8 +10,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
 
-import org.bukkit.entity.Player;
+import sk.crafting.connectionlogger.ConnectionLogger;
 import sk.crafting.connectionlogger.cache.Cache;
 import sk.crafting.connectionlogger.cache.Log;
 import sk.crafting.connectionlogger.listeners.EventType;
@@ -20,10 +21,12 @@ import sk.crafting.connectionlogger.listeners.EventType;
  *
  * @author Red-Eye~kikz0r_sk
  */
-public class DatabaseLogging extends Timer {
+public class DatabaseLogging {
+
+    static final String timeFormat = "yyyy-MM-dd HH:mm:ss";
 
     static final Object lock = new Object();
-    final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    final SimpleDateFormat formatter = new SimpleDateFormat(timeFormat);
 
     Connection db_connection;
     static HikariDataSource dataSource;
@@ -35,7 +38,7 @@ public class DatabaseLogging extends Timer {
         TestConnection();
     }
 
-    private void Init() {
+    private static void Init() {
         synchronized (lock) {
             dataSource = new HikariDataSource();
             dataSource.setJdbcUrl(String.format(
@@ -65,15 +68,10 @@ public class DatabaseLogging extends Timer {
     }
 
     private void Connect() throws Exception {
-        try {
-            if (db_connection == null || db_connection.isClosed()) {
-                db_connection = dataSource.getConnection();
-                ConnectionLogger.getPluginLogger().info("Connected to database");
-                StartTimer();
-            }
-        } catch (Exception ex) {
-            throw ex;
-        }
+        if (db_connection == null || db_connection.isClosed()) {
+            db_connection = dataSource.getConnection();
+            ConnectionLogger.getPluginLogger().info("Connected to database");
+            StartTimer();
 
 //        String sql = "CREATE TABLE IF NOT EXISTS " + db_tableName
 //                + "("
@@ -86,75 +84,42 @@ public class DatabaseLogging extends Timer {
 //                + "player_port int(5) NOT NULL, "
 //                + "PRIMARY KEY (ID)"
 //                + ")";
+        }
     }
 
-    public void Add(EventType type, Calendar time, Player player) {
+    public boolean AddFromCache(Cache cache) {
+        if (cache.isEmpty()) {
+            return true;
+        }
         PreparedStatement statement = null;
         try {
             Connect();
             synchronized (lock) {
-                statement = db_connection.prepareStatement(
-                        "INSERT INTO " + ConnectionLogger.getConfigHandler().getDb_tableName() + " (time, type, player_name, player_ip, player_hostname, player_port, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)"
-                );
-                statement.setString(1, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time.getTimeInMillis()));
-                statement.setString(2, type.getMessage());
-                if (player == null) {
-                    statement.setString(3, null);
-                } else {
-                    statement.setString(3, player.getName());
+                for (Log log : cache.toArray()) {
+                    statement = db_connection.prepareStatement(
+                            "INSERT INTO " + ConnectionLogger.getConfigHandler().getDb_tableName() + " (time, type, player_name, player_ip, player_hostname, player_port, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)"
+                    );
+                    statement.setString(1, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(log.getTime().getTimeInMillis()));
+                    statement.setString(2, log.getType().getMessage());
+                    statement.setString(3, log.getPlayerName());
+                    statement.setString(4, log.getPlayerIp());
+                    statement.setString(5, log.getPlayerHostname());
+                    statement.setInt(6, log.getPlayerPort());
+                    statement.setBoolean(7, false);
+                    statement.executeUpdate();
                 }
-                statement.setString(4, player.getAddress().getAddress().getHostAddress());
-                statement.setString(5, player.getAddress().getHostName());
-                statement.setInt(6, player.getAddress().getPort());
-                statement.setBoolean(7, false);
-            }
-            statement.executeUpdate();
-        } catch (Exception ex) {
-            ConnectionLogger.getPluginLogger().severe("Failed to add entry to database: " + ex.toString());
-        } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (Exception ex) {
-                    ConnectionLogger.getPluginLogger().warning("Could not close database statement: " + ex.toString());
-                }
-            }
-        }
-    }
-
-    public void AddFromCache(Cache cache) {
-        if (cache.getSize() == 0) {
-            return;
-        }
-        PreparedStatement statement = null;
-        try {
-            Connect();
-            for (Log log : cache.toArray()) {
-                statement = db_connection.prepareStatement(
-                        "INSERT INTO " + ConnectionLogger.getConfigHandler().getDb_tableName() + " (time, type, player_name, player_ip, player_hostname, player_port, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)"
-                );
-                statement.setString(1, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(log.getTime().getTimeInMillis()));
-                statement.setString(2, log.getType().getMessage());
-                if (log.getPlayer() == null) {
-                    statement.setString(3, null);
-                } else {
-                    statement.setString(3, log.getPlayer().getName());
-                }
-                statement.setString(4, log.getPlayer().getAddress().getAddress().getHostAddress());
-                statement.setString(5, log.getPlayer().getAddress().getHostName());
-                statement.setInt(6, log.getPlayer().getAddress().getPort());
-                statement.setBoolean(7, false);
-                statement.executeUpdate();
             }
             cache.Clear();
+            return true;
         } catch (Exception ex) {
-            ConnectionLogger.getPluginLogger().severe("Failed to dump cache to database: " + ex.toString());
+            ConnectionLogger.getPluginLogger().log(Level.SEVERE, "Failed to dump cache to database: {0}", ex.toString());
+            return false;
         } finally {
             if (statement != null) {
                 try {
                     statement.close();
                 } catch (Exception ex) {
-                    ConnectionLogger.getPluginLogger().warning("Could not close database statement: " + ex.toString());
+                    ConnectionLogger.getPluginLogger().log(Level.WARNING, "Could not close database statement: {0}", ex.toString());
                 }
             }
         }
@@ -205,6 +170,18 @@ public class DatabaseLogging extends Timer {
 
     public void Disable() {
         StopTimer();
+        if (ConnectionLogger.getCachePusher().isScheduled()) {
+            ConnectionLogger.getCachePusher().StopTimer();
+        }
+        if (ConnectionLogger.getConfigHandler().isAutoClean()) {
+            Clear();
+        }
+        if (ConnectionLogger.getConfigHandler().isLogPluginShutdown()) {
+            ConnectionLogger.getCache().Add(new Log(Calendar.getInstance(), EventType.PLUGIN_SHUTDOWN, "", "", "", 0));
+        }
+        if (!(AddFromCache(ConnectionLogger.getCache()))) {
+            ConnectionLogger.getCache().DumpCacheToFile();
+        }
         Disconnect();
         if (dataSource != null) {
             dataSource.close();
@@ -216,7 +193,7 @@ public class DatabaseLogging extends Timer {
         Disconnect();
         Init();
         TestConnection();
-        if (ConnectionLogger.getCache().getSize() > 0) {
+        if (!ConnectionLogger.getCache().isEmpty()) {
             AddFromCache(ConnectionLogger.getCache());
         }
     }
@@ -268,6 +245,10 @@ public class DatabaseLogging extends Timer {
         if (timer != null) {
             timer.cancel();
         }
+    }
+
+    public static String getTimeFormat() {
+        return timeFormat;
     }
 
 }

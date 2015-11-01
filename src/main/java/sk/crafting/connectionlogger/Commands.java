@@ -35,7 +35,6 @@ public class Commands implements CommandExecutor {
                     return true;
                 }
             }
-            ConnectionLogger.getPluginLogger().info(String.valueOf(hours));
             calendar.add(Calendar.HOUR_OF_DAY, hours);
             ArrayList<String> result = ConnectionLogger.getDefaultDatabaseHandler().Get(calendar);
             sender.sendMessage(result.toArray(new String[result.size()]));
@@ -47,13 +46,12 @@ public class Commands implements CommandExecutor {
             return true;
         }
         if (args[0].equalsIgnoreCase("reload")) {
-            ConnectionLogger.getConfigHandler().SaveDefaultConfig();
-            ConnectionLogger.getConfigHandler().ReloadConfig();
-            ConnectionLogger.getDefaultDatabaseHandler().Reload();
+            sender.sendMessage(ChatColor.GREEN + "Reloading ConnectionLogger...");
+            ConnectionLogger.getPlugin().Reload();
             return true;
         }
         if (args[0].equalsIgnoreCase("dumpcache")) {
-            if (ConnectionLogger.getCache().getSize() == 0) {
+            if (ConnectionLogger.getCache().isEmpty()) {
                 sender.sendMessage(ChatColor.GRAY + "Cache is empty");
                 return true;
             }

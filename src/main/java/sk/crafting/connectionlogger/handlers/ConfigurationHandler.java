@@ -1,20 +1,22 @@
-package sk.crafting.connectionlogger;
+package sk.crafting.connectionlogger.handlers;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.logging.Level;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import sk.crafting.connectionlogger.ConnectionLogger;
 
 /**
  *
  * @author Red-Eye~kikz0r_sk
  */
-public class Configuration {
+public final class ConfigurationHandler {
 
-    File confFile;
-    FileConfiguration conf;
+    private FileConfiguration conf;
+    private final File file;
 
     boolean logPlayerConnect,
             logPlayerDisconnect,
@@ -29,37 +31,32 @@ public class Configuration {
             db_tableName;
     int db_pools;
 
-    public Configuration() {
-        confFile = new File(ConnectionLogger.getPlugin().getDataFolder(), "config.yml");
+    int cacheSize;
+
+    public ConfigurationHandler() {
+        file = new File(ConnectionLogger.getPlugin().getDataFolder(), "config.yml");
         SaveDefaultConfig();
     }
 
     public void SaveDefaultConfig() {
-        if (!(confFile.exists())) {
-            confFile.mkdirs();
+        file.getParentFile().mkdirs();
+        if (!file.exists()) {
             try {
-                Files.copy(getClass().getResourceAsStream("/config.yml"), confFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(getClass().getResourceAsStream("/config.yml"), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException ex) {
-                ConnectionLogger.getPluginLogger().severe("Failed while copying default config: " + ex.toString());
+                ConnectionLogger.getPluginLogger().log(Level.SEVERE, "Failed to save default config file: {0}", ex.toString());
             }
         }
         ReloadConfig();
     }
 
-    private void SaveConfig() {
-        try {
-            conf.save(confFile);
-        } catch (IOException ex) {
-            ConnectionLogger.getPluginLogger().severe("Failed to save configuration file: " + ex.toString());
-        }
-    }
-
     public void ReloadConfig() {
-        conf = YamlConfiguration.loadConfiguration(confFile);
+        conf = YamlConfiguration.loadConfiguration(file);
         logPlayerConnect = conf.getBoolean("logging.player-connect");
         logPlayerDisconnect = conf.getBoolean("logging.player-disconnect");
         logPluginShutdown = conf.getBoolean("logging.plugin-shutdown");
         autoClean = conf.getBoolean("auto-cleaning.server-shutdown");
+        cacheSize = conf.getInt("cache.cache-size");
         db_host = conf.getString("database.host");
         db_port = conf.getString("database.port");
         db_user = conf.getString("database.user");
@@ -67,6 +64,19 @@ public class Configuration {
         db_name = conf.getString("database.database-name");
         db_tableName = conf.getString("database.table-name");
         db_pools = conf.getInt("database.pools");
+        if(db_pools < 1) {
+            conf.set("database.pools", 1);
+            SaveConfig();
+        }
+    }
+
+    public void SaveConfig() {
+        try {
+            conf.save(file);
+        } catch (IOException ex) {
+            ConnectionLogger.getPluginLogger().log(Level.SEVERE, "Failed to save configuration file: {0}", ex.toString());
+        }
+        ReloadConfig();
     }
 
     public FileConfiguration getConf() {
@@ -115,6 +125,10 @@ public class Configuration {
 
     public boolean isLogPluginShutdown() {
         return logPluginShutdown;
+    }
+
+    public int getCacheSize() {
+        return cacheSize;
     }
 
 }

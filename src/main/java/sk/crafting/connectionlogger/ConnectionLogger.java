@@ -1,13 +1,15 @@
 package sk.crafting.connectionlogger;
 
-import java.util.Calendar;
+import sk.crafting.connectionlogger.handlers.ConfigurationHandler;
+import sk.crafting.connectionlogger.handlers.DatabaseLogging;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import sk.crafting.connectionlogger.cache.Cache;
 import sk.crafting.connectionlogger.listeners.ConnectListener;
 import sk.crafting.connectionlogger.listeners.DisconnectListener;
-import sk.crafting.connectionlogger.listeners.EventType;
+import sk.crafting.connectionlogger.tasks.CachePusher;
 
 /**
  *
@@ -18,18 +20,21 @@ public class ConnectionLogger extends JavaPlugin {
     private static DatabaseLogging defaultDatabaseHandler;
     private static ConnectionLogger plugin;
     private static Logger logger;
-    private static Configuration configHandler;
+    private static ConfigurationHandler configHandler;
     private static Cache cache;
+    private static CachePusher cachePusher;
 
     @Override
     public void onEnable() {
         getCommand("cl").setExecutor(new Commands());
-        cache = new Cache(100);
         ConnectionLogger.plugin = this;
         logger = plugin.getLogger();
-        configHandler = new Configuration();
+        configHandler = new ConfigurationHandler();
+        cache = new Cache(configHandler.getCacheSize());
         defaultDatabaseHandler = new DatabaseLogging();
-        logger.info("Pool Size: " + configHandler.getDb_pools());
+        cachePusher = new CachePusher();
+        logger.log(Level.INFO, "Pool Size: {0}", configHandler.getDb_pools());
+        logger.log(Level.INFO, "Cache Size: {0}", configHandler.getCacheSize());
         if (configHandler.isLogPlayerConnect()) {
             Bukkit.getPluginManager().registerEvents(new ConnectListener(), this);
         }
@@ -38,23 +43,27 @@ public class ConnectionLogger extends JavaPlugin {
         }
     }
 
+    public void Reload() {
+        ConnectionLogger.getConfigHandler().SaveDefaultConfig();
+        ConnectionLogger.getConfigHandler().ReloadConfig();
+        ConnectionLogger.getDefaultDatabaseHandler().Reload();
+        logger.log(Level.INFO, "Pool Size: {0}", configHandler.getDb_pools());
+        logger.log(Level.INFO, "Cache Size: {0}", configHandler.getCacheSize());
+        if (!cache.isEmpty()) {
+            logger.warning("Cache is not empty!");
+            cache = new Cache(cache.getList());
+        }
+    }
+
     @Override
     public void onDisable() {
         if (defaultDatabaseHandler != null) {
-            if (configHandler.isAutoClean()) {
-                defaultDatabaseHandler.Clear();
-            }
-            if (cache.getSize() > 0) {
-                defaultDatabaseHandler.AddFromCache(cache);
-                if (cache.getSize() > 0) {
-                    logger.warning("Cache is not empty!");
-                }
-            }
-            if (configHandler.isLogPluginShutdown()) {
-                defaultDatabaseHandler.Add(EventType.PLUGIN_SHUTDOWN, Calendar.getInstance(), null);
-            }
             defaultDatabaseHandler.Disable();
         }
+    }
+
+    public static CachePusher getCachePusher() {
+        return cachePusher;
     }
 
     public static ConnectionLogger getPlugin() {
@@ -65,7 +74,7 @@ public class ConnectionLogger extends JavaPlugin {
         return logger;
     }
 
-    public static Configuration getConfigHandler() {
+    public static ConfigurationHandler getConfigHandler() {
         return configHandler;
     }
 
