@@ -26,26 +26,28 @@ public class CacheFileDumper {
     }
 
     public void Dump(Cache cache) {
-        file.mkdirs();
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException ex) {
-                ConnectionLogger.getPluginLogger().log(Level.SEVERE, "Failed to create cache dump file: {0}", ex.toString());
-            }
-        }
+        file.getParentFile().mkdirs();
+//        if (!file.exists()) {
+//            try {
+//                file.createNewFile();
+//            } catch (IOException ex) {
+//                ConnectionLogger.getPluginLogger().log(Level.SEVERE, "Failed to create cache dump file: {0}", ex.toString());
+//            }
+//        }
         PrintWriter out = null;
         try {
             out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
+            out.println("-------------------------------------------------------------------------");
             out.println("---------- ConnectionLogger " + ConnectionLogger.getPlugin().getDescription().getVersion() + " CACHE DUMP " + formatter.format(Calendar.getInstance().getTimeInMillis()) + " ----------");
+            out.println("-------------------------------------------------------------------------");
             for (Log log : cache.getList()) {
-                out.println("----------------------------------------------");
                 out.println("Time: " + formatter.format(log.getTime().getTimeInMillis()));
                 out.println("Type: " + log.getType());
                 out.println("Player Name: " + log.getPlayerName());
                 out.println("Player IP: " + log.getPlayerIp());
                 out.println("Player Hostname: " + log.getPlayerHostname());
                 out.println("Player Port: " + log.getPlayerPort());
+                out.println("=========================================================================");
                 out.println();
             }
         } catch (IOException ex) {

@@ -38,7 +38,7 @@ public class ConfigurationHandler {
     }
 
     public void SaveDefaultConfig() {
-        file.mkdirs();
+        file.getParentFile().mkdirs();
         if (!file.exists()) {
             try {
                 Files.copy(getClass().getResourceAsStream("/config.yml"), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
