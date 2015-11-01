@@ -73,7 +73,6 @@ public class DatabaseLogging {
             db_connection = dataSource.getConnection();
             ConnectionLogger.getPluginLogger().info("Connected to database");
             StartTimer();
-        }
 
 //        String sql = "CREATE TABLE IF NOT EXISTS " + db_tableName
 //                + "("
@@ -86,6 +85,7 @@ public class DatabaseLogging {
 //                + "player_port int(5) NOT NULL, "
 //                + "PRIMARY KEY (ID)"
 //                + ")";
+        }
     }
 
     /**
@@ -209,16 +209,16 @@ public class DatabaseLogging {
 
     public void Disable() {
         StopTimer();
-        if(ConnectionLogger.getCachePusher().isScheduled()) {
+        if (ConnectionLogger.getCachePusher().isScheduled()) {
             ConnectionLogger.getCachePusher().StopTimer();
         }
-        if(ConnectionLogger.getConfigHandler().isAutoClean()) {
+        if (ConnectionLogger.getConfigHandler().isAutoClean()) {
             Clear();
         }
         if (ConnectionLogger.getConfigHandler().isLogPluginShutdown()) {
             ConnectionLogger.getCache().Add(new Log(Calendar.getInstance(), EventType.PLUGIN_SHUTDOWN, "", "", "", 0));
         }
-        if(!(AddFromCache(ConnectionLogger.getCache()))) {
+        if (!(AddFromCache(ConnectionLogger.getCache()))) {
             ConnectionLogger.getCache().DumpCacheToFile();
         }
         Disconnect();
