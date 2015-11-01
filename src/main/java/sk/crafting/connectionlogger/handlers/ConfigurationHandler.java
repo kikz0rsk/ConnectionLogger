@@ -34,7 +34,7 @@ public class ConfigurationHandler {
 
     public ConfigurationHandler() {
         file = new File(ConnectionLogger.getPlugin().getDataFolder(), "config.yml");
-
+        SaveDefaultConfig();
     }
 
     public void SaveDefaultConfig() {
@@ -45,6 +45,7 @@ public class ConfigurationHandler {
                 ConnectionLogger.getPluginLogger().severe("Failed to save default config file: " + ex.toString());
             }
         }
+        ReloadConfig();
     }
 
     public void ReloadConfig() {
@@ -69,6 +70,7 @@ public class ConfigurationHandler {
         } catch (IOException ex) {
             ConnectionLogger.getPluginLogger().severe("Failed to save configuration file: " + ex.toString());
         }
+        ReloadConfig();
     }
 
     public FileConfiguration getConf() {
