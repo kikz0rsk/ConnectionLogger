@@ -34,11 +34,11 @@ public class ConfigurationHandler {
 
     public ConfigurationHandler() {
         file = new File(ConnectionLogger.getPlugin().getDataFolder(), "config.yml");
-        file.mkdirs();
         SaveDefaultConfig();
     }
 
     public void SaveDefaultConfig() {
+        file.mkdirs();
         if (!file.exists()) {
             try {
                 Files.copy(getClass().getResourceAsStream("/config.yml"), file.toPath(), StandardCopyOption.REPLACE_EXISTING);

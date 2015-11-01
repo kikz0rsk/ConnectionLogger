@@ -47,6 +47,8 @@ public class ConnectionLogger extends JavaPlugin {
         ConnectionLogger.getConfigHandler().SaveDefaultConfig();
         ConnectionLogger.getConfigHandler().ReloadConfig();
         ConnectionLogger.getDefaultDatabaseHandler().Reload();
+        logger.info("Pool Size: " + configHandler.getDb_pools());
+        logger.info("Cache Size: " + configHandler.getCacheSize());
         if (!cache.isEmpty()) {
             logger.warning("Cache is not empty!");
             cache = new Cache(cache.getList());
