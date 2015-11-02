@@ -51,12 +51,17 @@ public final class ConfigurationHandler {
     }
 
     public void ReloadConfig() {
+        boolean saveConfig = false;
         conf = YamlConfiguration.loadConfiguration(file);
         logPlayerConnect = conf.getBoolean("logging.player-connect");
         logPlayerDisconnect = conf.getBoolean("logging.player-disconnect");
         logPluginShutdown = conf.getBoolean("logging.plugin-shutdown");
         autoClean = conf.getBoolean("auto-cleaning.server-shutdown");
         cacheSize = conf.getInt("cache.cache-size");
+        if(cacheSize < 2) {
+            conf.set("cache.cache-size", 2);
+            saveConfig = true;
+        }
         db_host = conf.getString("database.host");
         db_port = conf.getString("database.port");
         db_user = conf.getString("database.user");
@@ -66,6 +71,9 @@ public final class ConfigurationHandler {
         db_pools = conf.getInt("database.pools");
         if(db_pools < 1) {
             conf.set("database.pools", 1);
+            saveConfig = true;
+        }
+        if(saveConfig) {
             SaveConfig();
         }
     }

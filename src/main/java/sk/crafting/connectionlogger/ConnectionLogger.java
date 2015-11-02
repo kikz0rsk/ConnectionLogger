@@ -45,7 +45,6 @@ public class ConnectionLogger extends JavaPlugin {
 
     public void Reload() {
         ConnectionLogger.getConfigHandler().SaveDefaultConfig();
-        ConnectionLogger.getConfigHandler().ReloadConfig();
         ConnectionLogger.getDefaultDatabaseHandler().Reload();
         logger.log(Level.INFO, "Pool Size: {0}", configHandler.getDb_pools());
         logger.log(Level.INFO, "Cache Size: {0}", configHandler.getCacheSize());
