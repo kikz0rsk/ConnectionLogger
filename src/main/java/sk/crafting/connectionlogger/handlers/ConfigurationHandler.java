@@ -15,7 +15,7 @@ import sk.crafting.connectionlogger.ConnectionLogger;
  */
 public final class ConfigurationHandler {
 
-    private FileConfiguration conf;
+    private YamlConfiguration conf;
     private final File file;
 
     boolean logPlayerConnect,
@@ -51,7 +51,6 @@ public final class ConfigurationHandler {
     }
 
     public void ReloadConfig() {
-        boolean saveConfig = false;
         conf = YamlConfiguration.loadConfiguration(file);
         logPlayerConnect = conf.getBoolean("logging.player-connect");
         logPlayerDisconnect = conf.getBoolean("logging.player-disconnect");
@@ -59,8 +58,8 @@ public final class ConfigurationHandler {
         autoClean = conf.getBoolean("auto-cleaning.server-shutdown");
         cacheSize = conf.getInt("cache.cache-size");
         if(cacheSize < 2) {
-            conf.set("cache.cache-size", 2);
-            saveConfig = true;
+            ConnectionLogger.getPluginLogger().info("Cache size is smaller than required value. Setting to 2");
+            cacheSize = 2;
         }
         db_host = conf.getString("database.host");
         db_port = conf.getString("database.port");
@@ -70,11 +69,8 @@ public final class ConfigurationHandler {
         db_tableName = conf.getString("database.table-name");
         db_pools = conf.getInt("database.pools");
         if(db_pools < 1) {
-            conf.set("database.pools", 1);
-            saveConfig = true;
-        }
-        if(saveConfig) {
-            SaveConfig();
+            ConnectionLogger.getPluginLogger().info("Pool size is smaller than required value. Setting to 1");
+            db_pools = 1;
         }
     }
 
