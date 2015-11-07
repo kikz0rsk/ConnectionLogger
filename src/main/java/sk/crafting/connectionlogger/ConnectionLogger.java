@@ -1,5 +1,6 @@
 package sk.crafting.connectionlogger;
 
+import java.util.Calendar;
 import sk.crafting.connectionlogger.handlers.ConfigurationHandler;
 import sk.crafting.connectionlogger.handlers.DatabaseLogging;
 import java.util.logging.Level;
@@ -7,8 +8,10 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import sk.crafting.connectionlogger.cache.Cache;
+import sk.crafting.connectionlogger.cache.Log;
 import sk.crafting.connectionlogger.listeners.ConnectListener;
 import sk.crafting.connectionlogger.listeners.DisconnectListener;
+import sk.crafting.connectionlogger.listeners.EventType;
 import sk.crafting.connectionlogger.tasks.CachePusher;
 
 /**
@@ -43,6 +46,11 @@ public class ConnectionLogger extends JavaPlugin {
         }
     }
 
+    @Override
+    public void onDisable() {
+        Disable();
+    }
+
     public void Reload() {
         ConnectionLogger.getConfigHandler().SaveDefaultConfig();
         ConnectionLogger.getDefaultDatabaseHandler().Reload();
@@ -54,11 +62,18 @@ public class ConnectionLogger extends JavaPlugin {
         }
     }
 
-    @Override
-    public void onDisable() {
-        if (defaultDatabaseHandler != null) {
-            defaultDatabaseHandler.Disable();
+    public void Disable() {
+        cachePusher.StopTimer();
+        if (configHandler.isAutoClean()) {
+            defaultDatabaseHandler.Clear();
         }
+        if (configHandler.isLogPluginShutdown()) {
+            cache.Add(EventType.getPluginShutdownLog());
+        }
+        if (!(defaultDatabaseHandler.AddFromCache(cache))) {
+            cache.DumpCacheToFile();
+        }
+        defaultDatabaseHandler.Disable();
     }
 
     public static CachePusher getCachePusher() {

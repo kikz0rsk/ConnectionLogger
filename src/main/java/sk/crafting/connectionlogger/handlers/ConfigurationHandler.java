@@ -57,7 +57,7 @@ public final class ConfigurationHandler {
         logPluginShutdown = conf.getBoolean("logging.plugin-shutdown");
         autoClean = conf.getBoolean("auto-cleaning.server-shutdown");
         cacheSize = conf.getInt("cache.cache-size");
-        if(cacheSize < 2) {
+        if (cacheSize < 2) {
             ConnectionLogger.getPluginLogger().info("Cache size is smaller than required value. Setting to 2");
             cacheSize = 2;
         }
@@ -68,7 +68,7 @@ public final class ConfigurationHandler {
         db_name = conf.getString("database.database-name");
         db_tableName = conf.getString("database.table-name");
         db_pools = conf.getInt("database.pools");
-        if(db_pools < 1) {
+        if (db_pools < 1) {
             ConnectionLogger.getPluginLogger().info("Pool size is smaller than required value. Setting to 1");
             db_pools = 1;
         }
