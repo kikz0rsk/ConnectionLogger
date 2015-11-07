@@ -29,6 +29,7 @@ public class ConnectionLogger extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "warn");
         getCommand("cl").setExecutor(new Commands());
         ConnectionLogger.plugin = this;
         logger = plugin.getLogger();
@@ -75,6 +76,8 @@ public class ConnectionLogger extends JavaPlugin {
         }
         defaultDatabaseHandler.Disable();
     }
+    
+    
 
     public static CachePusher getCachePusher() {
         return cachePusher;
