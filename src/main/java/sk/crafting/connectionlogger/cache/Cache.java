@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+
 import org.bukkit.entity.Player;
+
 import sk.crafting.connectionlogger.ConnectionLogger;
 import sk.crafting.connectionlogger.handlers.CacheFileDumper;
-
 import sk.crafting.connectionlogger.listeners.EventType;
 
 /**

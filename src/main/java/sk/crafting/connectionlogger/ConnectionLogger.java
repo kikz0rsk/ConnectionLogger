@@ -1,18 +1,18 @@
 package sk.crafting.connectionlogger;
 
-import java.util.Calendar;
-import sk.crafting.connectionlogger.handlers.ConfigurationHandler;
-import sk.crafting.connectionlogger.handlers.DatabaseLogging;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import sk.crafting.connectionlogger.cache.Cache;
-import sk.crafting.connectionlogger.cache.Log;
 import sk.crafting.connectionlogger.listeners.ConnectListener;
 import sk.crafting.connectionlogger.listeners.DisconnectListener;
 import sk.crafting.connectionlogger.listeners.EventType;
 import sk.crafting.connectionlogger.tasks.CachePusher;
+import sk.crafting.connectionlogger.handlers.ConfigurationHandler;
+import sk.crafting.connectionlogger.handlers.DatabaseLogging;
 
 /**
  *

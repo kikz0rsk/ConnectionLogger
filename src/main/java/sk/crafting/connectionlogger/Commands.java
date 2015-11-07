@@ -2,6 +2,7 @@ package sk.crafting.connectionlogger;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

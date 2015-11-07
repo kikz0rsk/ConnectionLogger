@@ -1,6 +1,7 @@
 package sk.crafting.connectionlogger.cache;
 
 import java.util.Calendar;
+
 import sk.crafting.connectionlogger.listeners.EventType;
 
 /**

@@ -8,7 +8,9 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.logging.Level;
+
 import org.bukkit.ChatColor;
+
 import sk.crafting.connectionlogger.ConnectionLogger;
 import sk.crafting.connectionlogger.cache.Cache;
 import sk.crafting.connectionlogger.cache.Log;

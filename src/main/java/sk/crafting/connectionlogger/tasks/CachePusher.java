@@ -2,6 +2,7 @@ package sk.crafting.connectionlogger.tasks;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
 import sk.crafting.connectionlogger.ConnectionLogger;
 
 /**

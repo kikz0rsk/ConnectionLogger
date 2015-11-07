@@ -1,6 +1,7 @@
 package sk.crafting.connectionlogger.listeners;
 
 import java.util.Calendar;
+
 import sk.crafting.connectionlogger.cache.Log;
 
 /**
@@ -24,5 +25,5 @@ public enum EventType {
     public static Log getPluginShutdownLog() {
         return new Log(Calendar.getInstance(), PLUGIN_SHUTDOWN, "", "", "", 0);
     }
-    
+
 }
