@@ -15,7 +15,6 @@ import java.util.logging.Level;
 import sk.crafting.connectionlogger.ConnectionLogger;
 import sk.crafting.connectionlogger.cache.Cache;
 import sk.crafting.connectionlogger.cache.Log;
-import sk.crafting.connectionlogger.listeners.EventType;
 
 /**
  *
@@ -168,51 +167,18 @@ public class DatabaseLogging {
         }
     }
 
-    public void Disable() {
-        StopTimer();
-        if (ConnectionLogger.getCachePusher().isScheduled()) {
-            ConnectionLogger.getCachePusher().StopTimer();
-        }
-        if (ConnectionLogger.getConfigHandler().isAutoClean()) {
-            Clear();
-        }
-        if (ConnectionLogger.getConfigHandler().isLogPluginShutdown()) {
-            ConnectionLogger.getCache().Add(new Log(Calendar.getInstance(), EventType.PLUGIN_SHUTDOWN, "", "", "", 0));
-        }
-        if (!(AddFromCache(ConnectionLogger.getCache()))) {
-            ConnectionLogger.getCache().DumpCacheToFile();
-        }
-        Disconnect();
-        if (dataSource != null) {
-            dataSource.close();
-        }
-    }
-
-    public void Reload() {
-        StopTimer();
-        Disconnect();
-        Init();
-        TestConnection();
-        if (!ConnectionLogger.getCache().isEmpty()) {
-            AddFromCache(ConnectionLogger.getCache());
-        }
-    }
-
     public ArrayList<String> Get(Calendar max) {
         PreparedStatement statement = null;
         try {
             Connect();
             ResultSet result;
             statement = db_connection.prepareStatement(
-                    "SELECT * FROM " + ConnectionLogger.getConfigHandler().getDb_tableName() + " WHERE time>=?"
+                    "SELECT * FROM " + ConnectionLogger.getConfigHandler().getDb_tableName() + " WHERE time>=? AND deleted=0"
             );
             statement.setString(1, formatter.format(max.getTimeInMillis()));
             result = statement.executeQuery();
             ArrayList<String> output = new ArrayList<>();
             while (result.next()) {
-                if (result.getBoolean("deleted")) {
-                    continue;
-                }
                 String time = result.getString("time");
                 output.add(String.format("ID: %s | Time: %s | Type: %s | Player Name: %s | Player IP: %s | Player Hostname: %s | Player Port: %d", result.getString("ID"), time.substring(0, time.lastIndexOf(".")), result.getString("type"), result.getString("player_name"), result.getString("player_ip"), result.getString("player_hostname"), result.getInt("player_port")));
             }
@@ -231,7 +197,25 @@ public class DatabaseLogging {
         return null;
     }
 
-    private void StartTimer() {
+    public void Reload() {
+        StopTimer();
+        Disconnect();
+        Init();
+        TestConnection();
+        if (!ConnectionLogger.getCache().isEmpty()) {
+            AddFromCache(ConnectionLogger.getCache());
+        }
+    }
+
+    public void Disable() {
+        StopTimer();
+        Disconnect();
+        if (dataSource != null) {
+            dataSource.close();
+        }
+    }
+
+    public void StartTimer() {
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -241,7 +225,7 @@ public class DatabaseLogging {
         }, 5 * 60 * 1000);
     }
 
-    private void StopTimer() {
+    public void StopTimer() {
         if (timer != null) {
             timer.cancel();
         }

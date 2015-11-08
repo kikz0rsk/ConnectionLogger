@@ -1,15 +1,18 @@
 package sk.crafting.connectionlogger;
 
-import sk.crafting.connectionlogger.handlers.ConfigurationHandler;
-import sk.crafting.connectionlogger.handlers.DatabaseLogging;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import sk.crafting.connectionlogger.cache.Cache;
 import sk.crafting.connectionlogger.listeners.ConnectListener;
 import sk.crafting.connectionlogger.listeners.DisconnectListener;
+import sk.crafting.connectionlogger.listeners.EventType;
 import sk.crafting.connectionlogger.tasks.CachePusher;
+import sk.crafting.connectionlogger.handlers.ConfigurationHandler;
+import sk.crafting.connectionlogger.handlers.DatabaseLogging;
 
 /**
  *
@@ -26,6 +29,7 @@ public class ConnectionLogger extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "warn");
         getCommand("cl").setExecutor(new Commands());
         ConnectionLogger.plugin = this;
         logger = plugin.getLogger();
@@ -43,10 +47,14 @@ public class ConnectionLogger extends JavaPlugin {
         }
     }
 
+    @Override
+    public void onDisable() {
+        Disable();
+    }
+
     public void Reload() {
-        ConnectionLogger.getConfigHandler().SaveDefaultConfig();
-        ConnectionLogger.getConfigHandler().ReloadConfig();
-        ConnectionLogger.getDefaultDatabaseHandler().Reload();
+        configHandler.SaveDefaultConfig();
+        defaultDatabaseHandler.Reload();
         logger.log(Level.INFO, "Pool Size: {0}", configHandler.getDb_pools());
         logger.log(Level.INFO, "Cache Size: {0}", configHandler.getCacheSize());
         if (!cache.isEmpty()) {
@@ -55,12 +63,21 @@ public class ConnectionLogger extends JavaPlugin {
         }
     }
 
-    @Override
-    public void onDisable() {
-        if (defaultDatabaseHandler != null) {
-            defaultDatabaseHandler.Disable();
+    public void Disable() {
+        cachePusher.StopTimer();
+        if (configHandler.isAutoClean()) {
+            defaultDatabaseHandler.Clear();
         }
+        if (configHandler.isLogPluginShutdown()) {
+            cache.Add(EventType.getPluginShutdownLog());
+        }
+        if (!(defaultDatabaseHandler.AddFromCache(cache))) {
+            cache.DumpCacheToFile();
+        }
+        defaultDatabaseHandler.Disable();
     }
+    
+    
 
     public static CachePusher getCachePusher() {
         return cachePusher;
