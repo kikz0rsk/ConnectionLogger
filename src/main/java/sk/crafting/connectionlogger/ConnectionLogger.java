@@ -29,7 +29,7 @@ public class ConnectionLogger extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "warn");
+        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "warn");
         getCommand("cl").setExecutor(new Commands());
         ConnectionLogger.plugin = this;
         logger = plugin.getLogger();
@@ -53,8 +53,8 @@ public class ConnectionLogger extends JavaPlugin {
     }
 
     public void Reload() {
-        ConnectionLogger.getConfigHandler().SaveDefaultConfig();
-        ConnectionLogger.getDefaultDatabaseHandler().Reload();
+        configHandler.SaveDefaultConfig();
+        defaultDatabaseHandler.Reload();
         logger.log(Level.INFO, "Pool Size: {0}", configHandler.getDb_pools());
         logger.log(Level.INFO, "Cache Size: {0}", configHandler.getCacheSize());
         if (!cache.isEmpty()) {
