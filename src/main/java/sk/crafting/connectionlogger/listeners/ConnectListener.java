@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import sk.crafting.connectionlogger.ConnectionLogger;
-import sk.crafting.connectionlogger.tasks.AsyncAddToDatabase;
+import sk.crafting.connectionlogger.tasks.AsyncAddToCache;
 
 /**
  *
@@ -18,7 +18,7 @@ public class ConnectListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void OnPlayerConnect(PlayerJoinEvent event) {
-        new AsyncAddToDatabase(EventType.CONNECT, Calendar.getInstance(), event.getPlayer()).runTaskAsynchronously(ConnectionLogger.getPlugin());
+        new AsyncAddToCache(EventType.CONNECT, Calendar.getInstance(), event.getPlayer()).runTaskAsynchronously(ConnectionLogger.getPlugin());
     }
 
 }

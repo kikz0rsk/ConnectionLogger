@@ -1,5 +1,6 @@
 package sk.crafting.connectionlogger;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -7,6 +8,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import sk.crafting.connectionlogger.cache.Log;
+import sk.crafting.connectionlogger.utils.Utils;
 
 /**
  *
@@ -28,7 +31,7 @@ public class Commands implements CommandExecutor {
             if (args.length >= 2) {
                 try {
                     hours = Integer.parseInt(args[1]);
-                    if (hours > 0) {
+                    if (hours > 0) { 
                         hours = -hours;
                     }
                 } catch (NumberFormatException nfe) {
@@ -37,7 +40,7 @@ public class Commands implements CommandExecutor {
                 }
             }
             calendar.add(Calendar.HOUR_OF_DAY, hours);
-            ArrayList<String> result = ConnectionLogger.getDefaultDatabaseHandler().Get(calendar);
+            ArrayList<String> result = ConnectionLogger.getDefaultDatabaseHandler().GetLogs(calendar);
             sender.sendMessage(result.toArray(new String[result.size()]));
             return true;
         }
@@ -57,8 +60,22 @@ public class Commands implements CommandExecutor {
                 return true;
             }
             sender.sendMessage(ChatColor.GREEN + "Dumping cache...");
-            ConnectionLogger.getDefaultDatabaseHandler().AddFromCache(ConnectionLogger.getCache());
+            ConnectionLogger.getCache().SendCache(true);
             return true;
+        }
+        if(args[0].equalsIgnoreCase("printcache")) {
+            SimpleDateFormat formatter = new SimpleDateFormat(Utils.getDefaultTimeFormat());
+            for(Log log : ConnectionLogger.getCache().getList()) {
+                sender.sendMessage(String.format("Time: %s | Type: %s | Player Name: %s | Player IP: %s | Player Hostname: %s | Player Port: %d",
+                        //log.getTime().substring(0, log.getTime().lastIndexOf(".")),
+                        formatter.format(log.getTime().getTimeInMillis()),
+                        log.getType().getMessage(),
+                        log.getPlayerName(),
+                        log.getPlayerIp(),
+                        log.getPlayerHostname(),
+                        log.getPlayerPort()
+                ));
+            }
         }
         return false;
     }

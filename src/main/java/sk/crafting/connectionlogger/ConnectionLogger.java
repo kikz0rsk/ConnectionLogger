@@ -9,10 +9,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import sk.crafting.connectionlogger.cache.Cache;
 import sk.crafting.connectionlogger.listeners.ConnectListener;
 import sk.crafting.connectionlogger.listeners.DisconnectListener;
-import sk.crafting.connectionlogger.listeners.EventType;
-import sk.crafting.connectionlogger.tasks.CachePusher;
 import sk.crafting.connectionlogger.handlers.ConfigurationHandler;
 import sk.crafting.connectionlogger.handlers.DatabaseLogging;
+import sk.crafting.connectionlogger.utils.Utils;
 
 /**
  *
@@ -25,7 +24,6 @@ public class ConnectionLogger extends JavaPlugin {
     private static Logger logger;
     private static ConfigurationHandler configHandler;
     private static Cache cache;
-    private static CachePusher cachePusher;
 
     @Override
     public void onEnable() {
@@ -36,7 +34,7 @@ public class ConnectionLogger extends JavaPlugin {
         configHandler = new ConfigurationHandler();
         cache = new Cache(configHandler.getCacheSize());
         defaultDatabaseHandler = new DatabaseLogging();
-        cachePusher = new CachePusher();
+        defaultDatabaseHandler.TestConnection();
         logger.log(Level.INFO, "Pool Size: {0}", configHandler.getDb_pools());
         logger.log(Level.INFO, "Cache Size: {0}", configHandler.getCacheSize());
         if (configHandler.isLogPlayerConnect()) {
@@ -63,24 +61,16 @@ public class ConnectionLogger extends JavaPlugin {
         }
     }
 
-    public void Disable() {
-        cachePusher.StopTimer();
+    private void Disable() {
+        cache.StopTimer();
         if (configHandler.isAutoClean()) {
             defaultDatabaseHandler.Clear();
         }
         if (configHandler.isLogPluginShutdown()) {
-            cache.Add(EventType.getPluginShutdownLog());
+            cache.Add(Utils.getPluginShutdownLog());
         }
-        if (!(defaultDatabaseHandler.AddFromCache(cache))) {
-            cache.DumpCacheToFile();
-        }
+        cache.SendCache(true);
         defaultDatabaseHandler.Disable();
-    }
-    
-    
-
-    public static CachePusher getCachePusher() {
-        return cachePusher;
     }
 
     public static ConnectionLogger getPlugin() {

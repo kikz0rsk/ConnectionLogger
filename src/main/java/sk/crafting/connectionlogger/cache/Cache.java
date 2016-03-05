@@ -8,7 +8,6 @@ import java.util.List;
 import org.bukkit.entity.Player;
 
 import sk.crafting.connectionlogger.ConnectionLogger;
-import sk.crafting.connectionlogger.handlers.CacheFileDumper;
 import sk.crafting.connectionlogger.listeners.EventType;
 
 /**
@@ -18,7 +17,8 @@ import sk.crafting.connectionlogger.listeners.EventType;
 public class Cache {
 
     private final List<Log> cache;
-    private CacheFileDumper dumper;
+    private final CacheFileDumper dumper = new CacheFileDumper();
+    private final CacheSender cacheSender = new CacheSender(this);
 
     public Cache(int size) {
         cache = Collections.synchronizedList(new ArrayList<Log>(size));
@@ -45,10 +45,15 @@ public class Cache {
     }
 
     public void DumpCacheToFile() {
-        if (dumper == null) {
-            dumper = new CacheFileDumper();
+        synchronized(cache) {
+            dumper.Dump(this);
         }
-        dumper.Dump(this);
+    }
+    
+    public void SendCache(boolean useFallback) {
+        if(!(ConnectionLogger.getDefaultDatabaseHandler().AddFromCache(this)) && useFallback) {
+            DumpCacheToFile();
+        }
     }
 
     public int getSize() {
@@ -80,5 +85,19 @@ public class Cache {
             return cache;
         }
     }
+    
+    public void StartTimer() {
+        cacheSender.StartTimer();
+    }
+    
+    public void StopTimer() {
+        cacheSender.StopTimer();
+    }
+    
+    public boolean isScheduled() {
+        return cacheSender.isScheduled();
+    }
+
+    
 
 }

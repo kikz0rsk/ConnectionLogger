@@ -1,4 +1,4 @@
-package sk.crafting.connectionlogger.handlers;
+package sk.crafting.connectionlogger.cache;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,8 +12,7 @@ import java.util.logging.Level;
 import org.bukkit.ChatColor;
 
 import sk.crafting.connectionlogger.ConnectionLogger;
-import sk.crafting.connectionlogger.cache.Cache;
-import sk.crafting.connectionlogger.cache.Log;
+import sk.crafting.connectionlogger.utils.Utils;
 
 /**
  *
@@ -22,7 +21,7 @@ import sk.crafting.connectionlogger.cache.Log;
 public class CacheFileDumper {
 
     private final File file;
-    private final SimpleDateFormat formatter = new SimpleDateFormat(DatabaseLogging.getTimeFormat());
+    private final SimpleDateFormat formatter = new SimpleDateFormat(Utils.getDatabaseTimeFormat());
 
     public CacheFileDumper() {
         file = new File(ConnectionLogger.getPlugin().getDataFolder(), "cache_dump.log");
@@ -46,6 +45,7 @@ public class CacheFileDumper {
                 out.println("=========================================================================");
                 out.println();
             }
+            cache.Clear();
             ConnectionLogger.getPluginLogger().log(Level.INFO, "{0}Successfully dumped to file", ChatColor.GREEN);
         } catch (IOException ex) {
             ConnectionLogger.getPluginLogger().log(Level.SEVERE, "IOException while dumping cache to file: {0}", ex.toString());

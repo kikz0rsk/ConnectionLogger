@@ -12,13 +12,13 @@ import sk.crafting.connectionlogger.listeners.EventType;
  *
  * @author Red-Eye~kikz0r_sk
  */
-public class AsyncAddToDatabase extends BukkitRunnable {
+public class AsyncAddToCache extends BukkitRunnable {
 
     private final EventType type;
     private final Calendar time;
     private final Player player;
 
-    public AsyncAddToDatabase(EventType type, Calendar time, Player player) {
+    public AsyncAddToCache(EventType type, Calendar time, Player player) {
         this.type = type;
         this.time = time;
         this.player = player;
@@ -27,8 +27,8 @@ public class AsyncAddToDatabase extends BukkitRunnable {
     @Override
     public void run() {
         ConnectionLogger.getCache().Add(time, type, player);
-        if (!(ConnectionLogger.getCache().isEmpty() || ConnectionLogger.getCachePusher().isScheduled())) {
-            ConnectionLogger.getCachePusher().StartTimer();
+        if (!(ConnectionLogger.getCache().isEmpty() || ConnectionLogger.getCache().isScheduled())) {
+            ConnectionLogger.getCache().StartTimer();
         }
     }
 

@@ -1,5 +1,6 @@
 package sk.crafting.connectionlogger.handlers;
 
+import com.sun.nio.sctp.SendFailedNotification;
 import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.Connection;
@@ -15,6 +16,7 @@ import java.util.logging.Level;
 import sk.crafting.connectionlogger.ConnectionLogger;
 import sk.crafting.connectionlogger.cache.Cache;
 import sk.crafting.connectionlogger.cache.Log;
+import sk.crafting.connectionlogger.utils.Utils;
 
 /**
  *
@@ -22,10 +24,8 @@ import sk.crafting.connectionlogger.cache.Log;
  */
 public class DatabaseLogging {
 
-    static final String timeFormat = "yyyy-MM-dd HH:mm:ss";
-
     static final Object lock = new Object();
-    final SimpleDateFormat formatter = new SimpleDateFormat(timeFormat);
+    final SimpleDateFormat formatter = new SimpleDateFormat(Utils.getDatabaseTimeFormat());
 
     Connection db_connection;
     static HikariDataSource dataSource;
@@ -34,7 +34,6 @@ public class DatabaseLogging {
 
     public DatabaseLogging() {
         Init();
-        TestConnection();
     }
 
     private static void Init() {
@@ -98,7 +97,7 @@ public class DatabaseLogging {
                     statement = db_connection.prepareStatement(
                             "INSERT INTO " + ConnectionLogger.getConfigHandler().getDb_tableName() + " (time, type, player_name, player_ip, player_hostname, player_port, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)"
                     );
-                    statement.setString(1, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(log.getTime().getTimeInMillis()));
+                    statement.setString(1, formatter.format(log.getTime().getTimeInMillis()));
                     statement.setString(2, log.getType().getMessage());
                     statement.setString(3, log.getPlayerName());
                     statement.setString(4, log.getPlayerIp());
@@ -167,7 +166,7 @@ public class DatabaseLogging {
         }
     }
 
-    public ArrayList<String> Get(Calendar max) {
+    public ArrayList<String> GetLogs(Calendar max) {
         PreparedStatement statement = null;
         try {
             Connect();
@@ -180,7 +179,16 @@ public class DatabaseLogging {
             ArrayList<String> output = new ArrayList<>();
             while (result.next()) {
                 String time = result.getString("time");
-                output.add(String.format("ID: %s | Time: %s | Type: %s | Player Name: %s | Player IP: %s | Player Hostname: %s | Player Port: %d", result.getString("ID"), time.substring(0, time.lastIndexOf(".")), result.getString("type"), result.getString("player_name"), result.getString("player_ip"), result.getString("player_hostname"), result.getInt("player_port")));
+                output.add(String.format(
+                        "ID: %s | Time: %s | Type: %s | Player Name: %s | Player IP: %s | Player Hostname: %s | Player Port: %d",
+                        result.getString("ID"),
+                        time.substring(0, time.lastIndexOf(".")),
+                        result.getString("type"),
+                        result.getString("player_name"),
+                        result.getString("player_ip"),
+                        result.getString("player_hostname"),
+                        result.getInt("player_port")
+                ));
             }
             return output;
         } catch (Exception ex) {
@@ -203,7 +211,7 @@ public class DatabaseLogging {
         Init();
         TestConnection();
         if (!ConnectionLogger.getCache().isEmpty()) {
-            AddFromCache(ConnectionLogger.getCache());
+            ConnectionLogger.getCache().SendCache(false);
         }
     }
 
@@ -229,10 +237,6 @@ public class DatabaseLogging {
         if (timer != null) {
             timer.cancel();
         }
-    }
-
-    public static String getTimeFormat() {
-        return timeFormat;
     }
 
 }

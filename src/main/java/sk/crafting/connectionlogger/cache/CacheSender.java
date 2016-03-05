@@ -1,18 +1,23 @@
-package sk.crafting.connectionlogger.tasks;
+package sk.crafting.connectionlogger.cache;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
 import sk.crafting.connectionlogger.ConnectionLogger;
 
 /**
  *
  * @author Red-Eye~kikz0r_sk
  */
-public class CachePusher {
+public class CacheSender {
 
-    private Timer timer;
-    private boolean scheduled = false;
+    Timer timer;
+    boolean scheduled = false;
+    Cache cache;
+    private final Object lock = new Object();
+    
+    public CacheSender(Cache cache) {
+        this.cache = cache;
+    }
 
     public void StartTimer() {
         timer = new Timer();
@@ -20,7 +25,11 @@ public class CachePusher {
             @Override
             public void run() {
                 if (ConnectionLogger.getDefaultDatabaseHandler() != null) {
-                    ConnectionLogger.getDefaultDatabaseHandler().AddFromCache(ConnectionLogger.getCache());
+                    ConnectionLogger.getPluginLogger().info("Sending cache...");
+                    cache.SendCache(false);
+                }
+                synchronized(lock) {
+                    scheduled = false;
                 }
             }
         }, 30 * 1000);
@@ -35,7 +44,9 @@ public class CachePusher {
     }
 
     public boolean isScheduled() {
-        return scheduled;
+        synchronized(lock) {
+            return scheduled;
+        }
     }
-
+    
 }
