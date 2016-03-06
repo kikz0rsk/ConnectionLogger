@@ -8,43 +8,59 @@ import sk.crafting.connectionlogger.ConnectionLogger;
  *
  * @author Red-Eye~kikz0r_sk
  */
-public class CacheSender {
-
+public class CacheSender
+{
+    
     Timer timer;
     boolean scheduled = false;
     Cache cache;
     private final Object lock = new Object();
     
-    public CacheSender(Cache cache) {
+    public CacheSender( Cache cache )
+    {
         this.cache = cache;
     }
-
-    public void StartTimer() {
+    
+    public void StartTimer()
+    {
         timer = new Timer();
-        timer.schedule(new TimerTask() {
+        timer.schedule( new TimerTask()
+        {
             @Override
-            public void run() {
-                if (ConnectionLogger.getDefaultDatabaseHandler() != null) {
-                    ConnectionLogger.getPluginLogger().info("Sending cache...");
-                    cache.SendCache(false);
+            public void run()
+            {
+                if ( ConnectionLogger.getDefaultDatabaseHandler() != null )
+                {
+                    ConnectionLogger.getPluginLogger().info( "Sending cache..." );
+                    cache.SendCache( false );
                 }
-                synchronized(lock) {
-                    scheduled = false;
-                }
+                SetScheduled( false );
             }
-        }, 30 * 1000);
-        scheduled = true;
+        }, ConnectionLogger.getConfigHandler().getDelayBeforeSend() );
+        SetScheduled( true );
     }
-
-    public void StopTimer() {
-        if (timer != null) {
-            timer.cancel();
-            scheduled = false;
+    
+    private void SetScheduled( boolean state )
+    {
+        synchronized ( lock )
+        {
+            scheduled = state;
         }
     }
-
-    public boolean isScheduled() {
-        synchronized(lock) {
+    
+    public void StopTimer()
+    {
+        if ( timer != null )
+        {
+            timer.cancel();
+            SetScheduled( false );
+        }
+    }
+    
+    public boolean isScheduled()
+    {
+        synchronized ( lock )
+        {
             return scheduled;
         }
     }

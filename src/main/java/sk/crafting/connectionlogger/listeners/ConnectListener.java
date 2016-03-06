@@ -14,11 +14,13 @@ import sk.crafting.connectionlogger.tasks.AsyncAddToCache;
  *
  * @author Red-Eye~kikz0r_sk
  */
-public class ConnectListener implements Listener {
+public class ConnectListener implements Listener
+{
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void OnPlayerConnect(PlayerJoinEvent event) {
-        new AsyncAddToCache(EventType.CONNECT, Calendar.getInstance(), event.getPlayer()).runTaskAsynchronously(ConnectionLogger.getPlugin());
+    @EventHandler( priority = EventPriority.MONITOR )
+    public void OnPlayerConnect( PlayerJoinEvent event )
+    {
+        new AsyncAddToCache( EventType.CONNECT, Calendar.getInstance(), event.getPlayer() ).runTaskAsynchronously( ConnectionLogger.getPlugin() );
     }
 
 }

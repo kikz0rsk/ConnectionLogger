@@ -14,11 +14,13 @@ import sk.crafting.connectionlogger.tasks.AsyncAddToCache;
  *
  * @author Red-Eye~kikz0r_sk
  */
-public class DisconnectListener implements Listener {
+public class DisconnectListener implements Listener
+{
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void OnPlayerDisconnect(PlayerQuitEvent event) {
-        new AsyncAddToCache(EventType.DISCONNECT, Calendar.getInstance(), event.getPlayer()).runTaskAsynchronously(ConnectionLogger.getPlugin());
+    @EventHandler( priority = EventPriority.MONITOR )
+    public void OnPlayerDisconnect( PlayerQuitEvent event )
+    {
+        new AsyncAddToCache( EventType.DISCONNECT, Calendar.getInstance(), event.getPlayer() ).runTaskAsynchronously( ConnectionLogger.getPlugin() );
     }
 
 }

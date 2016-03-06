@@ -8,7 +8,8 @@ import sk.crafting.connectionlogger.listeners.EventType;
  *
  * @author Red-Eye~kikz0r_sk
  */
-public class Log {
+public class Log
+{
 
     private final Calendar time;
     private final EventType type;
@@ -17,7 +18,8 @@ public class Log {
     private final String playerHostname;
     private final int playerPort;
 
-    public Log(Calendar time, EventType type, String playerName, String playerIp, String playerHostname, int playerPort) {
+    public Log( Calendar time, EventType type, String playerName, String playerIp, String playerHostname, int playerPort )
+    {
         this.time = time;
         this.type = type;
         this.playerName = playerName;
@@ -26,27 +28,33 @@ public class Log {
         this.playerPort = playerPort;
     }
 
-    public Calendar getTime() {
+    public Calendar getTime()
+    {
         return time;
     }
 
-    public EventType getType() {
+    public EventType getType()
+    {
         return type;
     }
 
-    public String getPlayerName() {
+    public String getPlayerName()
+    {
         return playerName;
     }
 
-    public String getPlayerIp() {
+    public String getPlayerIp()
+    {
         return playerIp;
     }
 
-    public String getPlayerHostname() {
+    public String getPlayerHostname()
+    {
         return playerHostname;
     }
 
-    public int getPlayerPort() {
+    public int getPlayerPort()
+    {
         return playerPort;
     }
 
