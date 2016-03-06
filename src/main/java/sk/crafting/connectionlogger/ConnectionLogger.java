@@ -63,7 +63,6 @@ public class ConnectionLogger extends JavaPlugin
         logger.log( Level.INFO, "Cache Size: {0}", configHandler.getCacheSize() );
         if ( !cache.isEmpty() )
         {
-            logger.warning( "Cache is not empty!" );
             cache = new Cache( cache.getList() );
         }
     }
