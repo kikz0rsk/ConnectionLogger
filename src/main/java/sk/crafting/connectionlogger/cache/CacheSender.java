@@ -14,6 +14,7 @@ public class CacheSender
     Timer timer;
     boolean scheduled = false;
     Cache cache;
+    
     private final Object lock = new Object();
     
     public CacheSender( Cache cache )

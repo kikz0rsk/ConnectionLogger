@@ -5,12 +5,15 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import sk.crafting.connectionlogger.ConnectionLogger;
 import sk.crafting.connectionlogger.cache.Cache;
@@ -125,16 +128,7 @@ public class DatabaseLogging
             return false;
         } finally
         {
-            if ( statement != null )
-            {
-                try
-                {
-                    statement.close();
-                } catch ( Exception ex )
-                {
-                    ConnectionLogger.getPluginLogger().log( Level.WARNING, "Could not close database statement: {0}", ex.toString() );
-                }
-            }
+            CloseStatement( statement );
         }
     }
 
@@ -167,16 +161,7 @@ public class DatabaseLogging
             ConnectionLogger.getPluginLogger().severe( "Failed to send SQL: " + ex.toString() );
         } finally
         {
-            if ( statement != null )
-            {
-                try
-                {
-                    statement.close();
-                } catch ( Exception ex )
-                {
-                    ConnectionLogger.getPluginLogger().warning( "Could not close database statement: " + ex.toString() );
-                }
-            }
+            CloseStatement( statement );
         }
     }
 
@@ -228,18 +213,23 @@ public class DatabaseLogging
             ConnectionLogger.getPluginLogger().severe( "Failed to send SQL: " + ex.toString() );
         } finally
         {
-            if ( statement != null )
-            {
-                try
-                {
-                    statement.close();
-                } catch ( Exception ex )
-                {
-                    ConnectionLogger.getPluginLogger().warning( "Could not close database statement: " + ex.toString() );
-                }
-            }
+            CloseStatement( statement );
         }
         return null;
+    }
+    
+    private void CloseStatement(Statement statement)
+    {
+        if(statement != null)
+        {
+            try
+            {
+                statement.close();
+            } catch ( SQLException ex )
+            {
+                ConnectionLogger.getPluginLogger().warning( "Failed to close database statement: " + ex.toString() );
+            }
+        }
     }
 
     public void Reload()
