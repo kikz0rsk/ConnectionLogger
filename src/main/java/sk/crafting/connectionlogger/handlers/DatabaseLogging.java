@@ -13,7 +13,6 @@ import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import sk.crafting.connectionlogger.ConnectionLogger;
 import sk.crafting.connectionlogger.cache.Cache;
@@ -27,11 +26,11 @@ import sk.crafting.connectionlogger.utils.Utils;
 public class DatabaseLogging
 {
 
-    static final Object lock = new Object();
-    final SimpleDateFormat formatter = new SimpleDateFormat( Utils.getDatabaseTimeFormat() );
+    private static final Object LOCK = new Object();
+    private final SimpleDateFormat formatter = new SimpleDateFormat( Utils.getDatabaseTimeFormat() );
 
-    Connection db_connection;
-    static HikariDataSource dataSource;
+    private Connection db_connection;
+    private HikariDataSource dataSource;
 
     private Timer timer;
 
@@ -40,35 +39,32 @@ public class DatabaseLogging
         Init();
     }
 
-    private static void Init()
+    private void Init()
     {
-        synchronized ( lock )
-        {
-            dataSource = new HikariDataSource();
-            dataSource.setJdbcUrl( String.format(
-                    "jdbc:mysql://%s:%s/%s",
-                    ConnectionLogger.getConfigHandler().getDb_host(),
-                    ConnectionLogger.getConfigHandler().getDb_port(),
-                    ConnectionLogger.getConfigHandler().getDb_name()
-            ) );
-            dataSource.setUsername( ConnectionLogger.getConfigHandler().getDb_user() );
-            dataSource.setPassword( ConnectionLogger.getConfigHandler().getDb_pass() );
-            dataSource.setMaximumPoolSize( ConnectionLogger.getConfigHandler().getDb_pools() );
-            dataSource.setConnectionInitSql(
-                    "CREATE TABLE IF NOT EXISTS " + ConnectionLogger.getConfigHandler().getDb_tableName()
-                    + "("
-                    + "ID int NOT NULL AUTO_INCREMENT, "
-                    + "time datetime NOT NULL, "
-                    + "type varchar(10) NOT NULL, "
-                    + "player_name varchar(50) NOT NULL, "
-                    + "player_ip varchar(50) NOT NULL, "
-                    + "player_hostname varchar(75) NOT NULL, "
-                    + "player_port int(5) NOT NULL, "
-                    + "deleted tinyint(1) NOT NULL, "
-                    + "PRIMARY KEY (ID)"
-                    + ")"
-            );
-        }
+        dataSource = new HikariDataSource();
+        dataSource.setJdbcUrl( String.format(
+                "jdbc:mysql://%s:%s/%s",
+                ConnectionLogger.getConfigHandler().getDb_host(),
+                ConnectionLogger.getConfigHandler().getDb_port(),
+                ConnectionLogger.getConfigHandler().getDb_name()
+        ) );
+        dataSource.setUsername( ConnectionLogger.getConfigHandler().getDb_user() );
+        dataSource.setPassword( ConnectionLogger.getConfigHandler().getDb_pass() );
+        dataSource.setMaximumPoolSize( ConnectionLogger.getConfigHandler().getDb_pools() );
+        dataSource.setConnectionInitSql(
+                "CREATE TABLE IF NOT EXISTS " + ConnectionLogger.getConfigHandler().getDb_tableName()
+                + "("
+                + "ID int NOT NULL AUTO_INCREMENT, "
+                + "time datetime NOT NULL, "
+                + "type varchar(10) NOT NULL, "
+                + "player_name varchar(50) NOT NULL, "
+                + "player_ip varchar(50) NOT NULL, "
+                + "player_hostname varchar(75) NOT NULL, "
+                + "player_port int(5) NOT NULL, "
+                + "deleted tinyint(1) NOT NULL, "
+                + "PRIMARY KEY (ID)"
+                + ")"
+        );
     }
 
     private void Connect() throws Exception
@@ -103,22 +99,19 @@ public class DatabaseLogging
         try
         {
             Connect();
-            synchronized ( lock )
+            for ( Log log : cache.toArray() )
             {
-                for ( Log log : cache.toArray() )
-                {
-                    statement = db_connection.prepareStatement(
-                            "INSERT INTO " + ConnectionLogger.getConfigHandler().getDb_tableName() + " (time, type, player_name, player_ip, player_hostname, player_port, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)"
-                    );
-                    statement.setString( 1, formatter.format( log.getTime().getTimeInMillis() ) );
-                    statement.setString( 2, log.getType().getMessage() );
-                    statement.setString( 3, log.getPlayerName() );
-                    statement.setString( 4, log.getPlayerIp() );
-                    statement.setString( 5, log.getPlayerHostname() );
-                    statement.setInt( 6, log.getPlayerPort() );
-                    statement.setBoolean( 7, false );
-                    statement.executeUpdate();
-                }
+                statement = db_connection.prepareStatement(
+                        "INSERT INTO " + ConnectionLogger.getConfigHandler().getDb_tableName() + " (time, type, player_name, player_ip, player_hostname, player_port, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)"
+                );
+                statement.setString( 1, formatter.format( log.getTime().getTimeInMillis() ) );
+                statement.setString( 2, log.getType().getMessage() );
+                statement.setString( 3, log.getPlayerName() );
+                statement.setString( 4, log.getPlayerIp() );
+                statement.setString( 5, log.getPlayerHostname() );
+                statement.setInt( 6, log.getPlayerPort() );
+                statement.setBoolean( 7, false );
+                statement.executeUpdate();
             }
             cache.Clear();
             return true;
@@ -217,10 +210,10 @@ public class DatabaseLogging
         }
         return null;
     }
-    
-    private void CloseStatement(Statement statement)
+
+    private void CloseStatement( Statement statement )
     {
-        if(statement != null)
+        if ( statement != null )
         {
             try
             {

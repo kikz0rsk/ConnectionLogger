@@ -36,11 +36,7 @@ public class Cache
         {
             if ( cache.size() >= ConnectionLogger.getConfigHandler().getCacheSize() )
             {
-                if ( !( ConnectionLogger.getDefaultDatabaseHandler().AddFromCache( this ) ) )
-                {
-                    ConnectionLogger.getPluginLogger().warning( "Failed to dump cache to database, dumping to file..." );
-                    DumpCacheToFile();
-                }
+                SendCache( true );
             }
             cache.add( log );
         }
