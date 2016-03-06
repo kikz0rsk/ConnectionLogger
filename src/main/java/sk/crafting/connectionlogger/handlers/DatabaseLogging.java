@@ -1,6 +1,5 @@
 package sk.crafting.connectionlogger.handlers;
 
-import com.sun.nio.sctp.SendFailedNotification;
 import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.Connection;

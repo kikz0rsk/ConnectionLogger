@@ -2,7 +2,6 @@ package sk.crafting.connectionlogger.cache;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.entity.Player;
@@ -23,12 +22,12 @@ public class Cache
 
     public Cache( int size )
     {
-        cache = Collections.synchronizedList( new ArrayList<Log>( size ) );
+        cache = new ArrayList<>( size );
     }
 
     public Cache( List<? extends Log> collection )
     {
-        cache = Collections.synchronizedList( new ArrayList<>( collection ) );
+        cache = new ArrayList<>( collection );
     }
 
     public void Add( Log log )
