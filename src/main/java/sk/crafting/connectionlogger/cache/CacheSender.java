@@ -15,7 +15,7 @@ public class CacheSender
     boolean scheduled = false;
     Cache cache;
     
-    private final Object lock = new Object();
+    private final Object LOCK = new Object();
     
     public CacheSender( Cache cache )
     {
@@ -43,7 +43,7 @@ public class CacheSender
     
     private void SetScheduled( boolean state )
     {
-        synchronized ( lock )
+        synchronized ( LOCK )
         {
             scheduled = state;
         }
@@ -60,7 +60,7 @@ public class CacheSender
     
     public boolean isScheduled()
     {
-        synchronized ( lock )
+        synchronized ( LOCK )
         {
             return scheduled;
         }

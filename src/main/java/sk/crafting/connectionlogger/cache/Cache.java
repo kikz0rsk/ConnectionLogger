@@ -60,6 +60,7 @@ public class Cache
         if ( !( ConnectionLogger.getDefaultDatabaseHandler().AddFromCache( this ) ) && useFallback )
         {
             DumpCacheToFile();
+            StopTimer();
         }
     }
 
