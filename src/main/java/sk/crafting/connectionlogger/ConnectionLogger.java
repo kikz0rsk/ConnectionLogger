@@ -20,7 +20,7 @@ import sk.crafting.connectionlogger.utils.Utils;
 public class ConnectionLogger extends JavaPlugin
 {
 
-    private static DatabaseLogging defaultDatabaseHandler;
+    private static DatabaseLogging databaseHandler;
     private static ConnectionLogger plugin;
     private static Logger logger;
     private static ConfigurationHandler configHandler;
@@ -35,8 +35,8 @@ public class ConnectionLogger extends JavaPlugin
         logger = plugin.getLogger();
         configHandler = new ConfigurationHandler();
         cache = new Cache( configHandler.getCacheSize() );
-        defaultDatabaseHandler = new DatabaseLogging();
-        defaultDatabaseHandler.TestConnection();
+        databaseHandler = new DatabaseLogging();
+        databaseHandler.TestConnection();
         logger.log( Level.INFO, "Pool Size: {0}", configHandler.getDb_pools() );
         logger.log( Level.INFO, "Cache Size: {0}", configHandler.getCacheSize() );
         if ( configHandler.isLogPlayerConnect() )
@@ -58,12 +58,14 @@ public class ConnectionLogger extends JavaPlugin
     public void Reload()
     {
         configHandler.SaveDefaultConfig();
-        defaultDatabaseHandler.Reload();
+        cache.SendCache( false );
+        databaseHandler.Reload();
         logger.log( Level.INFO, "Pool Size: {0}", configHandler.getDb_pools() );
         logger.log( Level.INFO, "Cache Size: {0}", configHandler.getCacheSize() );
         if ( !cache.isEmpty() )
         {
             cache = new Cache( cache.getList() );
+            logger.log(Level.INFO, "Cache was not empty during reload - cache size was not cahnged");
         }
     }
 
@@ -72,14 +74,14 @@ public class ConnectionLogger extends JavaPlugin
         cache.StopTimer();
         if ( configHandler.isAutoClean() )
         {
-            defaultDatabaseHandler.Clear();
+            databaseHandler.Clear();
         }
         if ( configHandler.isLogPluginShutdown() )
         {
             cache.Add( Utils.getPluginShutdownLog() );
         }
         cache.SendCache( true );
-        defaultDatabaseHandler.Disable();
+        databaseHandler.Disable();
     }
 
     public static ConnectionLogger getPlugin()
@@ -99,7 +101,7 @@ public class ConnectionLogger extends JavaPlugin
 
     public static DatabaseLogging getDefaultDatabaseHandler()
     {
-        return defaultDatabaseHandler;
+        return databaseHandler;
     }
 
     public static Cache getCache()
