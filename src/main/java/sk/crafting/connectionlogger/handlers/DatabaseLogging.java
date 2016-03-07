@@ -26,7 +26,6 @@ import sk.crafting.connectionlogger.utils.Utils;
 public class DatabaseLogging
 {
 
-    private static final Object LOCK = new Object();
     private final SimpleDateFormat formatter = new SimpleDateFormat( Utils.getDatabaseTimeFormat() );
 
     private Connection db_connection;
