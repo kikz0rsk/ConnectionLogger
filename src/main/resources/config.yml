@@ -19,6 +19,8 @@ auto-cleaning:
 # If you have small memory, you should set it to low value
 cache:
     cache-size: 20
+    # Time in miliseconds before sending cache to database
+    delay-before-send: 10000
 # MySQL Credentials - Please Fill Correctly
 database:
     host: ""
