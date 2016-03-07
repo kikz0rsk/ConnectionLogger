@@ -21,20 +21,20 @@ public final class ConfigurationHandler
     private YamlConfiguration conf;
     private final File file;
 
-    boolean logPlayerConnect,
+    private boolean logPlayerConnect,
             logPlayerDisconnect,
             logPluginShutdown,
             autoClean;
 
-    String db_host,
+    private String db_host,
             db_port,
             db_user,
             db_pass,
             db_name,
             db_tableName;
-    int db_pools;
+    private int db_pools, timeout;
 
-    int cacheSize, delayBeforeSend;
+    private int cacheSize, delayBeforeSend;
 
     public ConfigurationHandler()
     {
@@ -79,6 +79,7 @@ public final class ConfigurationHandler
         db_name = conf.getString( "database.database-name" );
         db_tableName = conf.getString( "database.table-name" );
         db_pools = conf.getInt( "database.pools" );
+        timeout = conf.getInt( "database.timeout" );
         if ( db_pools < 1 )
         {
             ConnectionLogger.getPluginLogger().info( "Pool size is smaller than required value. Setting to 1" );
@@ -166,6 +167,11 @@ public final class ConfigurationHandler
     public int getDelayBeforeSend()
     {
         return delayBeforeSend;
+    }
+
+    public int getTimeout()
+    {
+        return timeout;
     }
 
 }

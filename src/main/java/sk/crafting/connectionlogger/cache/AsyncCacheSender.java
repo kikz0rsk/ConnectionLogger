@@ -8,7 +8,7 @@ import sk.crafting.connectionlogger.ConnectionLogger;
  *
  * @author Red-Eye~kikz0r_sk
  */
-public class CacheSender
+public class AsyncCacheSender
 {
     
     Timer timer;
@@ -17,7 +17,7 @@ public class CacheSender
     
     private final Object LOCK = new Object();
     
-    public CacheSender( Cache cache )
+    public AsyncCacheSender( Cache cache )
     {
         this.cache = cache;
     }

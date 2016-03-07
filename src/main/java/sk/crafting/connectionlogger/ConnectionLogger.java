@@ -10,7 +10,7 @@ import sk.crafting.connectionlogger.cache.Cache;
 import sk.crafting.connectionlogger.listeners.ConnectListener;
 import sk.crafting.connectionlogger.listeners.DisconnectListener;
 import sk.crafting.connectionlogger.handlers.ConfigurationHandler;
-import sk.crafting.connectionlogger.handlers.DatabaseLogging;
+import sk.crafting.connectionlogger.handlers.DatabaseHandler;
 import sk.crafting.connectionlogger.utils.Utils;
 
 /**
@@ -20,7 +20,7 @@ import sk.crafting.connectionlogger.utils.Utils;
 public class ConnectionLogger extends JavaPlugin
 {
 
-    private static DatabaseLogging databaseHandler;
+    private static DatabaseHandler databaseHandler;
     private static ConnectionLogger plugin;
     private static Logger logger;
     private static ConfigurationHandler configHandler;
@@ -35,7 +35,7 @@ public class ConnectionLogger extends JavaPlugin
         logger = plugin.getLogger();
         configHandler = new ConfigurationHandler();
         cache = new Cache( configHandler.getCacheSize() );
-        databaseHandler = new DatabaseLogging();
+        databaseHandler = new DatabaseHandler();
         databaseHandler.TestConnection();
         logger.log( Level.INFO, "Pool Size: {0}", configHandler.getDb_pools() );
         logger.log( Level.INFO, "Cache Size: {0}", configHandler.getCacheSize() );
@@ -99,7 +99,7 @@ public class ConnectionLogger extends JavaPlugin
         return configHandler;
     }
 
-    public static DatabaseLogging getDefaultDatabaseHandler()
+    public static DatabaseHandler getDefaultDatabaseHandler()
     {
         return databaseHandler;
     }

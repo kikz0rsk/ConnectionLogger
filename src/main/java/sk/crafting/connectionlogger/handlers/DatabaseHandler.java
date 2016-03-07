@@ -23,7 +23,7 @@ import sk.crafting.connectionlogger.utils.Utils;
  *
  * @author Red-Eye~kikz0r_sk
  */
-public class DatabaseLogging
+public class DatabaseHandler
 {
 
     private final SimpleDateFormat formatter = new SimpleDateFormat( Utils.getDatabaseTimeFormat() );
@@ -33,7 +33,7 @@ public class DatabaseLogging
 
     private Timer timer;
 
-    public DatabaseLogging()
+    public DatabaseHandler()
     {
         Init();
     }
@@ -64,6 +64,7 @@ public class DatabaseLogging
                 + "PRIMARY KEY (ID)"
                 + ")"
         );
+        dataSource.setConnectionTimeout( ConnectionLogger.getConfigHandler().getTimeout() );
     }
 
     private void Connect() throws Exception
