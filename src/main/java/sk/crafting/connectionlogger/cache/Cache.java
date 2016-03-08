@@ -52,7 +52,7 @@ public class Cache
         }
     }
 
-    public void Add( Calendar time, EventType type, Player player )
+    public void Add( long time, EventType type, Player player )
     {
         Add( new Log( time, type, player.getName(), player.getAddress().getAddress().getHostAddress(), player.getAddress().getAddress().getHostName(), player.getAddress().getPort() ) );
     }
@@ -72,7 +72,7 @@ public class Cache
                 builder.append( "-------------------------------------------------------------------------" );
                 for ( Log log : getList() )
                 {
-                    builder.append( "Time: " ).append(formatter.format( log.getTime().getTimeInMillis() ));
+                    builder.append( "Time: " ).append(formatter.format( log.getTime() ));
                     builder.append( "Type: " ).append(log.getType());
                     builder.append( "Player Name: " ).append(log.getPlayerName());
                     builder.append( "Player IP: " ).append(log.getPlayerIp());

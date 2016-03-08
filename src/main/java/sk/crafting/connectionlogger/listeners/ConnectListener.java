@@ -20,7 +20,7 @@ public class ConnectListener implements Listener
     @EventHandler( priority = EventPriority.MONITOR )
     public void OnPlayerConnect( PlayerJoinEvent event )
     {
-        new AsyncAddToCache( EventType.CONNECT, Calendar.getInstance(), event.getPlayer() ).runTaskAsynchronously( ConnectionLogger.getPlugin() );
+        new AsyncAddToCache( EventType.CONNECT, System.currentTimeMillis(), event.getPlayer() ).runTaskAsynchronously( ConnectionLogger.getPlugin() );
     }
 
 }

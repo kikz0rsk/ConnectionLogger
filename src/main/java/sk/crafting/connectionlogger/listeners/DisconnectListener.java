@@ -20,7 +20,7 @@ public class DisconnectListener implements Listener
     @EventHandler( priority = EventPriority.MONITOR )
     public void OnPlayerDisconnect( PlayerQuitEvent event )
     {
-        new AsyncAddToCache( EventType.DISCONNECT, Calendar.getInstance(), event.getPlayer() ).runTaskAsynchronously( ConnectionLogger.getPlugin() );
+        new AsyncAddToCache( EventType.DISCONNECT, System.currentTimeMillis(), event.getPlayer() ).runTaskAsynchronously( ConnectionLogger.getPlugin() );
     }
 
 }

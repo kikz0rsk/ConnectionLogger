@@ -11,14 +11,14 @@ import sk.crafting.connectionlogger.listeners.EventType;
 public class Log
 {
 
-    private final Calendar time;
+    private final long time;
     private final EventType type;
     private final String playerName;
     private final String playerIp;
     private final String playerHostname;
     private final int playerPort;
 
-    public Log( Calendar time, EventType type, String playerName, String playerIp, String playerHostname, int playerPort )
+    public Log( long time, EventType type, String playerName, String playerIp, String playerHostname, int playerPort )
     {
         this.time = time;
         this.type = type;
@@ -28,7 +28,7 @@ public class Log
         this.playerPort = playerPort;
     }
 
-    public Calendar getTime()
+    public long getTime()
     {
         return time;
     }

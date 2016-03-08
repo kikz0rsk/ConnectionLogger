@@ -16,10 +16,10 @@ public class AsyncAddToCache extends BukkitRunnable
 {
 
     private final EventType type;
-    private final Calendar time;
+    private final long time;
     private final Player player;
 
-    public AsyncAddToCache( EventType type, Calendar time, Player player )
+    public AsyncAddToCache( EventType type, long time, Player player )
     {
         this.type = type;
         this.time = time;

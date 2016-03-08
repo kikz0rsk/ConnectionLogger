@@ -82,7 +82,7 @@ public class Commands implements CommandExecutor
             {
                 sender.sendMessage( String.format( "Time: %s | Type: %s | Player Name: %s | Player IP: %s | Player Hostname: %s | Player Port: %d",
                         //log.getTime().substring(0, log.getTime().lastIndexOf(".")),
-                        formatter.format( log.getTime().getTimeInMillis() ),
+                        formatter.format( log.getTime() ),
                         log.getType().getMessage(),
                         log.getPlayerName(),
                         log.getPlayerIp(),
