@@ -1,7 +1,5 @@
 package sk.crafting.connectionlogger.tasks;
 
-import java.util.Calendar;
-
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 

@@ -44,11 +44,11 @@ public class Cache
     {
         synchronized ( cache )
         {
-            if ( cache.size() >= ConnectionLogger.getConfigHandler().getCacheSize() )
-            {
-                SendCache( true );
-            }
             cache.add( log );
+        }
+        if ( cache.size() >= ConnectionLogger.getConfigHandler().getCacheSize() )
+        {
+            SendCache( true );
         }
     }
 
@@ -65,24 +65,24 @@ public class Cache
             PrintWriter out = null;
             try
             {
-                
+
                 StringBuilder builder = new StringBuilder();
-                builder.append( "-------------------------------------------------------------------------" );
-                builder.append( "---------- ConnectionLogger " ).append( ConnectionLogger.getPlugin().getDescription().getVersion() ).append( " CACHE DUMP " ).append( formatter.format( Calendar.getInstance().getTimeInMillis() ) ).append(" ----------");
-                builder.append( "-------------------------------------------------------------------------" );
+                builder.append( "-------------------------------------------------------------------------" ).append( System.lineSeparator() );
+                builder.append( "---------- ConnectionLogger " ).append( ConnectionLogger.getPlugin().getDescription().getVersion() ).append( " CACHE DUMP " ).append( formatter.format( Calendar.getInstance().getTimeInMillis() ) ).append( " ----------" ).append( System.lineSeparator() );
+                builder.append( "-------------------------------------------------------------------------" ).append( System.lineSeparator() );
                 for ( Log log : getList() )
                 {
-                    builder.append( "Time: " ).append(formatter.format( log.getTime() ));
-                    builder.append( "Type: " ).append(log.getType());
-                    builder.append( "Player Name: " ).append(log.getPlayerName());
-                    builder.append( "Player IP: " ).append(log.getPlayerIp());
-                    builder.append( "Player Hostname: " ).append(log.getPlayerHostname());
-                    builder.append( "Player Port: " ).append(log.getPlayerPort());
-                    builder.append( "=========================================================================" );
-                    builder.append(System.lineSeparator());
+                    builder.append( "Time: " ).append( formatter.format( log.getTime() ) ).append( System.lineSeparator() );
+                    builder.append( "Type: " ).append( log.getType() ).append( System.lineSeparator() );
+                    builder.append( "Player Name: " ).append( log.getPlayerName() ).append( System.lineSeparator() );
+                    builder.append( "Player IP: " ).append( log.getPlayerIp() ).append( System.lineSeparator() );
+                    builder.append( "Player Hostname: " ).append( log.getPlayerHostname() ).append( System.lineSeparator() );
+                    builder.append( "Player Port: " ).append( log.getPlayerPort() ).append( System.lineSeparator() );
+                    builder.append( "=========================================================================" ).append( System.lineSeparator() );
+                    builder.append( System.lineSeparator() );
                 }
                 out = new PrintWriter( new BufferedWriter( new FileWriter( file, true ) ) );
-                out.println(builder.toString());
+                out.println( builder.toString() );
                 Clear();
                 ConnectionLogger.getPluginLogger().log( Level.INFO, "{0}Successfully dumped to file", ChatColor.GREEN );
             } catch ( IOException ex )
@@ -100,11 +100,15 @@ public class Cache
 
     public void SendCache( boolean useFallback )
     {
-        if ( !( ConnectionLogger.getDefaultDatabaseHandler().AddFromCache( this ) ) && useFallback )
+        synchronized ( cache )
         {
-            DumpCacheToFile();
-            StopTimer();
+            if ( !( ConnectionLogger.getDefaultDatabaseHandler().AddFromCache( this ) ) && useFallback )
+            {
+                DumpCacheToFile();
+                StopTimer();
+            }
         }
+
     }
 
     public int getSize()

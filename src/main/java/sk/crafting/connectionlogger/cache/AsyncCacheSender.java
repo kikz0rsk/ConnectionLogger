@@ -10,18 +10,18 @@ import sk.crafting.connectionlogger.ConnectionLogger;
  */
 public class AsyncCacheSender
 {
-    
+
     Timer timer;
     boolean scheduled = false;
     Cache cache;
-    
+
     private final Object LOCK = new Object();
-    
+
     public AsyncCacheSender( Cache cache )
     {
         this.cache = cache;
     }
-    
+
     public void StartTimer()
     {
         timer = new Timer();
@@ -40,7 +40,7 @@ public class AsyncCacheSender
         }, ConnectionLogger.getConfigHandler().getDelayBeforeSend() );
         SetScheduled( true );
     }
-    
+
     private void SetScheduled( boolean state )
     {
         synchronized ( LOCK )
@@ -48,7 +48,7 @@ public class AsyncCacheSender
             scheduled = state;
         }
     }
-    
+
     public void StopTimer()
     {
         if ( timer != null )
@@ -57,7 +57,7 @@ public class AsyncCacheSender
             SetScheduled( false );
         }
     }
-    
+
     public boolean isScheduled()
     {
         synchronized ( LOCK )
@@ -65,5 +65,5 @@ public class AsyncCacheSender
             return scheduled;
         }
     }
-    
+
 }

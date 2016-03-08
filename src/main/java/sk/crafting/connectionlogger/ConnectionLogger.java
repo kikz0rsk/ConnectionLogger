@@ -7,10 +7,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import sk.crafting.connectionlogger.cache.Cache;
-import sk.crafting.connectionlogger.listeners.ConnectListener;
-import sk.crafting.connectionlogger.listeners.DisconnectListener;
 import sk.crafting.connectionlogger.handlers.ConfigurationHandler;
 import sk.crafting.connectionlogger.handlers.DatabaseHandler;
+import sk.crafting.connectionlogger.listeners.PlayerListener;
 import sk.crafting.connectionlogger.utils.Utils;
 
 /**
@@ -39,14 +38,7 @@ public class ConnectionLogger extends JavaPlugin
         databaseHandler.TestConnection();
         logger.log( Level.INFO, "Pool Size: {0}", configHandler.getDb_pools() );
         logger.log( Level.INFO, "Cache Size: {0}", configHandler.getCacheSize() );
-        if ( configHandler.isLogPlayerConnect() )
-        {
-            Bukkit.getPluginManager().registerEvents( new ConnectListener(), this );
-        }
-        if ( configHandler.isLogPlayerDisconnect() )
-        {
-            Bukkit.getPluginManager().registerEvents( new DisconnectListener(), this );
-        }
+        Bukkit.getPluginManager().registerEvents( new PlayerListener(), this );
     }
 
     @Override
@@ -65,7 +57,7 @@ public class ConnectionLogger extends JavaPlugin
         if ( !cache.isEmpty() )
         {
             cache = new Cache( cache.getList() );
-            logger.log(Level.INFO, "Cache was not empty during reload - cache size was not cahnged");
+            logger.log( Level.INFO, "Cache was not empty during reload - cache size was not cahnged" );
         }
     }
 

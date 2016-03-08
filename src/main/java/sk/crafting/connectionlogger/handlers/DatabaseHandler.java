@@ -104,7 +104,7 @@ public class DatabaseHandler
                 statement = db_connection.prepareStatement(
                         "INSERT INTO " + ConnectionLogger.getConfigHandler().getDb_tableName() + " (time, type, player_name, player_ip, player_hostname, player_port, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)"
                 );
-                statement.setString( 1, formatter.format( log.getTime()) );
+                statement.setString( 1, formatter.format( log.getTime() ) );
                 statement.setString( 2, log.getType().getMessage() );
                 statement.setString( 3, log.getPlayerName() );
                 statement.setString( 4, log.getPlayerIp() );
