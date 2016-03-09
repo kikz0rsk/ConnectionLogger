@@ -89,7 +89,7 @@ public class DatabaseHandler
         }
     }
 
-    public boolean AddFromCache( Cache cache )
+    public synchronized boolean AddFromCache( Cache cache )
     {
         if ( cache.isEmpty() )
         {
