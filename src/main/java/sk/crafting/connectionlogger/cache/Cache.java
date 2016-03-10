@@ -100,7 +100,7 @@ public class Cache
         if ( ConnectionLogger.getDefaultDatabaseHandler().AddFromCache( this ) )
         {
             StopTimer();
-        } else if(useFallback)
+        } else if ( useFallback )
         {
             DumpCacheToFile();
         }

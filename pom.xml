@@ -5,11 +5,17 @@
     <artifactId>ConnectionLogger</artifactId>
     <version>1.4</version>
     <packaging>jar</packaging>
+    <repositories>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <version>1.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
