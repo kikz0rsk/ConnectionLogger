@@ -30,6 +30,8 @@ public class DatabaseHandler
     private Connection db_connection;
     private HikariDataSource dataSource;
 
+    private String connectSql;
+
     public DatabaseHandler()
     {
         Init();
@@ -47,7 +49,22 @@ public class DatabaseHandler
         dataSource.setUsername( ConnectionLogger.getConfigHandler().getDb_user() );
         dataSource.setPassword( ConnectionLogger.getConfigHandler().getDb_pass() );
         dataSource.setMaximumPoolSize( ConnectionLogger.getConfigHandler().getDb_pools() );
-        dataSource.setConnectionInitSql(
+//        dataSource.setConnectionInitSql(
+//                "CREATE TABLE IF NOT EXISTS " + ConnectionLogger.getConfigHandler().getDb_tableName()
+//                + "("
+//                + "id int NOT NULL AUTO_INCREMENT, "
+//                + "time datetime NOT NULL, "
+//                + "type varchar(10) NOT NULL, "
+//                + "player_name varchar(50) NOT NULL, "
+//                + "player_ip varchar(50) NOT NULL, "
+//                + "player_hostname varchar(75) NOT NULL, "
+//                + "player_port int(5) NOT NULL, "
+//                + "deleted tinyint(1) NOT NULL, "
+//                + "PRIMARY KEY (ID)"
+//                + ")"
+//        );
+        dataSource.setConnectionTimeout( ConnectionLogger.getConfigHandler().getTimeout() );
+        connectSql =
                 "CREATE TABLE IF NOT EXISTS " + ConnectionLogger.getConfigHandler().getDb_tableName()
                 + "("
                 + "id int NOT NULL AUTO_INCREMENT, "
@@ -59,9 +76,7 @@ public class DatabaseHandler
                 + "player_port int(5) NOT NULL, "
                 + "deleted tinyint(1) NOT NULL, "
                 + "PRIMARY KEY (ID)"
-                + ")"
-        );
-        dataSource.setConnectionTimeout( ConnectionLogger.getConfigHandler().getTimeout() );
+                + ")";
     }
 
     private void Connect() throws Exception
@@ -83,6 +98,9 @@ public class DatabaseHandler
 //                + "PRIMARY KEY (ID)"
 //                + ")";
         }
+        PreparedStatement statement = db_connection.prepareStatement( connectSql );
+        statement.executeUpdate();
+        CloseObjects( null, null, statement );
     }
 
     public boolean AddFromCache( Cache cache )
@@ -117,7 +135,7 @@ public class DatabaseHandler
             return false;
         } finally
         {
-            CloseObjects(db_connection, null, statement );
+            CloseObjects( db_connection, null, statement );
         }
     }
 
@@ -153,7 +171,7 @@ public class DatabaseHandler
             ConnectionLogger.getPluginLogger().severe( "Failed to send SQL: " + ex.toString() );
         } finally
         {
-            CloseObjects(db_connection, null, statement );
+            CloseObjects( db_connection, null, statement );
         }
     }
 
@@ -205,7 +223,7 @@ public class DatabaseHandler
             ConnectionLogger.getPluginLogger().severe( "Failed to send SQL: " + ex.toString() );
         } finally
         {
-            CloseObjects(db_connection, result, statement );
+            CloseObjects( db_connection, result, statement );
         }
         return null;
     }
@@ -222,7 +240,7 @@ public class DatabaseHandler
             {
                 statement.close();
             }
-            if(connection != null)
+            if ( connection != null )
             {
                 Disconnect();
             }
