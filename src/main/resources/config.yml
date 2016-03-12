@@ -1,4 +1,3 @@
-# Select what you want to be logged
 logging:
     # Log player connect event
     # Default: true

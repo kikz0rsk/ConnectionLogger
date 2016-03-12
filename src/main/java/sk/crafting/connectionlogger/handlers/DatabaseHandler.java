@@ -89,7 +89,7 @@ public class DatabaseHandler
         }
     }
 
-    public synchronized boolean AddFromCache( Cache cache )
+    public boolean AddFromCache( Cache cache )
     {
         if ( cache.isEmpty() )
         {
@@ -121,7 +121,7 @@ public class DatabaseHandler
             return false;
         } finally
         {
-            CloseStatement( statement );
+            CloseObjects( null, statement );
         }
     }
 
@@ -154,7 +154,7 @@ public class DatabaseHandler
             ConnectionLogger.getPluginLogger().severe( "Failed to send SQL: " + ex.toString() );
         } finally
         {
-            CloseStatement( statement );
+            CloseObjects(null, statement );
         }
     }
 
@@ -176,10 +176,10 @@ public class DatabaseHandler
     public ArrayList<String> GetLogs( Calendar max )
     {
         PreparedStatement statement = null;
+        ResultSet result = null;
         try
         {
             Connect();
-            ResultSet result;
             statement = db_connection.prepareStatement(
                     "SELECT * FROM " + ConnectionLogger.getConfigHandler().getDb_tableName() + " WHERE time>=? AND deleted=0"
             );
@@ -206,22 +206,26 @@ public class DatabaseHandler
             ConnectionLogger.getPluginLogger().severe( "Failed to send SQL: " + ex.toString() );
         } finally
         {
-            CloseStatement( statement );
+            CloseObjects( result, statement );
         }
         return null;
     }
 
-    private void CloseStatement( Statement statement )
+    private void CloseObjects( ResultSet result, Statement statement )
     {
-        if ( statement != null )
+        try
         {
-            try
+            if ( result != null )
+            {
+                result.close();
+            }
+            if ( statement != null )
             {
                 statement.close();
-            } catch ( SQLException ex )
-            {
-                ConnectionLogger.getPluginLogger().warning( "Failed to close database statement: " + ex.toString() );
             }
+        } catch ( SQLException ex )
+        {
+            ConnectionLogger.getPluginLogger().warning( "Failed to close database statement: " + ex.toString() );
         }
     }
 

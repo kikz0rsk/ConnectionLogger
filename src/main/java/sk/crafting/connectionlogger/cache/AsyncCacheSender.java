@@ -11,9 +11,9 @@ import sk.crafting.connectionlogger.ConnectionLogger;
 public class AsyncCacheSender
 {
 
-    Timer timer;
-    boolean scheduled = false;
-    Cache cache;
+    private Timer timer;
+    private boolean scheduled = false;
+    private Cache cache;
 
     private final Object LOCK = new Object();
 
