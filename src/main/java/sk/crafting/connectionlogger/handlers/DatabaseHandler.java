@@ -64,8 +64,8 @@ public class DatabaseHandler
 //                + ")"
 //        );
         dataSource.setConnectionTimeout( ConnectionLogger.getConfigHandler().getTimeout() );
-        connectSql =
-                "CREATE TABLE IF NOT EXISTS " + ConnectionLogger.getConfigHandler().getDb_tableName()
+        connectSql
+                = "CREATE TABLE IF NOT EXISTS " + ConnectionLogger.getConfigHandler().getDb_tableName()
                 + "("
                 + "id int NOT NULL AUTO_INCREMENT, "
                 + "time datetime NOT NULL, "
@@ -113,11 +113,9 @@ public class DatabaseHandler
         try
         {
             Connect();
+            statement = db_connection.prepareStatement( "INSERT INTO " + ConnectionLogger.getConfigHandler().getDb_tableName() + " (time, type, player_name, player_ip, player_hostname, player_port, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)" );
             for ( Log log : cache.toArray() )
             {
-                statement = db_connection.prepareStatement(
-                        "INSERT INTO " + ConnectionLogger.getConfigHandler().getDb_tableName() + " (time, type, player_name, player_ip, player_hostname, player_port, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)"
-                );
                 statement.setString( 1, formatter.format( log.getTime() ) );
                 statement.setString( 2, log.getType().getMessage() );
                 statement.setString( 3, log.getPlayerName() );
@@ -125,13 +123,14 @@ public class DatabaseHandler
                 statement.setString( 5, log.getPlayerHostname() );
                 statement.setInt( 6, log.getPlayerPort() );
                 statement.setBoolean( 7, false );
-                statement.executeUpdate();
+                statement.addBatch();
             }
+            statement.executeBatch();
             cache.Clear();
             return true;
         } catch ( Exception ex )
         {
-            ConnectionLogger.getPluginLogger().log( Level.SEVERE, "Failed to dump cache to database: {0}", ex.toString() );
+            ConnectionLogger.getPluginLogger().log( Level.SEVERE, "Failed to send cache to database: {0}", ex.toString() );
             return false;
         } finally
         {
