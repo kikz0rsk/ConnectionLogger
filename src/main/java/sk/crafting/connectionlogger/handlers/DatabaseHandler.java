@@ -10,8 +10,7 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.sql.Time;
 import java.util.logging.Level;
 
 import sk.crafting.connectionlogger.ConnectionLogger;
@@ -30,8 +29,6 @@ public class DatabaseHandler
 
     private Connection db_connection;
     private HikariDataSource dataSource;
-
-    private Timer timer;
 
     public DatabaseHandler()
     {
@@ -53,7 +50,7 @@ public class DatabaseHandler
         dataSource.setConnectionInitSql(
                 "CREATE TABLE IF NOT EXISTS " + ConnectionLogger.getConfigHandler().getDb_tableName()
                 + "("
-                + "ID int NOT NULL AUTO_INCREMENT, "
+                + "id int NOT NULL AUTO_INCREMENT, "
                 + "time datetime NOT NULL, "
                 + "type varchar(10) NOT NULL, "
                 + "player_name varchar(50) NOT NULL, "
@@ -73,7 +70,6 @@ public class DatabaseHandler
         {
             db_connection = dataSource.getConnection();
             ConnectionLogger.getPluginLogger().info( "Connected to database" );
-            StartTimer();
 
 //        String sql = "CREATE TABLE IF NOT EXISTS " + db_tableName
 //                + "("
@@ -121,7 +117,7 @@ public class DatabaseHandler
             return false;
         } finally
         {
-            CloseObjects( null, statement );
+            CloseObjects(db_connection, null, statement );
         }
     }
 
@@ -135,6 +131,9 @@ public class DatabaseHandler
         } catch ( Exception ex )
         {
             ConnectionLogger.getPluginLogger().info( "Connection to database failed: " + ex.toString() );
+        } finally
+        {
+            Disconnect();
         }
     }
 
@@ -154,7 +153,7 @@ public class DatabaseHandler
             ConnectionLogger.getPluginLogger().severe( "Failed to send SQL: " + ex.toString() );
         } finally
         {
-            CloseObjects(null, statement );
+            CloseObjects(db_connection, null, statement );
         }
     }
 
@@ -188,11 +187,11 @@ public class DatabaseHandler
             ArrayList<String> output = new ArrayList<>();
             while ( result.next() )
             {
-                String time = result.getString( "time" );
+                Time time = result.getTime( "time" );
                 output.add( String.format(
                         "ID: %s | Time: %s | Type: %s | Player Name: %s | Player IP: %s | Player Hostname: %s | Player Port: %d",
                         result.getString( "ID" ),
-                        time.substring( 0, time.lastIndexOf( "." ) ),
+                        formatter.format( time.getTime() ),
                         result.getString( "type" ),
                         result.getString( "player_name" ),
                         result.getString( "player_ip" ),
@@ -206,12 +205,12 @@ public class DatabaseHandler
             ConnectionLogger.getPluginLogger().severe( "Failed to send SQL: " + ex.toString() );
         } finally
         {
-            CloseObjects( result, statement );
+            CloseObjects(db_connection, result, statement );
         }
         return null;
     }
 
-    private void CloseObjects( ResultSet result, Statement statement )
+    private void CloseObjects( Connection connection, ResultSet result, Statement statement )
     {
         try
         {
@@ -223,6 +222,10 @@ public class DatabaseHandler
             {
                 statement.close();
             }
+            if(connection != null)
+            {
+                Disconnect();
+            }
         } catch ( SQLException ex )
         {
             ConnectionLogger.getPluginLogger().warning( "Failed to close database statement: " + ex.toString() );
@@ -231,7 +234,6 @@ public class DatabaseHandler
 
     public void Reload()
     {
-        StopTimer();
         Disconnect();
         Init();
         TestConnection();
@@ -243,32 +245,10 @@ public class DatabaseHandler
 
     public void Disable()
     {
-        StopTimer();
         Disconnect();
         if ( dataSource != null )
         {
             dataSource.close();
-        }
-    }
-
-    public void StartTimer()
-    {
-        timer = new Timer();
-        timer.schedule( new TimerTask()
-        {
-            @Override
-            public void run()
-            {
-                Disconnect();
-            }
-        }, 5 * 60 * 1000 );
-    }
-
-    public void StopTimer()
-    {
-        if ( timer != null )
-        {
-            timer.cancel();
         }
     }
 
