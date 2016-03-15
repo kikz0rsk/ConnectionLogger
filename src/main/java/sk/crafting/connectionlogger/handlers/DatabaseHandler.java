@@ -74,6 +74,7 @@ public class DatabaseHandler
                 + "player_ip varchar(50) NOT NULL, "
                 + "player_hostname varchar(75) NOT NULL, "
                 + "player_port int(5) NOT NULL, "
+                + "world varchar(50) NOT NULL, "
                 + "deleted tinyint(1) NOT NULL, "
                 + "PRIMARY KEY (ID)"
                 + ")";
@@ -113,7 +114,7 @@ public class DatabaseHandler
         try
         {
             Connect();
-            statement = db_connection.prepareStatement( "INSERT INTO " + ConnectionLogger.getConfigHandler().getDb_tableName() + " (time, type, player_name, player_ip, player_hostname, player_port, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)" );
+            statement = db_connection.prepareStatement( "INSERT INTO " + ConnectionLogger.getConfigHandler().getDb_tableName() + " (time, type, player_name, player_ip, player_hostname, player_port, world, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?)" );
             for ( Log log : cache.toArray() )
             {
                 statement.setString( 1, formatter.format( log.getTime() ) );
@@ -122,7 +123,8 @@ public class DatabaseHandler
                 statement.setString( 4, log.getPlayerIp() );
                 statement.setString( 5, log.getPlayerHostname() );
                 statement.setInt( 6, log.getPlayerPort() );
-                statement.setBoolean( 7, false );
+                statement.setString( 7, log.getWorld() );
+                statement.setBoolean( 8, false );
                 statement.addBatch();
             }
             statement.executeBatch();

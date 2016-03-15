@@ -54,7 +54,7 @@ public class Cache
 
     public void Add( long time, EventType type, Player player )
     {
-        Add( new Log( time, type, player.getName(), player.getAddress().getAddress().getHostAddress(), player.getAddress().getAddress().getHostName(), player.getAddress().getPort() ) );
+        Add( new Log( time, type, player.getName(), player.getAddress().getAddress().getHostAddress(), player.getAddress().getAddress().getHostName(), player.getAddress().getPort(), player.getWorld().getName()) );
         if ( !( isEmpty() || isScheduled() ) )
         {
             StartTimer();
