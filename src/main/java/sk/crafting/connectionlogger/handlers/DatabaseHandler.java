@@ -208,14 +208,15 @@ public class DatabaseHandler
             {
                 Time time = result.getTime( "time" );
                 output.add( String.format(
-                        "ID: %s | Time: %s | Type: %s | Player Name: %s | Player IP: %s | Player Hostname: %s | Player Port: %d",
+                        "ID: %s | Time: %s | Type: %s | Player Name: %s | Player IP: %s | Player Hostname: %s | Player Port: %d | World: %s",
                         result.getString( "ID" ),
                         formatter.format( time.getTime() ),
                         result.getString( "type" ),
                         result.getString( "player_name" ),
                         result.getString( "player_ip" ),
                         result.getString( "player_hostname" ),
-                        result.getInt( "player_port" )
+                        result.getInt( "player_port" ),
+                        result.getString( "world")
                 ) );
             }
             return output;

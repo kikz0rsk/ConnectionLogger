@@ -156,7 +156,7 @@ public class MainCommand implements CommandExecutor
         {
             return subCommands.get( "help" ).onCommand( sender, command, string, args );
         }
-        CommandExecutor cmd = subCommands.get( args[ 0 ] );
+        CommandExecutor cmd = subCommands.get( args[ 0 ].toLowerCase() );
         if ( cmd == null )
         {
             return false;

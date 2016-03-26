@@ -1,6 +1,5 @@
 package sk.crafting.connectionlogger;
 
-import sk.crafting.connectionlogger.commands.Commands;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -8,7 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import sk.crafting.connectionlogger.cache.Cache;
-import sk.crafting.connectionlogger.commands.MainCommand;
+import sk.crafting.connectionlogger.commands.CommandRouter;
 import sk.crafting.connectionlogger.handlers.ConfigurationHandler;
 import sk.crafting.connectionlogger.handlers.DatabaseHandler;
 import sk.crafting.connectionlogger.listeners.PlayerListener;
@@ -31,7 +30,7 @@ public class ConnectionLogger extends JavaPlugin
     public void onEnable()
     {
         System.setProperty( org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "warn" );
-        getCommand( "cl" ).setExecutor( new MainCommand() );
+        getCommand( "cl" ).setExecutor( new CommandRouter() );
         ConnectionLogger.plugin = this;
         logger = plugin.getLogger();
         configHandler = new ConfigurationHandler();

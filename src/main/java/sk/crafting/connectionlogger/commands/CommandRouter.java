@@ -1,0 +1,52 @@
+package sk.crafting.connectionlogger.commands;
+
+import java.util.HashMap;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+
+/**
+ *
+ * @author Red-Eye~kikz0r_sk
+ */
+public class CommandRouter extends CLCommand
+{
+
+    private final HashMap<String, CLCommand> commands = new HashMap<>();
+
+    public CommandRouter()
+    {
+        super( "cl", "connectionlogger.cl", true );
+        commands.put( "clear", new CClear() );
+        commands.put( "help", new CHelp() );
+        commands.put( "reload", new CReload() );
+        commands.put( "print", new CPrint() );
+        commands.put( "printcache", new CPrintcache());
+    }
+
+    @Override
+    public boolean onCommand( CommandSender sender, Command command, String string, String[] args )
+    {
+        if ( !sender.hasPermission( getPermission() ) )
+        {
+            sender.sendMessage( ChatColor.RED + "You haven't got permission to do this!" );
+            return true;
+        }
+        if ( args.length == 0 || args[ 0 ].equals( "" ) )
+        {
+            return commands.get( "help" ).onCommand( sender, command, string, args );
+        }
+        CLCommand cmd = commands.get( args[ 0 ].toLowerCase() );
+        if ( cmd == null )
+        {
+            return false;
+        }
+        if ( !sender.hasPermission( cmd.getPermission() ) )
+        {
+            sender.sendMessage( ChatColor.RED + "You haven't got permission to do this!" );
+            return true;
+        }
+        return cmd.onCommand( sender, command, string, args );
+    }
+
+}

@@ -88,14 +88,15 @@ public class Commands implements CommandExecutor
             SimpleDateFormat formatter = new SimpleDateFormat( Utils.getDefaultTimeFormat() );
             for ( Log log : ConnectionLogger.getCache().getList() )
             {
-                sender.sendMessage( String.format( "Time: %s | Type: %s | Player Name: %s | Player IP: %s | Player Hostname: %s | Player Port: %d",
+                sender.sendMessage( String.format( "Time: %s | Type: %s | Player Name: %s | Player IP: %s | Player Hostname: %s | Player Port: %d | World: %s",
                         //log.getTime().substring(0, log.getTime().lastIndexOf(".")),
                         formatter.format( log.getTime() ),
                         log.getType().getMessage(),
                         log.getPlayerName(),
                         log.getPlayerIp(),
                         log.getPlayerHostname(),
-                        log.getPlayerPort()
+                        log.getPlayerPort(),
+                        log.getWorld()
                 ) );
             }
         }
