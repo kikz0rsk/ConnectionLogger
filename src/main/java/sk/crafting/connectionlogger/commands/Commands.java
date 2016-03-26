@@ -1,4 +1,4 @@
-package sk.crafting.connectionlogger;
+package sk.crafting.connectionlogger.commands;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,13 +8,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import sk.crafting.connectionlogger.ConnectionLogger;
 import sk.crafting.connectionlogger.cache.Log;
 import sk.crafting.connectionlogger.utils.Utils;
 
 /**
  *
  * @author Red-Eye~kikz0r_sk
+ * @deprecated Replaced with new command handling system in MainCommand class
  */
+@Deprecated
 public class Commands implements CommandExecutor
 {
 
@@ -37,6 +40,11 @@ public class Commands implements CommandExecutor
                 try
                 {
                     hours = Integer.parseInt( args[ 1 ] );
+                    if(hours == 0)
+                    {
+                        sender.sendMessage( "Invalid number" );
+                        return true;
+                    }
                     if ( hours > 0 )
                     {
                         hours = -hours;
@@ -48,7 +56,7 @@ public class Commands implements CommandExecutor
                 }
             }
             calendar.add( Calendar.HOUR_OF_DAY, hours );
-            ArrayList<String> result = ConnectionLogger.getDefaultDatabaseHandler().GetLogs( calendar );
+            ArrayList<String> result = ConnectionLogger.getDefaultDatabaseHandler().GetLogs( calendar.getTimeInMillis() );
             sender.sendMessage( result.toArray( new String[ result.size() ] ) );
             return true;
         }

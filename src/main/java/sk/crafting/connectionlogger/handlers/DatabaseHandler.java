@@ -191,7 +191,7 @@ public class DatabaseHandler
         }
     }
 
-    public ArrayList<String> GetLogs( Calendar max )
+    public ArrayList<String> GetLogs( long max )
     {
         PreparedStatement statement = null;
         ResultSet result = null;
@@ -201,7 +201,7 @@ public class DatabaseHandler
             statement = db_connection.prepareStatement(
                     "SELECT * FROM " + ConnectionLogger.getConfigHandler().getDb_tableName() + " WHERE time>=? AND deleted=0"
             );
-            statement.setString( 1, formatter.format( max.getTimeInMillis() ) );
+            statement.setString( 1, formatter.format( max ) );
             result = statement.executeQuery();
             ArrayList<String> output = new ArrayList<>();
             while ( result.next() )

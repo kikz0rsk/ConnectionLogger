@@ -7,3 +7,9 @@ commands:
     cl:
         description: Show connection log
         usage: /cl <print|reload|clear|help|dumpcache> <hours>
+        permission: connectionlogger.cl
+permissions:
+    connectionlogger.*:
+        description: Gives access to all commands
+        children:
+            connectionlogger.cl: true
