@@ -17,17 +17,24 @@ public class CommandRouter extends CLCommand
     public CommandRouter()
     {
         super( "cl", "connectionlogger.cl", true );
-        commands.put( "clear", new CClear() );
-        commands.put( "help", new CHelp() );
-        commands.put( "reload", new CReload() );
-        commands.put( "print", new CPrint() );
-        commands.put( "printcache", new CPrintcache());
+        CLCommand command = new CClear();
+        commands.put( command.getName(), command );
+        command = new CHelp();
+        commands.put( command.getName(), command );
+        command = new CReload();
+        commands.put( command.getName(), command );
+        command = new CPrint();
+        commands.put( command.getName(), command );
+        command = new CPrintcache();
+        commands.put( command.getName(), command );
+        command = new CDumpcache();
+        commands.put( command.getName(), command );
     }
 
     @Override
     public boolean onCommand( CommandSender sender, Command command, String string, String[] args )
     {
-        if ( !sender.hasPermission( getPermission() ) )
+        if ( !sender.hasPermission( permission ) )
         {
             sender.sendMessage( ChatColor.RED + "You haven't got permission to do this!" );
             return true;
@@ -41,7 +48,7 @@ public class CommandRouter extends CLCommand
         {
             return false;
         }
-        if ( !sender.hasPermission( cmd.getPermission() ) )
+        if ( cmd.hasPermission && !sender.hasPermission( cmd.getPermission() ) )
         {
             sender.sendMessage( ChatColor.RED + "You haven't got permission to do this!" );
             return true;
