@@ -29,6 +29,8 @@ public class CommandRouter extends CLCommand
         commands.put( command.getName(), command );
         command = new CDumpcache();
         commands.put( command.getName(), command );
+        command = new CSimulate();
+        commands.put( command.getName(), command );
     }
 
     @Override

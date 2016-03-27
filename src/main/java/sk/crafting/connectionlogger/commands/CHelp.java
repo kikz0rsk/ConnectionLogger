@@ -18,7 +18,7 @@ public class CHelp extends CLCommand
     }
 
     @Override
-    public boolean onCommand( CommandSender sender, Command command, String string, String[] args  )
+    public boolean onCommand( CommandSender sender, Command command, String string, String[] args )
     {
         sender.sendMessage( String.format(
                 "%s%s %sv%s by kikz0r_sk", ChatColor.RED, ConnectionLogger.getPlugin().getDescription().getName(), ChatColor.AQUA, ConnectionLogger.getPlugin().getDescription().getVersion()

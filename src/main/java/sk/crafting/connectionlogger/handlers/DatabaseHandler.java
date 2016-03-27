@@ -216,7 +216,7 @@ public class DatabaseHandler
                         result.getString( "player_ip" ),
                         result.getString( "player_hostname" ),
                         result.getInt( "player_port" ),
-                        result.getString( "world")
+                        result.getString( "world" )
                 ) );
             }
             return output;

@@ -40,7 +40,7 @@ public class Commands implements CommandExecutor
                 try
                 {
                     hours = Integer.parseInt( args[ 1 ] );
-                    if(hours == 0)
+                    if ( hours == 0 )
                     {
                         sender.sendMessage( "Invalid number" );
                         return true;

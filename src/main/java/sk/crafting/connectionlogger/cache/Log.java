@@ -17,7 +17,7 @@ public class Log
     private final int playerPort;
     private final String world;
 
-    public Log( long time, EventType type, String playerName, String playerIp, String playerHostname, int playerPort, String world)
+    public Log( long time, EventType type, String playerName, String playerIp, String playerHostname, int playerPort, String world )
     {
         this.time = time;
         this.type = type;

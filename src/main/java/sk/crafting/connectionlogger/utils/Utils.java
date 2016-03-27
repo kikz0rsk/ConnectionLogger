@@ -23,7 +23,7 @@ public class Utils
 
     public static Log getPluginShutdownLog()
     {
-        return new Log( System.currentTimeMillis(), EventType.PLUGIN_SHUTDOWN, "", "", "", 0, "");
+        return new Log( System.currentTimeMillis(), EventType.PLUGIN_SHUTDOWN, "", "", "", 0, "" );
     }
 
 }

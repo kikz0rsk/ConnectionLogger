@@ -6,7 +6,7 @@ version: 1.4
 commands:
     cl:
         description: Show connection log
-        usage: /cl <print|reload|clear|help|dumpcache> <hours>
+        usage: /cl <print|reload|clear|help|dumpcache>
         permission: connectionlogger.cl
 permissions:
     connectionlogger.*:
