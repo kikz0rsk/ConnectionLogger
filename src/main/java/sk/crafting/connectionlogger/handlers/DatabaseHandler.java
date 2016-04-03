@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.sql.Time;
 import java.util.logging.Level;
 
@@ -22,7 +21,7 @@ import sk.crafting.connectionlogger.utils.Utils;
  *
  * @author Red-Eye~kikz0r_sk
  */
-public class DatabaseHandler
+public class DatabaseHandler implements IDatabaseHandler
 {
 
     private final SimpleDateFormat formatter = new SimpleDateFormat( Utils.getDatabaseTimeFormat() );
@@ -191,7 +190,7 @@ public class DatabaseHandler
         }
     }
 
-    public ArrayList<String> GetLogs( long max )
+    public ArrayList<String> getLogs( long max )
     {
         PreparedStatement statement = null;
         ResultSet result = null;

@@ -56,7 +56,7 @@ public class Commands implements CommandExecutor
                 }
             }
             calendar.add( Calendar.HOUR_OF_DAY, hours );
-            ArrayList<String> result = ConnectionLogger.getDefaultDatabaseHandler().GetLogs( calendar.getTimeInMillis() );
+            ArrayList<String> result = ConnectionLogger.getDefaultDatabaseHandler().getLogs( calendar.getTimeInMillis() );
             sender.sendMessage( result.toArray( new String[ result.size() ] ) );
             return true;
         }
