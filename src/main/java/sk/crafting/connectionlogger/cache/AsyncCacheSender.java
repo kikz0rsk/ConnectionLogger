@@ -30,14 +30,14 @@ public class AsyncCacheSender
             @Override
             public void run()
             {
-                if ( ConnectionLogger.getDefaultDatabaseHandler() != null )
+                if ( ConnectionLogger.getInstance().getDefaultDatabaseHandler() != null )
                 {
-                    ConnectionLogger.getPluginLogger().info( "Sending cache..." );
+                    ConnectionLogger.getInstance().getPluginLogger().info( "Sending cache..." );
                     cache.SendCache( false );
                 }
                 SetScheduled( false );
             }
-        }, ConnectionLogger.getConfigHandler().getDelayBeforeSend() );
+        }, ConnectionLogger.getInstance().getConfigHandler().getDelayBeforeSend() );
         SetScheduled( true );
     }
 

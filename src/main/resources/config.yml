@@ -1,3 +1,5 @@
+# If enabled, CL will dissalow custom database handling
+secure-mode: false
 logging:
     # Log player connect event
     # Default: true

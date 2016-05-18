@@ -26,10 +26,10 @@ public class CSimulate extends CLCommand
         {
             if ( args[ 1 ].equalsIgnoreCase( "connect" ) )
             {
-                new AsyncAddToCache( EventType.CONNECT, System.currentTimeMillis(), new TestPlayer() ).runTaskAsynchronously( ConnectionLogger.getPlugin() );
+                new AsyncAddToCache( EventType.CONNECT, System.currentTimeMillis(), new TestPlayer() ).runTaskAsynchronously( ConnectionLogger.getInstance());
             } else
             {
-                new AsyncAddToCache( EventType.DISCONNECT, System.currentTimeMillis(), new TestPlayer() ).runTaskAsynchronously( ConnectionLogger.getPlugin() );
+                new AsyncAddToCache( EventType.DISCONNECT, System.currentTimeMillis(), new TestPlayer() ).runTaskAsynchronously( ConnectionLogger.getInstance());
             }
             return true;
         }

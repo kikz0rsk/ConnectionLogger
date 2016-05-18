@@ -20,6 +20,8 @@ public class MainCommand implements CommandExecutor
 {
 
     private final HashMap<String, CommandExecutor> subCommands = new HashMap<>();
+    
+    private ConnectionLogger instance = ConnectionLogger.getInstance();
 
     public MainCommand()
     {
@@ -29,7 +31,7 @@ public class MainCommand implements CommandExecutor
             public boolean onCommand( CommandSender sender, Command command, String string, String[] args )
             {
                 sender.sendMessage( String.format(
-                        "%s%s %sv%s by kikz0r_sk", ChatColor.RED, ConnectionLogger.getPlugin().getDescription().getName(), ChatColor.AQUA, ConnectionLogger.getPlugin().getDescription().getVersion()
+                        "%s%s %sv%s by kikz0r_sk", ChatColor.RED, instance.getDescription().getName(), ChatColor.AQUA, instance.getDescription().getVersion()
                 ) );
                 return true;
             }
@@ -64,7 +66,7 @@ public class MainCommand implements CommandExecutor
                     }
                 }
                 calendar.add( Calendar.HOUR_OF_DAY, hours );
-                ArrayList<String> result = ConnectionLogger.getDefaultDatabaseHandler().getLogs( calendar.getTimeInMillis() );
+                ArrayList<String> result = instance.getDefaultDatabaseHandler().getLogs( calendar.getTimeInMillis() );
                 if ( result != null )
                 {
                     sender.sendMessage( result.toArray( new String[ result.size() ] ) );
@@ -79,7 +81,7 @@ public class MainCommand implements CommandExecutor
             public boolean onCommand( CommandSender sender, Command command, String string, String[] args )
             {
                 sender.sendMessage( "Clearing entries..." );
-                ConnectionLogger.getDefaultDatabaseHandler().Clear();
+                instance.getDefaultDatabaseHandler().Clear();
                 return true;
             }
         } );
@@ -90,7 +92,7 @@ public class MainCommand implements CommandExecutor
             public boolean onCommand( CommandSender sender, Command command, String string, String[] args )
             {
                 sender.sendMessage( ChatColor.GREEN + "Reloading ConnectionLogger..." );
-                ConnectionLogger.getPlugin().Reload();
+                instance.Reload();
                 return true;
             }
         } );
@@ -100,13 +102,13 @@ public class MainCommand implements CommandExecutor
             @Override
             public boolean onCommand( CommandSender sender, Command command, String string, String[] args )
             {
-                if ( ConnectionLogger.getCache().isEmpty() )
+                if ( instance.getCache().isEmpty() )
                 {
                     sender.sendMessage( ChatColor.GRAY + "Cache is empty" );
                     return true;
                 }
                 sender.sendMessage( ChatColor.GREEN + "Dumping cache..." );
-                ConnectionLogger.getCache().SendCache( true );
+                instance.getCache().SendCache( true );
                 return true;
             }
         } );
@@ -117,7 +119,7 @@ public class MainCommand implements CommandExecutor
             public boolean onCommand( CommandSender sender, Command command, String string, String[] args )
             {
                 SimpleDateFormat formatter = new SimpleDateFormat( Utils.getDefaultTimeFormat() );
-                for ( Log log : ConnectionLogger.getCache().getList() )
+                for ( Log log : instance.getCache().getList() )
                 {
                     sender.sendMessage( String.format( "Time: %s | Type: %s | Player Name: %s | Player IP: %s | Player Hostname: %s | Player Port: %d",
                             //log.getTime().substring(0, log.getTime().lastIndexOf(".")),

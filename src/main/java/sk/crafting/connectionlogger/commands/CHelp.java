@@ -21,7 +21,7 @@ public class CHelp extends CLCommand
     public boolean onCommand( CommandSender sender, Command command, String string, String[] args )
     {
         sender.sendMessage( String.format(
-                "%s%s %sv%s by kikz0r_sk", ChatColor.RED, ConnectionLogger.getPlugin().getDescription().getName(), ChatColor.AQUA, ConnectionLogger.getPlugin().getDescription().getVersion()
+                "%s%s %sv%s by kikz0r_sk", ChatColor.RED, ConnectionLogger.getInstance().getDescription().getName(), ChatColor.AQUA, ConnectionLogger.getInstance().getDescription().getVersion()
         ) );
         return true;
     }

@@ -46,7 +46,7 @@ public class CPrint extends CLCommand
             }
         }
         calendar.add( Calendar.HOUR_OF_DAY, hours );
-        ArrayList<String> result = ConnectionLogger.getDefaultDatabaseHandler().getLogs( calendar.getTimeInMillis() );
+        ArrayList<String> result = ConnectionLogger.getInstance().getDefaultDatabaseHandler().getLogs( calendar.getTimeInMillis() );
         if ( result != null )
         {
             sender.sendMessage( result.toArray( new String[ result.size() ] ) );

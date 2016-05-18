@@ -21,7 +21,7 @@ public class CReload extends CLCommand
     public boolean onCommand( CommandSender sender, Command command, String string, String[] args )
     {
         sender.sendMessage( ChatColor.GREEN + "Reloading ConnectionLogger..." );
-        ConnectionLogger.getPlugin().Reload();
+        ConnectionLogger.getInstance().Reload();
         return true;
     }
 

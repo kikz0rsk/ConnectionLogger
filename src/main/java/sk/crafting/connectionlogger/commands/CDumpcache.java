@@ -20,13 +20,13 @@ public class CDumpcache extends CLCommand
     @Override
     public boolean onCommand( CommandSender sender, Command command, String string, String[] args )
     {
-        if ( ConnectionLogger.getCache().isEmpty() )
+        if ( ConnectionLogger.getInstance().getCache().isEmpty() )
         {
             sender.sendMessage( ChatColor.GRAY + "Cache is empty" );
             return true;
         }
         sender.sendMessage( ChatColor.GREEN + "Dumping cache..." );
-        ConnectionLogger.getCache().SendCache( true );
+        ConnectionLogger.getInstance().getCache().SendCache( true );
         return true;
     }
 

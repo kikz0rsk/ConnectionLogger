@@ -27,8 +27,10 @@ public class Cache
 
     private final List<Log> cache;
     private final AsyncCacheSender cacheSender = new AsyncCacheSender( this );
-    private final File file = new File( ConnectionLogger.getPlugin().getDataFolder(), "cache_dump.log" );
+    private final File file = new File( ConnectionLogger.getInstance().getDataFolder(), "cache_dump.log" );
     private final SimpleDateFormat formatter = new SimpleDateFormat( Utils.getDatabaseTimeFormat() );
+    
+    private ConnectionLogger instance = ConnectionLogger.getInstance();
 
     public Cache( int size )
     {
@@ -46,7 +48,7 @@ public class Cache
         {
             cache.add( log );
         }
-        if ( cache.size() >= ConnectionLogger.getConfigHandler().getCacheSize() )
+        if ( cache.size() >= instance.getConfigHandler().getCacheSize() )
         {
             SendCache( true );
         }
@@ -70,7 +72,7 @@ public class Cache
 
             StringBuilder builder = new StringBuilder();
             builder.append( "-------------------------------------------------------------------------" ).append( System.lineSeparator() );
-            builder.append( "---------- ConnectionLogger " ).append( ConnectionLogger.getPlugin().getDescription().getVersion() ).append( " CACHE DUMP " ).append( formatter.format( Calendar.getInstance().getTimeInMillis() ) ).append( " ----------" ).append( System.lineSeparator() );
+            builder.append( "---------- ConnectionLogger " ).append( ConnectionLogger.getInstance().getDescription().getVersion() ).append( " CACHE DUMP " ).append( formatter.format( Calendar.getInstance().getTimeInMillis() ) ).append( " ----------" ).append( System.lineSeparator() );
             builder.append( "-------------------------------------------------------------------------" ).append( System.lineSeparator() );
             for ( Log log : getList() )
             {
@@ -87,10 +89,10 @@ public class Cache
             out = new PrintWriter( new BufferedWriter( new FileWriter( file, true ) ) );
             out.println( builder.toString() );
             Clear();
-            ConnectionLogger.getPluginLogger().log( Level.INFO, "{0}Successfully dumped to file", ChatColor.GREEN );
+            instance.getPluginLogger().log( Level.INFO, "{0}Successfully dumped to file", ChatColor.GREEN );
         } catch ( IOException ex )
         {
-            ConnectionLogger.getPluginLogger().log( Level.SEVERE, "IOException while dumping cache to file: {0}", ex.toString() );
+            instance.getPluginLogger().log( Level.SEVERE, "IOException while dumping cache to file: {0}", ex.toString() );
         } finally
         {
             if ( out != null )
@@ -102,7 +104,7 @@ public class Cache
 
     public synchronized void SendCache( boolean useFallback )
     {
-        if ( ConnectionLogger.getDefaultDatabaseHandler().AddFromCache( this ) )
+        if ( instance.getDefaultDatabaseHandler().AddFromCache( this ) )
         {
             StopTimer();
         } else if ( useFallback )

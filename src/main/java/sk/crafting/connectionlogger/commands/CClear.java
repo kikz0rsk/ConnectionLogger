@@ -20,7 +20,7 @@ public class CClear extends CLCommand
     public boolean onCommand( CommandSender sender, Command command, String string, String[] args )
     {
         sender.sendMessage( "Clearing entries..." );
-        ConnectionLogger.getDefaultDatabaseHandler().Clear();
+        ConnectionLogger.getInstance().getDefaultDatabaseHandler().Clear();
         return true;
     }
 

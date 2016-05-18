@@ -23,7 +23,7 @@ public class CPrintcache extends CLCommand
     public boolean onCommand( CommandSender sender, Command command, String string, String[] args )
     {
         SimpleDateFormat formatter = new SimpleDateFormat( Utils.getDefaultTimeFormat() );
-        for ( Log log : ConnectionLogger.getCache().getList() )
+        for ( Log log : ConnectionLogger.getInstance().getCache().getList() )
         {
             sender.sendMessage( String.format( "Time: %s | Type: %s | Player Name: %s | Player IP: %s | Player Hostname: %s | Player Port: %d | World: %s",
                     //log.getTime().substring(0, log.getTime().lastIndexOf(".")),

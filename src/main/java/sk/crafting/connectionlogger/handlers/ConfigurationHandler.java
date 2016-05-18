@@ -24,21 +24,24 @@ public final class ConfigurationHandler
     private boolean logPlayerConnect,
             logPlayerDisconnect,
             logPluginShutdown,
-            autoClean;
+            autoClean, safeMode;
 
-    private String db_host,
-            db_port,
-            db_user,
-            db_pass,
-            db_name,
-            db_tableName;
-    private int db_pools, timeout;
+    private String databaseHost,
+            databasePort,
+            databaseUser,
+            databasePassword,
+            databaseName,
+            databaseTableName;
+    private int databasePools, timeout;
 
     private int cacheSize, delayBeforeSend;
 
-    public ConfigurationHandler()
+    private ConnectionLogger instance;
+
+    public ConfigurationHandler(ConnectionLogger instance)
     {
-        file = new File( ConnectionLogger.getPlugin().getDataFolder(), "config.yml" );
+        this.instance = instance;
+        file = new File( ConnectionLogger.getInstance().getDataFolder(), "config.yml" );
         SaveDefaultConfig();
     }
 
@@ -52,7 +55,7 @@ public final class ConfigurationHandler
                 Files.copy( getClass().getResourceAsStream( "/config.yml" ), file.toPath(), StandardCopyOption.REPLACE_EXISTING );
             } catch ( IOException ex )
             {
-                ConnectionLogger.getPluginLogger().log( Level.SEVERE, "Failed to save default config file: {0}", ex.toString() );
+                instance.getPluginLogger().log( Level.SEVERE, "Failed to save default config file: {0}", ex.toString() );
             }
         }
         ReloadConfig();
@@ -68,22 +71,23 @@ public final class ConfigurationHandler
         cacheSize = conf.getInt( "cache.cache-size" );
         if ( cacheSize < 2 )
         {
-            ConnectionLogger.getPluginLogger().info( "Cache size is smaller than required value. Setting to 2" );
+            instance.getPluginLogger().info( "Cache size is smaller than required value. Setting to 2" );
             cacheSize = 2;
         }
         delayBeforeSend = conf.getInt( "cache.delay-before-send" );
-        db_host = conf.getString( "database.host" );
-        db_port = conf.getString( "database.port" );
-        db_user = conf.getString( "database.user" );
-        db_pass = conf.getString( "database.password" );
-        db_name = conf.getString( "database.database-name" );
-        db_tableName = conf.getString( "database.table-name" );
-        db_pools = conf.getInt( "database.pools" );
+        databaseHost = conf.getString( "database.host" );
+        databasePort = conf.getString( "database.port" );
+        databaseUser = conf.getString( "database.user" );
+        databasePassword = conf.getString( "database.password" );
+        databaseName = conf.getString( "database.database-name" );
+        databaseTableName = conf.getString( "database.table-name" );
+        databasePools = conf.getInt( "database.pools" );
         timeout = conf.getInt( "database.timeout" );
-        if ( db_pools < 1 )
+        safeMode = conf.getBoolean( "secure-mode" );
+        if ( databasePools < 1 )
         {
-            ConnectionLogger.getPluginLogger().info( "Pool size is smaller than required value. Setting to 1" );
-            db_pools = 1;
+            instance.getPluginLogger().info( "Pool size is smaller than required value. Setting to 1" );
+            databasePools = 1;
         }
     }
 
@@ -94,7 +98,7 @@ public final class ConfigurationHandler
             conf.save( file );
         } catch ( IOException ex )
         {
-            ConnectionLogger.getPluginLogger().log( Level.SEVERE, "Failed to save configuration file: {0}", ex.toString() );
+            instance.getPluginLogger().log( Level.SEVERE, "Failed to save configuration file: {0}", ex.toString() );
         }
         ReloadConfig();
     }
@@ -102,6 +106,11 @@ public final class ConfigurationHandler
     public FileConfiguration getConf()
     {
         return conf;
+    }
+
+    public boolean isSafeMode()
+    {
+        return safeMode;
     }
 
     public boolean isLogPlayerConnect()
@@ -119,39 +128,39 @@ public final class ConfigurationHandler
         return autoClean;
     }
 
-    public String getDb_host()
+    public String getDatabaseHost()
     {
-        return db_host;
+        return databaseHost;
     }
 
-    public String getDb_port()
+    public String getDatabasePort()
     {
-        return db_port;
+        return databasePort;
     }
 
-    public String getDb_user()
+    public String getDatabaseUser()
     {
-        return db_user;
+        return databaseUser;
     }
 
-    public String getDb_pass()
+    public String getDatabasePassword()
     {
-        return db_pass;
+        return databasePassword;
     }
 
-    public String getDb_name()
+    public String getDatabaseName()
     {
-        return db_name;
+        return databaseName;
     }
 
-    public String getDb_tableName()
+    public String getDatabaseTableName()
     {
-        return db_tableName;
+        return databaseTableName;
     }
 
-    public int getDb_pools()
+    public int getDatabasePools()
     {
-        return db_pools;
+        return databasePools;
     }
 
     public boolean isLogPluginShutdown()

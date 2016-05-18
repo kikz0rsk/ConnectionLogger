@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.sql.Time;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import sk.crafting.connectionlogger.ConnectionLogger;
 import sk.crafting.connectionlogger.cache.Cache;
@@ -31,9 +32,16 @@ public class DatabaseHandler implements IDatabaseHandler
 
     private String connectSql;
 
-    public DatabaseHandler()
+    private ConnectionLogger plugin;
+    private ConfigurationHandler configuration;
+    private Logger logger;
+    
+    public DatabaseHandler(ConnectionLogger plugin)
     {
         Init();
+        this.plugin = plugin;
+        configuration = plugin.getConfigHandler();
+        logger = plugin.getLogger();
     }
 
     private void Init()
@@ -41,13 +49,13 @@ public class DatabaseHandler implements IDatabaseHandler
         dataSource = new HikariDataSource();
         dataSource.setJdbcUrl( String.format(
                 "jdbc:mysql://%s:%s/%s",
-                ConnectionLogger.getConfigHandler().getDb_host(),
-                ConnectionLogger.getConfigHandler().getDb_port(),
-                ConnectionLogger.getConfigHandler().getDb_name()
+                configuration.getDatabaseHost(),
+                configuration.getDatabasePort(),
+                configuration.getDatabaseName()
         ) );
-        dataSource.setUsername( ConnectionLogger.getConfigHandler().getDb_user() );
-        dataSource.setPassword( ConnectionLogger.getConfigHandler().getDb_pass() );
-        dataSource.setMaximumPoolSize( ConnectionLogger.getConfigHandler().getDb_pools() );
+        dataSource.setUsername( configuration.getDatabaseUser());
+        dataSource.setPassword( configuration.getDatabasePassword());
+        dataSource.setMaximumPoolSize( configuration.getDatabasePools());
 //        dataSource.setConnectionInitSql(
 //                "CREATE TABLE IF NOT EXISTS " + ConnectionLogger.getConfigHandler().getDb_tableName()
 //                + "("
@@ -62,9 +70,9 @@ public class DatabaseHandler implements IDatabaseHandler
 //                + "PRIMARY KEY (ID)"
 //                + ")"
 //        );
-        dataSource.setConnectionTimeout( ConnectionLogger.getConfigHandler().getTimeout() );
+        dataSource.setConnectionTimeout( configuration.getTimeout() );
         connectSql
-                = "CREATE TABLE IF NOT EXISTS " + ConnectionLogger.getConfigHandler().getDb_tableName()
+                = "CREATE TABLE IF NOT EXISTS " + configuration.getDatabaseTableName()
                 + "("
                 + "id int NOT NULL AUTO_INCREMENT, "
                 + "time datetime NOT NULL, "
@@ -84,7 +92,7 @@ public class DatabaseHandler implements IDatabaseHandler
         if ( db_connection == null || db_connection.isClosed() )
         {
             db_connection = dataSource.getConnection();
-            ConnectionLogger.getPluginLogger().info( "Connected to database" );
+            logger.info( "Connected to database" );
 
 //        String sql = "CREATE TABLE IF NOT EXISTS " + db_tableName
 //                + "("
@@ -103,6 +111,7 @@ public class DatabaseHandler implements IDatabaseHandler
         CloseObjects( null, null, statement );
     }
 
+    @Override
     public boolean AddFromCache( Cache cache )
     {
         if ( cache.isEmpty() )
@@ -113,7 +122,7 @@ public class DatabaseHandler implements IDatabaseHandler
         try
         {
             Connect();
-            statement = db_connection.prepareStatement( "INSERT INTO " + ConnectionLogger.getConfigHandler().getDb_tableName() + " (time, type, player_name, player_ip, player_hostname, player_port, world, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?)" );
+            statement = db_connection.prepareStatement( "INSERT INTO " + configuration.getDatabaseTableName()+ " (time, type, player_name, player_ip, player_hostname, player_port, world, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?)" );
             for ( Log log : cache.toArray() )
             {
                 statement.setString( 1, formatter.format( log.getTime() ) );
@@ -131,30 +140,32 @@ public class DatabaseHandler implements IDatabaseHandler
             return true;
         } catch ( Exception ex )
         {
-            ConnectionLogger.getPluginLogger().log( Level.SEVERE, "Failed to send cache to database: {0}", ex.toString() );
+            logger.log( Level.SEVERE, "Failed to send cache to database: {0}", ex.toString() );
             return false;
         } finally
-        {
+        { 
             CloseObjects( db_connection, null, statement );
         }
     }
 
+    @Override
     public void TestConnection()
     {
-        ConnectionLogger.getPluginLogger().info( "Testing connection to database..." );
+        logger.info( "Testing connection to database..." );
         try
         {
             Connect();
-            ConnectionLogger.getPluginLogger().info( "Connection to database works!" );
+            logger.info( "Connection to database works!" );
         } catch ( Exception ex )
         {
-            ConnectionLogger.getPluginLogger().info( "Connection to database failed: " + ex.toString() );
+            logger.log(Level.INFO, "Connection to database failed: {0}", ex.toString());
         } finally
         {
             Disconnect();
         }
     }
 
+    @Override
     public void Clear()
     {
         PreparedStatement statement = null;
@@ -162,13 +173,13 @@ public class DatabaseHandler implements IDatabaseHandler
         {
             Connect();
             statement = db_connection.prepareStatement(
-                    "UPDATE " + ConnectionLogger.getConfigHandler().getDb_tableName() + " SET deleted=?"
+                    "UPDATE " + configuration.getDatabaseTableName()+ " SET deleted=?"
             );
             statement.setBoolean( 1, true );
             statement.executeUpdate();
         } catch ( Exception ex )
         {
-            ConnectionLogger.getPluginLogger().severe( "Failed to send SQL: " + ex.toString() );
+            logger.severe( "Failed to send SQL: " + ex.toString() );
         } finally
         {
             CloseObjects( db_connection, null, statement );
@@ -182,14 +193,15 @@ public class DatabaseHandler implements IDatabaseHandler
             if ( db_connection != null )
             {
                 db_connection.close();
-                ConnectionLogger.getPluginLogger().info( "Connection to database closed" );
+                logger.info( "Connection to database closed" );
             }
         } catch ( Exception ex )
         {
-            ConnectionLogger.getPluginLogger().warning( "Failed to close connection to database: " + ex.toString() );
+            logger.warning( "Failed to close connection to database: " + ex.toString() );
         }
     }
 
+    @Override
     public ArrayList<String> getLogs( long max )
     {
         PreparedStatement statement = null;
@@ -198,7 +210,7 @@ public class DatabaseHandler implements IDatabaseHandler
         {
             Connect();
             statement = db_connection.prepareStatement(
-                    "SELECT * FROM " + ConnectionLogger.getConfigHandler().getDb_tableName() + " WHERE time>=? AND deleted=0"
+                    "SELECT * FROM " + configuration.getDatabaseTableName()+ " WHERE time>=? AND deleted=0"
             );
             statement.setString( 1, formatter.format( max ) );
             result = statement.executeQuery();
@@ -221,7 +233,7 @@ public class DatabaseHandler implements IDatabaseHandler
             return output;
         } catch ( Exception ex )
         {
-            ConnectionLogger.getPluginLogger().severe( "Failed to send SQL: " + ex.toString() );
+            logger.log(Level.SEVERE, "Failed to send SQL: {0}", ex.toString());
         } finally
         {
             CloseObjects( db_connection, result, statement );
@@ -247,21 +259,23 @@ public class DatabaseHandler implements IDatabaseHandler
             }
         } catch ( SQLException ex )
         {
-            ConnectionLogger.getPluginLogger().warning( "Failed to close database statement: " + ex.toString() );
+            logger.warning( "Failed to close database statement: " + ex.toString() );
         }
     }
 
+    @Override
     public void Reload()
     {
         Disconnect();
         Init();
         TestConnection();
-        if ( !ConnectionLogger.getCache().isEmpty() )
+        if ( !plugin.getCache().isEmpty() )
         {
-            ConnectionLogger.getCache().SendCache( false );
+            plugin.getCache().SendCache( false );
         }
     }
 
+    @Override
     public void Disable()
     {
         Disconnect();
