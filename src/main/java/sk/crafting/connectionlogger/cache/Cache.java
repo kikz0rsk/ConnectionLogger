@@ -39,7 +39,7 @@ public class Cache
 
     public Cache( List<? extends Log> collection )
     {
-        cache = new ArrayList<>( collection );
+        cache = new ArrayList<Log>( collection );
     }
 
     public void Add( Log log )

@@ -24,7 +24,7 @@ public final class ConfigurationHandler
     private boolean logPlayerConnect,
             logPlayerDisconnect,
             logPluginShutdown,
-            autoClean, safeMode;
+            safeMode;
 
     private String databaseHost,
             databasePort,
@@ -67,7 +67,6 @@ public final class ConfigurationHandler
         logPlayerConnect = conf.getBoolean( "logging.player-connect" );
         logPlayerDisconnect = conf.getBoolean( "logging.player-disconnect" );
         logPluginShutdown = conf.getBoolean( "logging.plugin-shutdown" );
-        autoClean = conf.getBoolean( "auto-cleaning.server-shutdown" );
         cacheSize = conf.getInt( "cache.cache-size" );
         if ( cacheSize < 2 )
         {
@@ -121,11 +120,6 @@ public final class ConfigurationHandler
     public boolean isLogPlayerDisconnect()
     {
         return logPlayerDisconnect;
-    }
-
-    public boolean isAutoClean()
-    {
-        return autoClean;
     }
 
     public String getDatabaseHost()

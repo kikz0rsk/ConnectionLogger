@@ -71,10 +71,6 @@ public class ConnectionLogger extends JavaPlugin
     private void Disable()
     {
         cache.StopTimer();
-        if ( configHandler.isAutoClean() )
-        {
-            databaseHandler.Clear();
-        }
         if ( configHandler.isLogPluginShutdown() )
         {
             cache.Add( Utils.getPluginShutdownLog() );
