@@ -14,19 +14,18 @@ public class CDumpcache extends CLCommand
 
     public CDumpcache()
     {
-        super( "dumpcache", "connectionlogger.dumpcache", true );
+        super("dumpcache", "connectionlogger.dumpcache", true, "Force to dump cache to database");
     }
 
     @Override
-    public boolean onCommand( CommandSender sender, Command command, String string, String[] args )
+    public boolean onCommand(CommandSender sender, Command command, String string, String[] args)
     {
-        if ( ConnectionLogger.getInstance().getCache().isEmpty() )
-        {
-            sender.sendMessage( ChatColor.GRAY + "Cache is empty" );
+        if (ConnectionLogger.getInstance().getCache().isEmpty()) {
+            sender.sendMessage(ChatColor.GRAY + "Cache is empty");
             return true;
         }
-        sender.sendMessage( ChatColor.GREEN + "Dumping cache..." );
-        ConnectionLogger.getInstance().getCache().SendCache( true );
+        sender.sendMessage(ChatColor.GREEN + "Dumping cache...");
+        ConnectionLogger.getInstance().getCache().SendCache(true);
         return true;
     }
 

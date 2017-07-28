@@ -12,12 +12,14 @@ public abstract class CLCommand implements CommandExecutor
     protected String name;
     protected String permission;
     protected boolean hasPermission;
+    protected String description;
 
-    public CLCommand( String name, String permission, boolean hasPermission )
+    public CLCommand(String name, String permission, boolean hasPermission, String description)
     {
         this.name = name;
         this.permission = permission;
         this.hasPermission = hasPermission;
+        this.description = description;
     }
 
     public String getName()
@@ -33,6 +35,11 @@ public abstract class CLCommand implements CommandExecutor
     public boolean hasPermission()
     {
         return hasPermission;
+    }
+
+    public String getDescription()
+    {
+        return description;
     }
 
 }

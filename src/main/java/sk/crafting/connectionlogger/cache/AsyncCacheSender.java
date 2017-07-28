@@ -17,7 +17,7 @@ public class AsyncCacheSender
 
     private final Object LOCK = new Object();
 
-    public AsyncCacheSender( Cache cache )
+    public AsyncCacheSender(Cache cache)
     {
         this.cache = cache;
     }
@@ -25,43 +25,39 @@ public class AsyncCacheSender
     public void StartTimer()
     {
         timer = new Timer();
-        timer.schedule( new TimerTask()
+        timer.schedule(new TimerTask()
         {
             @Override
             public void run()
             {
-                if ( ConnectionLogger.getInstance().getDefaultDatabaseHandler() != null )
-                {
-                    ConnectionLogger.getInstance().getPluginLogger().info( "Sending cache..." );
-                    cache.SendCache( false );
+                if (ConnectionLogger.getInstance().getDefaultDatabaseHandler() != null) {
+                    ConnectionLogger.getInstance().getPluginLogger().info("Sending cache...");
+                    cache.SendCache(false);
                 }
-                SetScheduled( false );
+                SetScheduled(false);
             }
-        }, ConnectionLogger.getInstance().getConfigHandler().getDelayBeforeSend() );
-        SetScheduled( true );
+        }, ConnectionLogger.getInstance().getConfigHandler().getDelayBeforeSend());
+        SetScheduled(true);
     }
 
-    private void SetScheduled( boolean state )
+    private void SetScheduled(boolean state)
     {
-        synchronized ( LOCK )
-        {
+        synchronized (LOCK) {
             scheduled = state;
         }
     }
 
     public void StopTimer()
     {
-        if ( timer != null )
-        {
+        if (timer != null) {
             timer.cancel();
-            SetScheduled( false );
+            SetScheduled(false);
         }
     }
 
     public boolean isScheduled()
     {
-        synchronized ( LOCK )
-        {
+        synchronized (LOCK) {
             return scheduled;
         }
     }

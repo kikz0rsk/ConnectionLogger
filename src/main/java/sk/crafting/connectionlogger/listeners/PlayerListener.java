@@ -15,21 +15,19 @@ import sk.crafting.connectionlogger.tasks.AsyncAddToCache;
 public class PlayerListener implements Listener
 {
 
-    @EventHandler( priority = EventPriority.MONITOR )
-    public void OnPlayerConnect( PlayerJoinEvent event )
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void OnPlayerConnect(PlayerJoinEvent event)
     {
-        if ( ConnectionLogger.getInstance().getConfigHandler().isLogPlayerConnect() )
-        {
-            new AsyncAddToCache( EventType.CONNECT, System.currentTimeMillis(), event.getPlayer() ).runTaskAsynchronously( ConnectionLogger.getInstance());
+        if (ConnectionLogger.getInstance().getConfigHandler().isLogPlayerConnect()) {
+            new AsyncAddToCache(EventType.CONNECT, System.currentTimeMillis(), event.getPlayer()).runTaskAsynchronously(ConnectionLogger.getInstance());
         }
     }
 
-    @EventHandler( priority = EventPriority.MONITOR )
-    public void OnPlayerDisconnect( PlayerQuitEvent event )
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void OnPlayerDisconnect(PlayerQuitEvent event)
     {
-        if ( ConnectionLogger.getInstance().getConfigHandler().isLogPlayerDisconnect() )
-        {
-            new AsyncAddToCache( EventType.DISCONNECT, System.currentTimeMillis(), event.getPlayer() ).runTaskAsynchronously( ConnectionLogger.getInstance());
+        if (ConnectionLogger.getInstance().getConfigHandler().isLogPlayerDisconnect()) {
+            new AsyncAddToCache(EventType.DISCONNECT, System.currentTimeMillis(), event.getPlayer()).runTaskAsynchronously(ConnectionLogger.getInstance());
         }
     }
 

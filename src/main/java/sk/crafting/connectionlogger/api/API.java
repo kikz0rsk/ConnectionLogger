@@ -21,16 +21,15 @@ public class API
 
     public static API getInstance()
     {
-        if ( instance == null )
-        {
+        if (instance == null) {
             instance = new API(ConnectionLogger.getInstance());
         }
         return instance;
     }
 
-    public boolean setCustomDatabaseHandler( IDatabaseHandler handler, Plugin caller )
+    public boolean setCustomDatabaseHandler(IDatabaseHandler handler, Plugin caller)
     {
-        return this.plugin.setCustomDatabaseHandler( handler, caller );
+        return this.plugin.setCustomDatabaseHandler(handler, caller);
     }
 
 }

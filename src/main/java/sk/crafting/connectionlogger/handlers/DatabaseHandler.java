@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,6 +26,7 @@ public class DatabaseHandler implements IDatabaseHandler
 {
 
     private final SimpleDateFormat formatter = new SimpleDateFormat(Utils.getDatabaseTimeFormat());
+    private final SimpleDateFormat defaultFormatter = new SimpleDateFormat(Utils.getDefaultTimeFormat());
 
     private Connection db_connection;
     private HikariDataSource dataSource;
@@ -200,11 +201,11 @@ public class DatabaseHandler implements IDatabaseHandler
             result = statement.executeQuery();
             ArrayList<String> output = new ArrayList<>();
             while (result.next()) {
-                Time time = result.getTime("time");
+                Timestamp time = result.getTimestamp("time");
                 output.add(String.format(
                         "ID: %s | Time: %s | Type: %s | Player Name: %s | Player IP: %s | Player Hostname: %s | Player Port: %d | World: %s",
-                        result.getString("ID"),
-                        formatter.format(time.getTime()),
+                        result.getString("id"),
+                        defaultFormatter.format(time.getTime()),
                         result.getString("type"),
                         result.getString("player_name"),
                         result.getString("player_ip"),

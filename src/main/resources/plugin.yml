@@ -5,7 +5,7 @@ author: kikz0r_sk
 version: 1.5
 commands:
     cl:
-        description: Show connection log
+        description: Main command with subcommands
         usage: /cl <print|reload|clear|help|dumpcache>
         permission: connectionlogger.cl
 permissions:

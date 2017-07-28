@@ -13,13 +13,13 @@ public class CClear extends CLCommand
 
     public CClear()
     {
-        super( "clear", "connectionlogger.clear", true );
+        super("clear", "connectionlogger.clear", true, "Clear all logs");
     }
 
     @Override
-    public boolean onCommand( CommandSender sender, Command command, String string, String[] args )
+    public boolean onCommand(CommandSender sender, Command command, String string, String[] args)
     {
-        sender.sendMessage( "Clearing entries..." );
+        sender.sendMessage("Clearing entries...");
         ConnectionLogger.getInstance().getDefaultDatabaseHandler().Clear();
         return true;
     }

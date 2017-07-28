@@ -16,40 +16,35 @@ public class CPrint extends CLCommand
 
     public CPrint()
     {
-        super( "print", "connectionlogger.print", true );
+        super("print", "connectionlogger.print", true, "Print logs");
     }
 
     @Override
-    public boolean onCommand( CommandSender sender, Command command, String string, String[] args )
+    public boolean onCommand(CommandSender sender, Command command, String string, String[] args)
     {
         Calendar calendar = Calendar.getInstance();
         int hours = -24;
-        if ( args.length >= 2 )
-        {
-            try
-            {
-                hours = Integer.parseInt( args[ 1 ] );
+        if (args.length >= 2) {
+            try {
+                hours = Integer.parseInt(args[1]);
 
-            } catch ( NumberFormatException nfe )
-            {
-                sender.sendMessage( ChatColor.RED + "Failed to parse number!" );
+            } catch (NumberFormatException nfe) {
+                sender.sendMessage(ChatColor.RED + "Failed to parse number!");
                 return true;
             }
-            if ( hours == 0 )
-            {
-                sender.sendMessage( "Invalid number" );
+            if (hours == 0) {
+                sender.sendMessage("Invalid number");
                 return true;
             }
-            if ( hours > 0 );
+            if (hours > 0);
             {
                 hours = -hours;
             }
         }
-        calendar.add( Calendar.HOUR_OF_DAY, hours );
-        ArrayList<String> result = ConnectionLogger.getInstance().getDefaultDatabaseHandler().getLogs( calendar.getTimeInMillis() );
-        if ( result != null )
-        {
-            sender.sendMessage( result.toArray( new String[ result.size() ] ) );
+        calendar.add(Calendar.HOUR_OF_DAY, hours);
+        ArrayList<String> result = ConnectionLogger.getInstance().getDefaultDatabaseHandler().getLogs(calendar.getTimeInMillis());
+        if (result != null) {
+            sender.sendMessage(result.toArray(new String[result.size()]));
         }
         return true;
     }

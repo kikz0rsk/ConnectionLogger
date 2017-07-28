@@ -41,21 +41,18 @@ public final class ConfigurationHandler
     public ConfigurationHandler(ConnectionLogger instance)
     {
         this.instance = instance;
-        file = new File( ConnectionLogger.getInstance().getDataFolder(), "config.yml" );
+        file = new File(ConnectionLogger.getInstance().getDataFolder(), "config.yml");
         SaveDefaultConfig();
     }
 
     public void SaveDefaultConfig()
     {
         file.getParentFile().mkdirs();
-        if ( !file.exists() )
-        {
-            try
-            {
-                Files.copy( getClass().getResourceAsStream( "/config.yml" ), file.toPath(), StandardCopyOption.REPLACE_EXISTING );
-            } catch ( IOException ex )
-            {
-                instance.getPluginLogger().log( Level.SEVERE, "Failed to save default config file: {0}", ex.toString() );
+        if (!file.exists()) {
+            try {
+                Files.copy(getClass().getResourceAsStream("/config.yml"), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException ex) {
+                instance.getPluginLogger().log(Level.SEVERE, "Failed to save default config file: {0}", ex.toString());
             }
         }
         ReloadConfig();
@@ -63,41 +60,37 @@ public final class ConfigurationHandler
 
     public void ReloadConfig()
     {
-        conf = YamlConfiguration.loadConfiguration( file );
-        logPlayerConnect = conf.getBoolean( "logging.player-connect" );
-        logPlayerDisconnect = conf.getBoolean( "logging.player-disconnect" );
-        logPluginShutdown = conf.getBoolean( "logging.plugin-shutdown" );
-        cacheSize = conf.getInt( "cache.cache-size" );
-        if ( cacheSize < 2 )
-        {
-            instance.getPluginLogger().info( "Cache size is smaller than required value. Setting to 2" );
+        conf = YamlConfiguration.loadConfiguration(file);
+        logPlayerConnect = conf.getBoolean("logging.player-connect");
+        logPlayerDisconnect = conf.getBoolean("logging.player-disconnect");
+        logPluginShutdown = conf.getBoolean("logging.plugin-shutdown");
+        cacheSize = conf.getInt("cache.cache-size");
+        if (cacheSize < 2) {
+            instance.getPluginLogger().info("Cache size is smaller than required value. Setting to 2");
             cacheSize = 2;
         }
-        delayBeforeSend = conf.getInt( "cache.delay-before-send" );
-        databaseHost = conf.getString( "database.host" );
-        databasePort = conf.getString( "database.port" );
-        databaseUser = conf.getString( "database.user" );
-        databasePassword = conf.getString( "database.password" );
-        databaseName = conf.getString( "database.database-name" );
-        databaseTableName = conf.getString( "database.table-name" );
-        databasePools = conf.getInt( "database.pools" );
-        timeout = conf.getInt( "database.timeout" );
-        safeMode = conf.getBoolean( "secure-mode" );
-        if ( databasePools < 1 )
-        {
-            instance.getPluginLogger().info( "Pool size is smaller than required value. Setting to 1" );
+        delayBeforeSend = conf.getInt("cache.delay-before-send");
+        databaseHost = conf.getString("database.host");
+        databasePort = conf.getString("database.port");
+        databaseUser = conf.getString("database.user");
+        databasePassword = conf.getString("database.password");
+        databaseName = conf.getString("database.database-name");
+        databaseTableName = conf.getString("database.table-name");
+        databasePools = conf.getInt("database.pools");
+        timeout = conf.getInt("database.timeout");
+        safeMode = conf.getBoolean("secure-mode");
+        if (databasePools < 1) {
+            instance.getPluginLogger().info("Pool size is smaller than required value. Setting to 1");
             databasePools = 1;
         }
     }
 
     public void SaveConfig()
     {
-        try
-        {
-            conf.save( file );
-        } catch ( IOException ex )
-        {
-            instance.getPluginLogger().log( Level.SEVERE, "Failed to save configuration file: {0}", ex.toString() );
+        try {
+            conf.save(file);
+        } catch (IOException ex) {
+            instance.getPluginLogger().log(Level.SEVERE, "Failed to save configuration file: {0}", ex.toString());
         }
         ReloadConfig();
     }

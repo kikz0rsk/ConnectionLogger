@@ -26,39 +26,36 @@ public class Cache
 {
 
     private final List<Log> cache;
-    private final AsyncCacheSender cacheSender = new AsyncCacheSender( this );
-    private final File file = new File( ConnectionLogger.getInstance().getDataFolder(), "cache_dump.log" );
-    private final SimpleDateFormat formatter = new SimpleDateFormat( Utils.getDatabaseTimeFormat() );
-    
+    private final AsyncCacheSender cacheSender = new AsyncCacheSender(this);
+    private final File file = new File(ConnectionLogger.getInstance().getDataFolder(), "cache_dump.log");
+    private final SimpleDateFormat formatter = new SimpleDateFormat(Utils.getDatabaseTimeFormat());
+
     private ConnectionLogger instance = ConnectionLogger.getInstance();
 
-    public Cache( int size )
+    public Cache(int size)
     {
-        cache = new ArrayList<>( size );
+        cache = new ArrayList<>(size);
     }
 
-    public Cache( List<? extends Log> collection )
+    public Cache(List<? extends Log> collection)
     {
-        cache = new ArrayList<Log>( collection );
+        cache = new ArrayList<Log>(collection);
     }
 
-    public void Add( Log log )
+    public void Add(Log log)
     {
-        synchronized ( this )
-        {
-            cache.add( log );
+        synchronized (this) {
+            cache.add(log);
         }
-        if ( cache.size() >= instance.getConfigHandler().getCacheSize() )
-        {
-            SendCache( true );
+        if (cache.size() >= instance.getConfigHandler().getCacheSize()) {
+            SendCache(true);
         }
     }
 
-    public void Add( long time, EventType type, Player player )
+    public void Add(long time, EventType type, Player player)
     {
-        Add( new Log( time, type, player.getName(), player.getAddress().getAddress().getHostAddress(), player.getAddress().getAddress().getHostName(), player.getAddress().getPort(), player.getWorld().getName() ) );
-        if ( !( isEmpty() || isScheduled() ) )
-        {
+        Add(new Log(time, type, player.getName(), player.getAddress().getAddress().getHostAddress(), player.getAddress().getAddress().getHostName(), player.getAddress().getPort(), player.getWorld().getName()));
+        if (!(isEmpty() || isScheduled())) {
             StartTimer();
         }
     }
@@ -67,48 +64,41 @@ public class Cache
     {
         file.getParentFile().mkdirs();
         PrintWriter out = null;
-        try
-        {
+        try {
 
             StringBuilder builder = new StringBuilder();
-            builder.append( "-------------------------------------------------------------------------" ).append( System.lineSeparator() );
-            builder.append( "---------- ConnectionLogger " ).append( ConnectionLogger.getInstance().getDescription().getVersion() ).append( " CACHE DUMP " ).append( formatter.format( Calendar.getInstance().getTimeInMillis() ) ).append( " ----------" ).append( System.lineSeparator() );
-            builder.append( "-------------------------------------------------------------------------" ).append( System.lineSeparator() );
-            for ( Log log : getList() )
-            {
-                builder.append( "Time: " ).append( formatter.format( log.getTime() ) ).append( System.lineSeparator() );
-                builder.append( "Type: " ).append( log.getType() ).append( System.lineSeparator() );
-                builder.append( "Player Name: " ).append( log.getPlayerName() ).append( System.lineSeparator() );
-                builder.append( "Player IP: " ).append( log.getPlayerIp() ).append( System.lineSeparator() );
-                builder.append( "Player Hostname: " ).append( log.getPlayerHostname() ).append( System.lineSeparator() );
-                builder.append( "Player Port: " ).append( log.getPlayerPort() ).append( System.lineSeparator() );
-                builder.append( "World: " ).append( log.getWorld() ).append( System.lineSeparator() );
-                builder.append( "=========================================================================" ).append( System.lineSeparator() );
-                builder.append( System.lineSeparator() );
+            builder.append("-------------------------------------------------------------------------").append(System.lineSeparator());
+            builder.append("---------- ConnectionLogger ").append(ConnectionLogger.getInstance().getDescription().getVersion()).append(" CACHE DUMP ").append(formatter.format(Calendar.getInstance().getTimeInMillis())).append(" ----------").append(System.lineSeparator());
+            builder.append("-------------------------------------------------------------------------").append(System.lineSeparator());
+            for (Log log : getList()) {
+                builder.append("Time: ").append(formatter.format(log.getTime())).append(System.lineSeparator());
+                builder.append("Type: ").append(log.getType()).append(System.lineSeparator());
+                builder.append("Player Name: ").append(log.getPlayerName()).append(System.lineSeparator());
+                builder.append("Player IP: ").append(log.getPlayerIp()).append(System.lineSeparator());
+                builder.append("Player Hostname: ").append(log.getPlayerHostname()).append(System.lineSeparator());
+                builder.append("Player Port: ").append(log.getPlayerPort()).append(System.lineSeparator());
+                builder.append("World: ").append(log.getWorld()).append(System.lineSeparator());
+                builder.append("=========================================================================").append(System.lineSeparator());
+                builder.append(System.lineSeparator());
             }
-            out = new PrintWriter( new BufferedWriter( new FileWriter( file, true ) ) );
-            out.println( builder.toString() );
+            out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
+            out.println(builder.toString());
             Clear();
-            instance.getPluginLogger().log( Level.INFO, "{0}Successfully dumped to file", ChatColor.GREEN );
-        } catch ( IOException ex )
-        {
-            instance.getPluginLogger().log( Level.SEVERE, "IOException while dumping cache to file: {0}", ex.toString() );
-        } finally
-        {
-            if ( out != null )
-            {
+            instance.getPluginLogger().log(Level.INFO, "{0}Successfully dumped to file", ChatColor.GREEN);
+        } catch (IOException ex) {
+            instance.getPluginLogger().log(Level.SEVERE, "IOException while dumping cache to file: {0}", ex.toString());
+        } finally {
+            if (out != null) {
                 out.close();
             }
         }
     }
 
-    public synchronized void SendCache( boolean useFallback )
+    public synchronized void SendCache(boolean useFallback)
     {
-        if ( instance.getDefaultDatabaseHandler().AddFromCache( this ) )
-        {
+        if (instance.getDefaultDatabaseHandler().AddFromCache(this)) {
             StopTimer();
-        } else if ( useFallback )
-        {
+        } else if (useFallback) {
             DumpCacheToFile();
         }
     }
@@ -120,7 +110,7 @@ public class Cache
 
     public synchronized Log[] toArray()
     {
-        return cache.toArray( new Log[ cache.size() ] );
+        return cache.toArray(new Log[cache.size()]);
     }
 
     public synchronized boolean isEmpty()
