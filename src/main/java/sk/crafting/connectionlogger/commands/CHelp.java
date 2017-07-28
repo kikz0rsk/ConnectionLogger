@@ -25,8 +25,9 @@ public class CHelp extends CLCommand
         ));
         StringBuilder builder = new StringBuilder();
         for(CLCommand cmd : ConnectionLogger.getInstance().getCommandRouter().getCommands().values()) {
-            builder.append(String.format("%s%s %s- %s%n", ChatColor.RED, cmd.getName(), ChatColor.AQUA, cmd.getDescription()));
+            builder.append(String.format("%s%s %s- %s%n", ChatColor.GOLD, cmd.getName(), ChatColor.LIGHT_PURPLE, cmd.getDescription()));
         }
+        sender.sendMessage(builder.toString());
         return true;
     }
 
