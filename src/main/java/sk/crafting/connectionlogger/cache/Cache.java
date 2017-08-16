@@ -1,29 +1,22 @@
 package sk.crafting.connectionlogger.cache;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import sk.crafting.connectionlogger.ConnectionLogger;
+import sk.crafting.connectionlogger.listeners.EventType;
+import sk.crafting.connectionlogger.utils.Utils;
+
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
-import org.bukkit.ChatColor;
-
-import org.bukkit.entity.Player;
-
-import sk.crafting.connectionlogger.ConnectionLogger;
-import sk.crafting.connectionlogger.listeners.EventType;
-import sk.crafting.connectionlogger.utils.Utils;
 
 /**
- *
  * @author Red-Eye~kikz0r_sk
  */
-public class Cache
-{
+public class Cache {
 
     private final List<Log> cache;
     private final AsyncCacheSender cacheSender = new AsyncCacheSender(this);
@@ -32,36 +25,29 @@ public class Cache
 
     private ConnectionLogger instance = ConnectionLogger.getInstance();
 
-    public Cache(int size)
-    {
+    public Cache(int size) {
         cache = new ArrayList<>(size);
     }
 
-    public Cache(List<? extends Log> collection)
-    {
+    public Cache(List<? extends Log> collection) {
         cache = new ArrayList<Log>(collection);
     }
 
-    public void Add(Log log)
-    {
-        synchronized (this) {
-            cache.add(log);
-        }
+    public synchronized void Add(Log log) {
+        cache.add(log);
         if (cache.size() >= instance.getConfigHandler().getCacheSize()) {
             SendCache(true);
         }
     }
 
-    public void Add(long time, EventType type, Player player)
-    {
+    public void Add(long time, EventType type, Player player) {
         Add(new Log(time, type, player.getName(), player.getAddress().getAddress().getHostAddress(), player.getAddress().getAddress().getHostName(), player.getAddress().getPort(), player.getWorld().getName()));
         if (!(isEmpty() || isScheduled())) {
             StartTimer();
         }
     }
 
-    public synchronized void DumpCacheToFile()
-    {
+    public synchronized void DumpCacheToFile() {
         file.getParentFile().mkdirs();
         PrintWriter out = null;
         try {
@@ -94,8 +80,7 @@ public class Cache
         }
     }
 
-    public synchronized void SendCache(boolean useFallback)
-    {
+    public synchronized void SendCache(boolean useFallback) {
         if (instance.getDefaultDatabaseHandler().AddFromCache(this)) {
             StopTimer();
         } else if (useFallback) {
@@ -103,43 +88,35 @@ public class Cache
         }
     }
 
-    public synchronized int getSize()
-    {
+    public synchronized int getSize() {
         return cache.size();
     }
 
-    public synchronized Log[] toArray()
-    {
+    public synchronized Log[] toArray() {
         return cache.toArray(new Log[cache.size()]);
     }
 
-    public synchronized boolean isEmpty()
-    {
+    public synchronized boolean isEmpty() {
         return cache.isEmpty();
     }
 
-    public synchronized void Clear()
-    {
+    public synchronized void Clear() {
         cache.clear();
     }
 
-    public synchronized List<Log> getList()
-    {
+    public synchronized List<Log> getList() {
         return cache;
     }
 
-    public void StartTimer()
-    {
+    public void StartTimer() {
         cacheSender.StartTimer();
     }
 
-    public void StopTimer()
-    {
+    public void StopTimer() {
         cacheSender.StopTimer();
     }
 
-    public boolean isScheduled()
-    {
+    public boolean isScheduled() {
         return cacheSender.isScheduled();
     }
 

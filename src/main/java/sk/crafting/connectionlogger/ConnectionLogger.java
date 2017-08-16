@@ -13,6 +13,7 @@ import sk.crafting.connectionlogger.handlers.ConfigurationHandler;
 import sk.crafting.connectionlogger.handlers.DatabaseHandler;
 import sk.crafting.connectionlogger.handlers.IDatabaseHandler;
 import sk.crafting.connectionlogger.listeners.PlayerListener;
+import sk.crafting.connectionlogger.session.SessionManager;
 import sk.crafting.connectionlogger.utils.Utils;
 
 /**
@@ -26,6 +27,7 @@ public class ConnectionLogger extends JavaPlugin
     private CommandRouter commandRouter;
 
     private IDatabaseHandler databaseHandler;
+    private SessionManager sessionManager;
 
     private Logger logger;
     private ConfigurationHandler configHandler;
@@ -45,8 +47,10 @@ public class ConnectionLogger extends JavaPlugin
         cache = new Cache(configHandler.getCacheSize());
         databaseHandler = new DatabaseHandler(this);
         databaseHandler.TestConnection();
-        logger.log(Level.INFO, "Pool Size: {0}", configHandler.getDatabasePools());
-        logger.log(Level.INFO, "Cache Size: {0}", configHandler.getCacheSize());
+        sessionManager = new SessionManager();
+        sessionManager.StartSession();
+        logger.info("Started new session with hash " + sessionManager.getCurrentSession().getHashHex());
+        printInfoMessages();
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
     }
 
@@ -56,13 +60,17 @@ public class ConnectionLogger extends JavaPlugin
         Disable();
     }
 
+    private void printInfoMessages() {
+        logger.log(Level.INFO, "Pool Size: {0}", configHandler.getDatabasePools());
+        logger.log(Level.INFO, "Cache Size: {0}", configHandler.getCacheSize());
+    }
+
     public void Reload()
     {
         configHandler.SaveDefaultConfig();
         cache.SendCache(false);
         databaseHandler.Reload();
-        logger.log(Level.INFO, "Pool Size: {0}", configHandler.getDatabasePools());
-        logger.log(Level.INFO, "Cache Size: {0}", configHandler.getCacheSize());
+        printInfoMessages();
         if (!cache.isEmpty()) {
             cache = new Cache(cache.getList());
             logger.log(Level.INFO, "Cache was not empty during reload - cache size was not changed");
