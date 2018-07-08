@@ -1,4 +1,4 @@
-# If enabled, CL will dissalow custom database handling
+# If enabled, CL will disable custom database handling
 secure-mode: false
 logging:
     # Log player connect event
@@ -9,11 +9,12 @@ logging:
     player-disconnect: true
 # Cache where players logs are stored before we send them to database.
 # If connection to database is not available, here are stored until we successfully connect to database
-# Default: 50
+# These settings control triggers for sending cache
 cache:
-    cache-size: 20
-    # Time in miliseconds before sending cache to database
-    delay-before-send: 10000
+    # When cache hit this number of records, it immediately sends cache (this does not define size of cache itself)
+    cache-size-trigger: 20
+    # Time in milliseconds before sending cache to database after first record
+    delay-before-send: 5000
 # MySQL Credentials - Please Fill Correctly
 database:
     host: ""
@@ -22,5 +23,5 @@ database:
     table-name: "connectionlogger"
     user: ""
     password: ""
-    pools: 1
+    pool-size: 1
     timeout: 5000

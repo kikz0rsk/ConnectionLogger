@@ -27,7 +27,7 @@ public class Cache {
     private ConnectionLogger instance = ConnectionLogger.getInstance();
 
     public Cache(int size) {
-        cache = new ArrayList<>(size);
+        cache = new ArrayList<>(size + 2);
     }
 
     public Cache(List<? extends Log> collection) {

@@ -64,7 +64,7 @@ public final class ConfigurationHandler
         logPlayerConnect = conf.getBoolean("logging.player-connect");
         logPlayerDisconnect = conf.getBoolean("logging.player-disconnect");
         logPluginShutdown = conf.getBoolean("logging.plugin-shutdown");
-        cacheSize = conf.getInt("cache.cache-size");
+        cacheSize = conf.getInt("cache.cache-size-trigger");
         if (cacheSize < 2) {
             instance.getPluginLogger().info("Cache size is smaller than required value. Setting to 2");
             cacheSize = 2;
@@ -76,7 +76,7 @@ public final class ConfigurationHandler
         databasePassword = conf.getString("database.password");
         databaseName = conf.getString("database.database-name");
         databaseTableName = conf.getString("database.table-name");
-        databasePools = conf.getInt("database.pools");
+        databasePools = conf.getInt("database.pool-size");
         timeout = conf.getInt("database.timeout");
         safeMode = conf.getBoolean("secure-mode");
         if (databasePools < 1) {
