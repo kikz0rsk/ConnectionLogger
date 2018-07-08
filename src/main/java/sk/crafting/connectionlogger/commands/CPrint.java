@@ -27,7 +27,6 @@ public class CPrint extends CLCommand
         if (args.length >= 2) {
             try {
                 hours = Integer.parseInt(args[1]);
-
             } catch (NumberFormatException nfe) {
                 sender.sendMessage(ChatColor.RED + "Failed to parse number!");
                 return true;
@@ -44,6 +43,10 @@ public class CPrint extends CLCommand
         calendar.add(Calendar.HOUR_OF_DAY, hours);
         ArrayList<String> result = ConnectionLogger.getInstance().getDatabaseHandler().getLogs(calendar.getTimeInMillis());
         if (result != null) {
+            if(result.size() == 0) {
+                sender.sendMessage("No logs in specified time range (" + hours + ")");
+                return true;
+            }
             sender.sendMessage(result.toArray(new String[result.size()]));
         }
         return true;

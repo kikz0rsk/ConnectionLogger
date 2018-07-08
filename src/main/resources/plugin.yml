@@ -2,7 +2,7 @@ name: ConnectionLogger
 main: sk.crafting.connectionlogger.ConnectionLogger
 description: Player connection logger
 author: kikz0r_sk
-version: 1.5
+version: 1.6
 commands:
     cl:
         description: Main command with subcommands

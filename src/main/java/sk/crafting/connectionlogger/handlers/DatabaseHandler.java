@@ -84,7 +84,7 @@ public class DatabaseHandler implements IDatabaseHandler
                 + "player_hostname varchar(75) NOT NULL, "
                 + "player_port int(5) NOT NULL, "
                 + "world varchar(50) NOT NULL, "
-                + "session varchar(8) NOT NULL, "
+                + "session varchar(10) NOT NULL, "
                 + "deleted tinyint(1) NOT NULL, "
                 + "PRIMARY KEY (ID)"
                 + ")";
@@ -94,7 +94,6 @@ public class DatabaseHandler implements IDatabaseHandler
     {
         if (db_connection == null || db_connection.isClosed()) {
             db_connection = dataSource.getConnection();
-            logger.info("Connected to database");
 
 //        String sql = "CREATE TABLE IF NOT EXISTS " + db_tableName
 //                + "("
@@ -183,7 +182,6 @@ public class DatabaseHandler implements IDatabaseHandler
         try {
             if (db_connection != null) {
                 db_connection.close();
-                logger.info("Connection to database closed");
             }
         } catch (Exception ex) {
             logger.warning("Failed to close connection to database: " + ex.toString());

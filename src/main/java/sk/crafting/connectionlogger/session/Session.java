@@ -16,7 +16,7 @@ public class Session {
         }
         this.hash = DigestUtils.md5(System.currentTimeMillis() + salt);
         this.hashHex = Hex.encodeHexString(hash);
-        this.shortHashHex = hashHex.substring(0, 10);
+        this.shortHashHex = hashHex.substring(0, 9);
     }
 
     public byte[] getHash() {

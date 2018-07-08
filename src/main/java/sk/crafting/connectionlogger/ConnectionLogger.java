@@ -50,7 +50,6 @@ public class ConnectionLogger extends JavaPlugin
         sessionManager = SessionManager.getInstance();
         sessionManager.StartSession();
         logger.info("Started new session with ID " + sessionManager.getSession().getHashHex());
-        printInfoMessages();
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
     }
 
@@ -60,18 +59,11 @@ public class ConnectionLogger extends JavaPlugin
         Disable();
     }
 
-    private void printInfoMessages() {
-        System.out.println(configHandler.getCacheSize());
-        logger.log(Level.INFO, "Pool Size: {0,number,integer}", configHandler.getDatabasePools());
-        logger.log(Level.INFO, "Cache Size: {0,number,integer}", configHandler.getCacheSize());
-    }
-
     public void Reload()
     {
         configHandler.SaveDefaultConfig();
         cache.SendCache(false);
         databaseHandler.Reload();
-        printInfoMessages();
         if (!cache.isEmpty()) {
             cache = new Cache(cache.getList());
             logger.log(Level.INFO, "Cache was not empty during reload - cache size was not changed");
