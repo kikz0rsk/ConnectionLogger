@@ -47,9 +47,9 @@ public class ConnectionLogger extends JavaPlugin
         cache = new Cache(configHandler.getCacheSize());
         databaseHandler = new DatabaseHandler(this);
         databaseHandler.TestConnection();
-        sessionManager = new SessionManager();
+        sessionManager = SessionManager.getInstance();
         sessionManager.StartSession();
-        logger.info("Started new session with hash " + sessionManager.getCurrentSession().getHashHex());
+        logger.info("Started new session with ID " + sessionManager.getSession().getHashHex());
         printInfoMessages();
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
     }
@@ -61,8 +61,9 @@ public class ConnectionLogger extends JavaPlugin
     }
 
     private void printInfoMessages() {
-        logger.log(Level.INFO, "Pool Size: {0}", configHandler.getDatabasePools());
-        logger.log(Level.INFO, "Cache Size: {0}", configHandler.getCacheSize());
+        System.out.println(configHandler.getCacheSize());
+        logger.log(Level.INFO, "Pool Size: {0,number,integer}", configHandler.getDatabasePools());
+        logger.log(Level.INFO, "Cache Size: {0,number,integer}", configHandler.getCacheSize());
     }
 
     public void Reload()
@@ -77,7 +78,7 @@ public class ConnectionLogger extends JavaPlugin
         }
     }
 
-    private void Disable()
+    private void  Disable()
     {
         cache.StopTimer();
         if (configHandler.isLogPluginShutdown()) {
@@ -85,6 +86,7 @@ public class ConnectionLogger extends JavaPlugin
         }
         cache.SendCache(true);
         databaseHandler.Disable();
+        sessionManager.CloseSession();
     }
 
     public boolean setCustomDatabaseHandler(IDatabaseHandler handler, Plugin plugin)

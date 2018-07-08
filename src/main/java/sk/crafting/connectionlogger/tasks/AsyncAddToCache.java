@@ -28,7 +28,6 @@ public class AsyncAddToCache extends BukkitRunnable
     public void run()
     {
         ConnectionLogger.getInstance().getCache().Add(time, type, player);
-
     }
 
 }

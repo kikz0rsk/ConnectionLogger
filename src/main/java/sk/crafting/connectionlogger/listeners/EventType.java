@@ -7,11 +7,11 @@ package sk.crafting.connectionlogger.listeners;
 public enum EventType
 {
 
-    CONNECT("Connect"), DISCONNECT("Disconnect"), PLUGIN_SHUTDOWN("Plugin Shutdown");
+    CONNECT("Connect"), DISCONNECT("Disconnect");
 
     private final String msg;
 
-    private EventType(String msg)
+    EventType(String msg)
     {
         this.msg = msg;
     }
