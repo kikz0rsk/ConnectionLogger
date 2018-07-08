@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import sk.crafting.connectionlogger.ConnectionLogger;
 import sk.crafting.connectionlogger.listeners.EventType;
+import sk.crafting.connectionlogger.session.SessionManager;
 import sk.crafting.connectionlogger.utils.Utils;
 
 import java.io.*;
@@ -30,19 +31,16 @@ public class Cache {
     }
 
     public Cache(List<? extends Log> collection) {
-        cache = new ArrayList<Log>(collection);
+        cache = new ArrayList<>(collection);
     }
 
     public synchronized void Add(Log log) {
         cache.add(log);
+
+        // If it is full, send immediately
         if (cache.size() >= instance.getConfigHandler().getCacheSize()) {
             SendCache(true);
-        }
-    }
-
-    public void Add(long time, EventType type, Player player) {
-        Add(new Log(time, type, player.getName(), player.getAddress().getAddress().getHostAddress(), player.getAddress().getAddress().getHostName(), player.getAddress().getPort(), player.getWorld().getName()));
-        if (!(isEmpty() || isScheduled())) {
+        } else if(!(isEmpty() || isScheduled())) {
             StartTimer();
         }
     }
@@ -81,9 +79,11 @@ public class Cache {
     }
 
     public synchronized void SendCache(boolean useFallback) {
-        if (instance.getDefaultDatabaseHandler().AddFromCache(this)) {
+        if(instance.getDatabaseHandler().AddFromCache(this)) {
             StopTimer();
-        } else if (useFallback) {
+            return;
+        }
+        if(useFallback) {
             DumpCacheToFile();
         }
     }

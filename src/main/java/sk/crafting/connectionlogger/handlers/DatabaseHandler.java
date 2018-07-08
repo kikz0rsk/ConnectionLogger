@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import sk.crafting.connectionlogger.ConnectionLogger;
 import sk.crafting.connectionlogger.cache.Cache;
 import sk.crafting.connectionlogger.cache.Log;
+import sk.crafting.connectionlogger.session.SessionManager;
 import sk.crafting.connectionlogger.utils.Utils;
 
 /**
@@ -83,6 +84,7 @@ public class DatabaseHandler implements IDatabaseHandler
                 + "player_hostname varchar(75) NOT NULL, "
                 + "player_port int(5) NOT NULL, "
                 + "world varchar(50) NOT NULL, "
+                + "session varchar(8) NOT NULL, "
                 + "deleted tinyint(1) NOT NULL, "
                 + "PRIMARY KEY (ID)"
                 + ")";
@@ -120,7 +122,7 @@ public class DatabaseHandler implements IDatabaseHandler
         PreparedStatement statement = null;
         try {
             Connect();
-            statement = db_connection.prepareStatement("INSERT INTO " + configuration.getDatabaseTableName() + " (time, type, player_name, player_ip, player_hostname, player_port, world, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            statement = db_connection.prepareStatement("INSERT INTO " + configuration.getDatabaseTableName() + " (time, type, player_name, player_ip, player_hostname, player_port, world, session, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
             for (Log log : cache.toArray()) {
                 statement.setString(1, formatter.format(log.getTime()));
                 statement.setString(2, log.getType().getMessage());
@@ -129,7 +131,8 @@ public class DatabaseHandler implements IDatabaseHandler
                 statement.setString(5, log.getPlayerHostname());
                 statement.setInt(6, log.getPlayerPort());
                 statement.setString(7, log.getWorld());
-                statement.setBoolean(8, false);
+                statement.setString(8, SessionManager.getInstance().getSession().getShortHashHex());
+                statement.setBoolean(9, false);
                 statement.addBatch();
             }
             statement.executeBatch();
@@ -203,7 +206,7 @@ public class DatabaseHandler implements IDatabaseHandler
             while (result.next()) {
                 Timestamp time = result.getTimestamp("time");
                 output.add(String.format(
-                        "ID: %s | Time: %s | Type: %s | Player Name: %s | Player IP: %s | Player Hostname: %s | Player Port: %d | World: %s",
+                        "ID: %s | Time: %s | Type: %s | Player Name: %s | Player IP: %s | Player Hostname: %s | Player Port: %d | World: %s | Session: %s",
                         result.getString("id"),
                         defaultFormatter.format(time.getTime()),
                         result.getString("type"),
@@ -211,7 +214,8 @@ public class DatabaseHandler implements IDatabaseHandler
                         result.getString("player_ip"),
                         result.getString("player_hostname"),
                         result.getInt("player_port"),
-                        result.getString("world")
+                        result.getString("world"),
+                        result.getString("session")
                 ));
             }
             return output;

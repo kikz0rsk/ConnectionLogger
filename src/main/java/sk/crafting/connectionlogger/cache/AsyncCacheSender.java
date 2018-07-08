@@ -1,36 +1,29 @@
 package sk.crafting.connectionlogger.cache;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import sk.crafting.connectionlogger.ConnectionLogger;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
- *
  * @author Red-Eye~kikz0r_sk
  */
-public class AsyncCacheSender
-{
+public class AsyncCacheSender {
 
     private Timer timer;
     private boolean scheduled = false;
     private Cache cache;
 
-    private final Object LOCK = new Object();
-
-    public AsyncCacheSender(Cache cache)
-    {
+    public AsyncCacheSender(Cache cache) {
         this.cache = cache;
     }
 
-    public void StartTimer()
-    {
+    public synchronized void StartTimer() {
         timer = new Timer();
-        timer.schedule(new TimerTask()
-        {
+        timer.schedule(new TimerTask() {
             @Override
-            public void run()
-            {
-                if (ConnectionLogger.getInstance().getDefaultDatabaseHandler() != null) {
+            public void run() {
+                if (ConnectionLogger.getInstance().getDatabaseHandler() != null) {
                     ConnectionLogger.getInstance().getPluginLogger().info("Sending cache...");
                     cache.SendCache(false);
                 }
@@ -40,26 +33,19 @@ public class AsyncCacheSender
         SetScheduled(true);
     }
 
-    private void SetScheduled(boolean state)
-    {
-        synchronized (LOCK) {
-            scheduled = state;
-        }
+    private synchronized void SetScheduled(boolean state) {
+        scheduled = state;
     }
 
-    public void StopTimer()
-    {
+    public synchronized void StopTimer() {
         if (timer != null) {
             timer.cancel();
             SetScheduled(false);
         }
     }
 
-    public boolean isScheduled()
-    {
-        synchronized (LOCK) {
-            return scheduled;
-        }
+    public synchronized boolean isScheduled() {
+        return scheduled;
     }
 
 }

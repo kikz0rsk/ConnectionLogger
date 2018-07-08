@@ -61,7 +61,7 @@ public class MainCommand implements CommandExecutor
                     }
                 }
                 calendar.add(Calendar.HOUR_OF_DAY, hours);
-                ArrayList<String> result = instance.getDefaultDatabaseHandler().getLogs(calendar.getTimeInMillis());
+                ArrayList<String> result = instance.getDatabaseHandler().getLogs(calendar.getTimeInMillis());
                 if (result != null) {
                     sender.sendMessage(result.toArray(new String[result.size()]));
                 }
@@ -75,7 +75,7 @@ public class MainCommand implements CommandExecutor
             public boolean onCommand(CommandSender sender, Command command, String string, String[] args)
             {
                 sender.sendMessage("Clearing entries...");
-                instance.getDefaultDatabaseHandler().Clear();
+                instance.getDatabaseHandler().Clear();
                 return true;
             }
         });

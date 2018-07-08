@@ -81,9 +81,6 @@ public class ConnectionLogger extends JavaPlugin
     private void  Disable()
     {
         cache.StopTimer();
-        if (configHandler.isLogPluginShutdown()) {
-            cache.Add(Utils.getPluginShutdownLog());
-        }
         cache.SendCache(true);
         databaseHandler.Disable();
         sessionManager.CloseSession();
@@ -115,7 +112,7 @@ public class ConnectionLogger extends JavaPlugin
         return configHandler;
     }
 
-    public IDatabaseHandler getDefaultDatabaseHandler()
+    public IDatabaseHandler getDatabaseHandler()
     {
         return databaseHandler;
     }

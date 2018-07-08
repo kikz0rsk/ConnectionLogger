@@ -19,7 +19,7 @@ public class PlayerListener implements Listener
     public void OnPlayerConnect(PlayerJoinEvent event)
     {
         if (ConnectionLogger.getInstance().getConfigHandler().isLogPlayerConnect()) {
-            new AsyncAddToCache(EventType.CONNECT, System.currentTimeMillis(), event.getPlayer()).runTaskAsynchronously(ConnectionLogger.getInstance());
+            new AsyncAddToCache(System.currentTimeMillis(), EventType.CONNECT, event.getPlayer()).runTaskAsynchronously(ConnectionLogger.getInstance());
         }
     }
 
@@ -27,7 +27,7 @@ public class PlayerListener implements Listener
     public void OnPlayerDisconnect(PlayerQuitEvent event)
     {
         if (ConnectionLogger.getInstance().getConfigHandler().isLogPlayerDisconnect()) {
-            new AsyncAddToCache(EventType.DISCONNECT, System.currentTimeMillis(), event.getPlayer()).runTaskAsynchronously(ConnectionLogger.getInstance());
+            new AsyncAddToCache(System.currentTimeMillis(), EventType.DISCONNECT, event.getPlayer()).runTaskAsynchronously(ConnectionLogger.getInstance());
         }
     }
 

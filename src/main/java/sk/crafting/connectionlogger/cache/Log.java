@@ -16,8 +16,9 @@ public class Log
     private final String playerHostname;
     private final int playerPort;
     private final String world;
+    private final String session;
 
-    public Log(long time, EventType type, String playerName, String playerIp, String playerHostname, int playerPort, String world)
+    public Log(long time, EventType type, String playerName, String playerIp, String playerHostname, int playerPort, String world, String session)
     {
         this.time = time;
         this.type = type;
@@ -26,6 +27,7 @@ public class Log
         this.playerHostname = playerHostname;
         this.playerPort = playerPort;
         this.world = world;
+        this.session = session;
     }
 
     public long getTime()

@@ -6,13 +6,17 @@ import org.apache.commons.codec.digest.DigestUtils;
 public class Session {
 
     private String hashHex;
+    private String shortHashHex;
     private byte[] hash;
 
     public Session() {
         String salt = String.valueOf(System.nanoTime());
-        salt = salt.substring(salt.length() - 4, salt.length() - 1);
+        if (salt.length() > 8) {
+            salt = salt.substring(0, 7);
+        }
         this.hash = DigestUtils.md5(System.currentTimeMillis() + salt);
         this.hashHex = Hex.encodeHexString(hash);
+        this.shortHashHex = hashHex.substring(0, 10);
     }
 
     public byte[] getHash() {
@@ -23,4 +27,7 @@ public class Session {
         return hashHex;
     }
 
+    public String getShortHashHex() {
+        return shortHashHex;
+    }
 }

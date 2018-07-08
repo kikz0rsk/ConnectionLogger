@@ -21,9 +21,4 @@ public class Utils
         return "dd-MM-yyyy HH:mm:ss";
     }
 
-    public static Log getPluginShutdownLog()
-    {
-        return new Log(System.currentTimeMillis(), EventType.PLUGIN_SHUTDOWN, "", "", "", 0, "");
-    }
-
 }

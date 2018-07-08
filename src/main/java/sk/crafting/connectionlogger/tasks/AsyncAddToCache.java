@@ -4,7 +4,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import sk.crafting.connectionlogger.ConnectionLogger;
+import sk.crafting.connectionlogger.cache.Log;
 import sk.crafting.connectionlogger.listeners.EventType;
+import sk.crafting.connectionlogger.session.SessionManager;
 
 /**
  *
@@ -13,21 +15,20 @@ import sk.crafting.connectionlogger.listeners.EventType;
 public class AsyncAddToCache extends BukkitRunnable
 {
 
-    private final EventType type;
-    private final long time;
-    private final Player player;
+    private Log log;
 
-    public AsyncAddToCache(EventType type, long time, Player player)
+    public AsyncAddToCache(long time, EventType type, Player player)
     {
-        this.type = type;
-        this.time = time;
-        this.player = player;
+        log = new Log(
+                time, type, player.getName(), player.getAddress().getAddress().getHostAddress(),
+                player.getAddress().getAddress().getHostName(), player.getAddress().getPort(), player.getWorld().getName(), SessionManager.getInstance().getSession().getShortHashHex()
+        );
     }
 
     @Override
     public void run()
     {
-        ConnectionLogger.getInstance().getCache().Add(time, type, player);
+        ConnectionLogger.getInstance().getCache().Add(log);
     }
 
 }
