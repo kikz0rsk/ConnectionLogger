@@ -46,7 +46,7 @@ public class ConnectionLogger extends JavaPlugin
         logger = getLogger();
         configHandler = new ConfigurationHandler(this);
         if(configHandler.isVerbose()) {
-            logger.setLevel(Level.ALL);
+            logger.setLevel(Level.FINEST);
         } else {
             logger.setLevel(Level.INFO);
         }
