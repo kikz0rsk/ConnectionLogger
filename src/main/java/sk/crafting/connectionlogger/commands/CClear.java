@@ -1,5 +1,6 @@
 package sk.crafting.connectionlogger.commands;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import sk.crafting.connectionlogger.ConnectionLogger;
@@ -19,8 +20,8 @@ public class CClear extends CLCommand
     @Override
     public boolean onCommand(CommandSender sender, Command command, String string, String[] args)
     {
-        sender.sendMessage("Clearing entries...");
         ConnectionLogger.getInstance().getDatabaseHandler().Clear();
+        sender.sendMessage(ChatColor.GREEN + "Logs cleared");
         return true;
     }
 

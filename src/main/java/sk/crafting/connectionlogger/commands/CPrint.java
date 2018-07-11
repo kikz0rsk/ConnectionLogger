@@ -32,7 +32,7 @@ public class CPrint extends CLCommand
                 return true;
             }
             if (hours == 0) {
-                sender.sendMessage("Invalid number");
+                sender.sendMessage(ChatColor.RED + "Invalid number");
                 return true;
             }
             if (hours > 0);
@@ -44,7 +44,7 @@ public class CPrint extends CLCommand
         ArrayList<String> result = ConnectionLogger.getInstance().getDatabaseHandler().getLogs(calendar.getTimeInMillis());
         if (result != null) {
             if(result.size() == 0) {
-                sender.sendMessage("No logs in specified time range (" + hours + ")");
+                sender.sendMessage(ChatColor.RED + "No logs in specified time range (" + hours + ")");
                 return true;
             }
             sender.sendMessage(result.toArray(new String[result.size()]));

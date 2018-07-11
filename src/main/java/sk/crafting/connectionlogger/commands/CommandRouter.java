@@ -46,6 +46,7 @@ public class CommandRouter extends CLCommand
         if (args.length == 0 || args[0].equals("")) {
             return commands.get("help").onCommand(sender, command, string, args);
         }
+
         CLCommand cmd = commands.get(args[0].toLowerCase());
         if (cmd == null) {
             return false;

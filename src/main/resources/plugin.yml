@@ -13,3 +13,30 @@ permissions:
         description: Gives access to all commands
         children:
             connectionlogger.cl: true
+            connectionlogger.print: true
+            connectionlogger.clear: true
+            connectionlogger.dumpcache: true
+            connectionlogger.help: true
+            connectionlogger.printcache: true
+            connectionlogger.reload: true
+    connectionlogger.cl:
+        description: Gives access to CL command
+        default: op
+    connectionlogger.print:
+        description: Allows to show logs in specified time range
+        default: op
+    connectionlogger.clear:
+        description: Allows to remove logs
+        default: op
+    connectionlogger.dumpcache:
+        description: Allows to remove logs
+        default: op
+    connectionlogger.help:
+        description: Gives access to help
+        default: op
+    connectionlogger.printcache:
+        description: Allows to print cache
+        default: op
+    connectionlogger.reload:
+        description: Allows to reload ConnectionLogger
+        default: op
