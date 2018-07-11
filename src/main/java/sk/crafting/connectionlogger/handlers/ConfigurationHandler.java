@@ -24,7 +24,7 @@ public final class ConfigurationHandler
     private boolean logPlayerConnect,
             logPlayerDisconnect,
             logPluginShutdown,
-            safeMode;
+            safeMode, verbose;
 
     private String databaseHost,
             databasePort,
@@ -79,6 +79,7 @@ public final class ConfigurationHandler
         databasePools = conf.getInt("database.pool-size");
         timeout = conf.getInt("database.timeout");
         safeMode = conf.getBoolean("secure-mode");
+        verbose = conf.getBoolean("verbose");
         if (databasePools < 1) {
             instance.getPluginLogger().info("Pool size is smaller than required value. Setting to 1");
             databasePools = 1;
@@ -168,6 +169,10 @@ public final class ConfigurationHandler
     public int getTimeout()
     {
         return timeout;
+    }
+
+    public boolean isVerbose() {
+        return verbose;
     }
 
 }

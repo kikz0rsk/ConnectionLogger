@@ -4,6 +4,7 @@ import sk.crafting.connectionlogger.ConnectionLogger;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
 
 /**
  * @author Red-Eye~kikz0r_sk
@@ -24,7 +25,7 @@ public class AsyncCacheSender {
             @Override
             public void run() {
                 if (ConnectionLogger.getInstance().getDatabaseHandler() != null) {
-                    ConnectionLogger.getInstance().getPluginLogger().info("Sending cache...");
+                    ConnectionLogger.getInstance().getPluginLogger().log(Level.FINE, "Sending " + cache.getSize() + " logs...");
                     cache.SendCache(false);
                 }
                 SetScheduled(false);

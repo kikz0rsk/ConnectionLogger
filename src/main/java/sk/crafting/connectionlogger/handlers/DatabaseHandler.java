@@ -55,6 +55,7 @@ public class DatabaseHandler implements IDatabaseHandler
                 configuration.getDatabasePort(),
                 configuration.getDatabaseName()
         ));
+        dataSource.addDataSourceProperty("useSSL", "false");
         dataSource.setUsername(configuration.getDatabaseUser());
         dataSource.setPassword(configuration.getDatabasePassword());
         dataSource.setMaximumPoolSize(configuration.getDatabasePools());
@@ -94,18 +95,6 @@ public class DatabaseHandler implements IDatabaseHandler
     {
         if (db_connection == null || db_connection.isClosed()) {
             db_connection = dataSource.getConnection();
-
-//        String sql = "CREATE TABLE IF NOT EXISTS " + db_tableName
-//                + "("
-//                + "ID int NOT NULL AUTO_INCREMENT, "
-//                + "time datetime NOT NULL, "
-//                + "type varchar(10) NOT NULL, "
-//                + "player_name varchar(50) NOT NULL, "
-//                + "player_ip varchar(50) NOT NULL, "
-//                + "player_hostname varchar(75) NOT NULL, "
-//                + "player_port int(5) NOT NULL, "
-//                + "PRIMARY KEY (ID)"
-//                + ")";
         }
         PreparedStatement statement = db_connection.prepareStatement(connectSql);
         statement.executeUpdate();
@@ -153,7 +142,7 @@ public class DatabaseHandler implements IDatabaseHandler
             Connect();
             logger.info("Connection to database works!");
         } catch (Exception ex) {
-            logger.log(Level.INFO, "Connection to database failed: {0}", ex.toString());
+            logger.log(Level.INFO, "Connection to database failed: {0}", ex.getMessage());
         } finally {
             Disconnect();
         }

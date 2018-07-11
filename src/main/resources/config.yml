@@ -1,5 +1,10 @@
 # If enabled, CL will disable custom database handling
 secure-mode: false
+
+# Level of information printed to console
+# true - more information is printed (for example before every send)
+verbose: false
+
 logging:
     # Log player connect event
     # Default: true
@@ -13,7 +18,7 @@ logging:
 cache:
     # When cache hit this number of records, it immediately sends cache (this does not define size of cache itself)
     cache-size-trigger: 20
-    # Time in milliseconds before sending cache to database after first record
+    # Time in milliseconds before sending cache to database after first record is added to cache
     delay-before-send: 5000
 # MySQL Credentials - Please Fill Correctly
 database:

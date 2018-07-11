@@ -42,8 +42,14 @@ public class ConnectionLogger extends JavaPlugin
         commandRouter = new CommandRouter();
         getCommand("cl").setExecutor(commandRouter);
         instance = this;
+
         logger = getLogger();
         configHandler = new ConfigurationHandler(this);
+        if(configHandler.isVerbose()) {
+            logger.setLevel(Level.ALL);
+        } else {
+            logger.setLevel(Level.INFO);
+        }
         cache = new Cache(configHandler.getCacheSize());
         databaseHandler = new DatabaseHandler(this);
         databaseHandler.TestConnection();

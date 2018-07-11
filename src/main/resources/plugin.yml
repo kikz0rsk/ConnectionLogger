@@ -9,16 +9,16 @@ commands:
         usage: /cl <print|reload|clear|help|dumpcache|printcache>
         permission: connectionlogger.cl
 permissions:
-    connectionlogger.*:
+    connectionlogger.cl.*:
         description: Gives access to all commands
         children:
             connectionlogger.cl: true
-            connectionlogger.print: true
-            connectionlogger.clear: true
-            connectionlogger.dumpcache: true
-            connectionlogger.help: true
-            connectionlogger.printcache: true
-            connectionlogger.reload: true
+            connectionlogger.cl.print: true
+            connectionlogger.cl.clear: true
+            connectionlogger.cl.dumpcache: true
+            connectionlogger.cl.help: true
+            connectionlogger.cl.printcache: true
+            connectionlogger.cl.reload: true
     connectionlogger.cl:
         description: Gives access to CL command
     connectionlogger.cl.print:
@@ -26,7 +26,7 @@ permissions:
     connectionlogger.cl.clear:
         description: Allows to remove logs
     connectionlogger.cl.dumpcache:
-        description: Allows to remove logs
+        description: Allows to force dump cache
     connectionlogger.cl.help:
         description: Gives access to help
     connectionlogger.cl.printcache:

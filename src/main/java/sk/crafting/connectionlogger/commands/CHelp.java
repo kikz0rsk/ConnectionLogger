@@ -23,11 +23,9 @@ public class CHelp extends CLCommand
         sender.sendMessage(String.format(
                 "%s%s %sv%s by kikz0r_sk", ChatColor.RED, ConnectionLogger.getInstance().getDescription().getName(), ChatColor.AQUA, ConnectionLogger.getInstance().getDescription().getVersion()
         ));
-        StringBuilder builder = new StringBuilder();
         for(CLCommand cmd : ConnectionLogger.getInstance().getCommandRouter().getCommands().values()) {
-            builder.append(String.format("%s%s %s- %s%n", ChatColor.GOLD, cmd.getName(), ChatColor.LIGHT_PURPLE, cmd.getDescription()));
+            sender.sendMessage(String.format("%s%s %s- %s", ChatColor.GOLD, cmd.getName(), ChatColor.LIGHT_PURPLE, cmd.getDescription()));
         }
-        sender.sendMessage(builder.toString());
         return true;
     }
 
