@@ -16,7 +16,7 @@ public class CPrint extends CLCommand
 
     public CPrint()
     {
-        super("print", "connectionlogger.print", true, "Print logs");
+        super("print", "connectionlogger.cl.print", true, "Print logs");
     }
 
     @Override

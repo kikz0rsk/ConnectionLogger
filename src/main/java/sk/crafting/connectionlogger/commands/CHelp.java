@@ -14,7 +14,7 @@ public class CHelp extends CLCommand
 
     public CHelp()
     {
-        super("help", "connectionlogger.help", true, "Show commands");
+        super("help", "connectionlogger.cl.help", true, "Show commands");
     }
 
     @Override

@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import sk.crafting.connectionlogger.ConnectionLogger;
+import sk.crafting.connectionlogger.cache.EventType;
 import sk.crafting.connectionlogger.tasks.AsyncAddToCache;
 
 /**

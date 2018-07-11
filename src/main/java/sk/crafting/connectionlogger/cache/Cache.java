@@ -1,10 +1,7 @@
 package sk.crafting.connectionlogger.cache;
 
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import sk.crafting.connectionlogger.ConnectionLogger;
-import sk.crafting.connectionlogger.listeners.EventType;
-import sk.crafting.connectionlogger.session.SessionManager;
 import sk.crafting.connectionlogger.utils.Utils;
 
 import java.io.*;

@@ -1,4 +1,4 @@
-package sk.crafting.connectionlogger.listeners;
+package sk.crafting.connectionlogger.cache;
 
 /**
  *

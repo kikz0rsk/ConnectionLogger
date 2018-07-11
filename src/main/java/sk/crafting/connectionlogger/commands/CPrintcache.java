@@ -16,7 +16,7 @@ public class CPrintcache extends CLCommand
 
     public CPrintcache()
     {
-        super("printcache", "connectionlogger.printcache", true, "Print current cached logs");
+        super("printcache", "connectionlogger.cl.printcache", true, "Print current cached logs");
     }
 
     @Override

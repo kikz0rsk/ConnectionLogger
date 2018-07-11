@@ -5,7 +5,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import sk.crafting.connectionlogger.ConnectionLogger;
 import sk.crafting.connectionlogger.cache.Log;
-import sk.crafting.connectionlogger.listeners.EventType;
+import sk.crafting.connectionlogger.cache.EventType;
 import sk.crafting.connectionlogger.session.SessionManager;
 
 /**

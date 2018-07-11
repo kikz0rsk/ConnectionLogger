@@ -14,14 +14,14 @@ public class CReload extends CLCommand
 
     public CReload()
     {
-        super("reload", "connectionlogger.reload", true, "Reload ConnectionLogger");
+        super("reload", "connectionlogger.cl.reload", true, "Reload ConnectionLogger");
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String string, String[] args)
     {
-        sender.sendMessage(ChatColor.GREEN + "Reloading ConnectionLogger...");
         ConnectionLogger.getInstance().Reload();
+        sender.sendMessage(ChatColor.GREEN + "ConnectionLogger reloaded");
         return true;
     }
 

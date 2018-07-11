@@ -14,7 +14,7 @@ public class CClear extends CLCommand
 
     public CClear()
     {
-        super("clear", "connectionlogger.clear", true, "Clear all logs");
+        super("clear", "connectionlogger.cl.clear", true, "Clear all logs");
     }
 
     @Override

@@ -1,8 +1,5 @@
 package sk.crafting.connectionlogger.utils;
 
-import sk.crafting.connectionlogger.cache.Log;
-import sk.crafting.connectionlogger.listeners.EventType;
-
 /**
  *
  * @author Red-Eye~kikz0r_sk

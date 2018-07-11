@@ -14,7 +14,7 @@ public class CDumpcache extends CLCommand
 
     public CDumpcache()
     {
-        super("dumpcache", "connectionlogger.dumpcache", true, "Force to dump cache to database");
+        super("dumpcache", "connectionlogger.cl.dumpcache", true, "Force to dump cache to database");
     }
 
     @Override

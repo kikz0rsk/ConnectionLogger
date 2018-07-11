@@ -1,7 +1,5 @@
 package sk.crafting.connectionlogger.cache;
 
-import sk.crafting.connectionlogger.listeners.EventType;
-
 /**
  *
  * @author Red-Eye~kikz0r_sk
