@@ -1,9 +1,5 @@
 package sk.crafting.connectionlogger.cache;
 
-import java.util.Calendar;
-
-import sk.crafting.connectionlogger.listeners.EventType;
-
 /**
  *
  * @author Red-Eye~kikz0r_sk
@@ -11,14 +7,16 @@ import sk.crafting.connectionlogger.listeners.EventType;
 public class Log
 {
 
-    private final Calendar time;
+    private final long time;
     private final EventType type;
     private final String playerName;
     private final String playerIp;
     private final String playerHostname;
     private final int playerPort;
+    private final String world;
+    private final String session;
 
-    public Log( Calendar time, EventType type, String playerName, String playerIp, String playerHostname, int playerPort )
+    public Log(long time, EventType type, String playerName, String playerIp, String playerHostname, int playerPort, String world, String session)
     {
         this.time = time;
         this.type = type;
@@ -26,9 +24,11 @@ public class Log
         this.playerIp = playerIp;
         this.playerHostname = playerHostname;
         this.playerPort = playerPort;
+        this.world = world;
+        this.session = session;
     }
 
-    public Calendar getTime()
+    public long getTime()
     {
         return time;
     }
@@ -56,6 +56,11 @@ public class Log
     public int getPlayerPort()
     {
         return playerPort;
+    }
+
+    public String getWorld()
+    {
+        return world;
     }
 
 }

@@ -2,8 +2,34 @@ name: ConnectionLogger
 main: sk.crafting.connectionlogger.ConnectionLogger
 description: Player connection logger
 author: kikz0r_sk
-version: 1.4
+version: 1.6
 commands:
     cl:
-        description: Show connection log
-        usage: /cl <print|reload|clear|help|dumpcache> <hours>
+        description: Main command with subcommands
+        usage: /cl <print|reload|clear|help|dumpcache|printcache>
+        permission: connectionlogger.cl
+permissions:
+    connectionlogger.cl.*:
+        description: Gives access to all commands
+        children:
+            connectionlogger.cl: true
+            connectionlogger.cl.print: true
+            connectionlogger.cl.clear: true
+            connectionlogger.cl.dumpcache: true
+            connectionlogger.cl.help: true
+            connectionlogger.cl.printcache: true
+            connectionlogger.cl.reload: true
+    connectionlogger.cl:
+        description: Gives access to CL command
+    connectionlogger.cl.print:
+        description: Allows to show logs in specified time range
+    connectionlogger.cl.clear:
+        description: Allows to remove logs
+    connectionlogger.cl.dumpcache:
+        description: Allows to force dump cache
+    connectionlogger.cl.help:
+        description: Gives access to help
+    connectionlogger.cl.printcache:
+        description: Allows to print cache
+    connectionlogger.cl.reload:
+        description: Allows to reload ConnectionLogger

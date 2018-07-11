@@ -4,14 +4,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import sk.crafting.connectionlogger.cache.Cache;
-import sk.crafting.connectionlogger.listeners.ConnectListener;
-import sk.crafting.connectionlogger.listeners.DisconnectListener;
+import sk.crafting.connectionlogger.commands.CommandRouter;
 import sk.crafting.connectionlogger.handlers.ConfigurationHandler;
-import sk.crafting.connectionlogger.handlers.DatabaseLogging;
-import sk.crafting.connectionlogger.utils.Utils;
+import sk.crafting.connectionlogger.handlers.DatabaseHandler;
+import sk.crafting.connectionlogger.handlers.IDatabaseHandler;
+import sk.crafting.connectionlogger.listeners.PlayerListener;
+import sk.crafting.connectionlogger.session.SessionManager;
 
 /**
  *
@@ -20,93 +22,107 @@ import sk.crafting.connectionlogger.utils.Utils;
 public class ConnectionLogger extends JavaPlugin
 {
 
-    private static DatabaseLogging databaseHandler;
-    private static ConnectionLogger plugin;
-    private static Logger logger;
-    private static ConfigurationHandler configHandler;
-    private static Cache cache;
+    private static ConnectionLogger instance;
+    private CommandRouter commandRouter;
+
+    private IDatabaseHandler databaseHandler;
+    private SessionManager sessionManager;
+
+    private Logger logger;
+    private ConfigurationHandler configHandler;
+    private Cache cache;
 
     @Override
     public void onEnable()
     {
-        System.setProperty( org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "warn" );
-        getCommand( "cl" ).setExecutor( new Commands() );
-        ConnectionLogger.plugin = this;
-        logger = plugin.getLogger();
-        configHandler = new ConfigurationHandler();
-        cache = new Cache( configHandler.getCacheSize() );
-        databaseHandler = new DatabaseLogging();
-        databaseHandler.TestConnection();
-        logger.log( Level.INFO, "Pool Size: {0}", configHandler.getDb_pools() );
-        logger.log( Level.INFO, "Cache Size: {0}", configHandler.getCacheSize() );
-        if ( configHandler.isLogPlayerConnect() )
-        {
-            Bukkit.getPluginManager().registerEvents( new ConnectListener(), this );
+        // Set logging level
+        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "warn");
+           
+        commandRouter = new CommandRouter();
+        getCommand("cl").setExecutor(commandRouter);
+        instance = this;
+
+        logger = getLogger();
+        configHandler = new ConfigurationHandler(this);
+        if(configHandler.isVerbose()) {
+            logger.setLevel(Level.FINEST);
+        } else {
+            logger.setLevel(Level.INFO);
         }
-        if ( configHandler.isLogPlayerDisconnect() )
-        {
-            Bukkit.getPluginManager().registerEvents( new DisconnectListener(), this );
-        }
+        cache = new Cache(configHandler.getCacheSize());
+        databaseHandler = new DatabaseHandler(this);
+        databaseHandler.testConnection();
+        sessionManager = SessionManager.getInstance();
+        sessionManager.StartSession();
+        logger.info("Started new session with ID " + sessionManager.getSession().getHashHex());
+        Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
     }
 
     @Override
     public void onDisable()
     {
-        Disable();
+        disable();
     }
 
-    public void Reload()
+    public void reload()
     {
-        configHandler.SaveDefaultConfig();
-        cache.SendCache( false );
-        databaseHandler.Reload();
-        logger.log( Level.INFO, "Pool Size: {0}", configHandler.getDb_pools() );
-        logger.log( Level.INFO, "Cache Size: {0}", configHandler.getCacheSize() );
-        if ( !cache.isEmpty() )
-        {
-            cache = new Cache( cache.getList() );
-            logger.log(Level.INFO, "Cache was not empty during reload - cache size was not cahnged");
+        configHandler.saveDefaultConfig();
+        configHandler.reloadConfig();
+        cache.SendCache(false);
+        databaseHandler.reload();
+        if (!cache.isEmpty()) {
+            cache = new Cache(cache.getList());
+            logger.log(Level.INFO, "Cache was not empty during reload - cache size was not changed");
         }
     }
 
-    private void Disable()
+    private void disable()
     {
         cache.StopTimer();
-        if ( configHandler.isAutoClean() )
-        {
-            databaseHandler.Clear();
-        }
-        if ( configHandler.isLogPluginShutdown() )
-        {
-            cache.Add( Utils.getPluginShutdownLog() );
-        }
-        cache.SendCache( true );
-        databaseHandler.Disable();
+        cache.SendCache(true);
+        databaseHandler.disable();
+        sessionManager.CloseSession();
     }
 
-    public static ConnectionLogger getPlugin()
+    public boolean setCustomDatabaseHandler(IDatabaseHandler handler, Plugin plugin)
     {
-        return plugin;
+        if (handler == null || configHandler.isSafeMode()) {
+            return false;
+        }
+        logger.log(Level.WARNING, "Setting custom database handler. This may cause nonfunctional logging. Name of requesting plugin: {0}", plugin.getName());
+        databaseHandler.disable();
+        databaseHandler = handler;
+        return true;
     }
 
-    public static Logger getPluginLogger()
+    public static ConnectionLogger getInstance()
+    {
+        return instance;
+    }
+
+    public Logger getPluginLogger()
     {
         return logger;
     }
 
-    public static ConfigurationHandler getConfigHandler()
+    public ConfigurationHandler getConfigHandler()
     {
         return configHandler;
     }
 
-    public static DatabaseLogging getDefaultDatabaseHandler()
+    public IDatabaseHandler getDatabaseHandler()
     {
         return databaseHandler;
     }
 
-    public static Cache getCache()
+    public Cache getCache()
     {
         return cache;
+    }
+
+    public CommandRouter getCommandRouter()
+    {
+        return commandRouter;
     }
 
 }
