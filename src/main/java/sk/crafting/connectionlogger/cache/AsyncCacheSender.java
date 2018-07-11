@@ -1,10 +1,10 @@
 package sk.crafting.connectionlogger.cache;
 
 import sk.crafting.connectionlogger.ConnectionLogger;
+import sk.crafting.connectionlogger.utils.Logging;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Level;
 
 /**
  * @author Red-Eye~kikz0r_sk
@@ -19,29 +19,29 @@ public class AsyncCacheSender {
         this.cache = cache;
     }
 
-    public synchronized void StartTimer() {
+    public synchronized void startTimer() {
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 if (ConnectionLogger.getInstance().getDatabaseHandler() != null) {
-                    ConnectionLogger.getInstance().getPluginLogger().log(Level.FINE, "Sending " + cache.getSize() + " logs...");
                     cache.SendCache(false);
+                    Logging.verbose("Cache sent");
                 }
-                SetScheduled(false);
+                setScheduled(false);
             }
         }, ConnectionLogger.getInstance().getConfigHandler().getDelayBeforeSend());
-        SetScheduled(true);
+        setScheduled(true);
     }
 
-    private synchronized void SetScheduled(boolean state) {
+    private synchronized void setScheduled(boolean state) {
         scheduled = state;
     }
 
-    public synchronized void StopTimer() {
+    public synchronized void stopTimer() {
         if (timer != null) {
             timer.cancel();
-            SetScheduled(false);
+            setScheduled(false);
         }
     }
 

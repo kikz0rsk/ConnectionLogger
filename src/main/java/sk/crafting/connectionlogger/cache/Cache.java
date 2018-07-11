@@ -76,7 +76,7 @@ public class Cache {
     }
 
     public synchronized void SendCache(boolean useFallback) {
-        if(instance.getDatabaseHandler().AddFromCache(this)) {
+        if(instance.getDatabaseHandler().send(this)) {
             StopTimer();
             return;
         }
@@ -106,11 +106,11 @@ public class Cache {
     }
 
     public void StartTimer() {
-        cacheSender.StartTimer();
+        cacheSender.startTimer();
     }
 
     public void StopTimer() {
-        cacheSender.StopTimer();
+        cacheSender.stopTimer();
     }
 
     public boolean isScheduled() {

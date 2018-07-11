@@ -10,16 +10,16 @@ import sk.crafting.connectionlogger.cache.Cache;
 public interface IDatabaseHandler
 {
 
-    public boolean AddFromCache(Cache cache);
+    public boolean send(Cache cache);
 
-    public void TestConnection();
+    public void testConnection();
 
-    public void Clear();
+    public void clear();
 
     public ArrayList<String> getLogs(long max);
 
-    public void Reload();
+    public void reload();
 
-    public void Disable();
+    public void disable();
 
 }

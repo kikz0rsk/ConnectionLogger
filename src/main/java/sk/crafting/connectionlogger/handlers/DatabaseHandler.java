@@ -43,10 +43,10 @@ public class DatabaseHandler implements IDatabaseHandler
         this.plugin = plugin;
         configuration = plugin.getConfigHandler();
         logger = plugin.getLogger();
-        Init();
+        init();
     }
 
-    private void Init()
+    private void init()
     {
         dataSource = new HikariDataSource();
         dataSource.setJdbcUrl(String.format(
@@ -91,25 +91,25 @@ public class DatabaseHandler implements IDatabaseHandler
                 + ")";
     }
 
-    private void Connect() throws Exception
+    private void connect() throws Exception
     {
         if (db_connection == null || db_connection.isClosed()) {
             db_connection = dataSource.getConnection();
         }
         PreparedStatement statement = db_connection.prepareStatement(connectSql);
         statement.executeUpdate();
-        CloseObjects(null, null, statement);
+        closeObjects(null, null, statement);
     }
 
     @Override
-    public boolean AddFromCache(Cache cache)
+    public boolean send(Cache cache)
     {
         if (cache.isEmpty()) {
             return true;
         }
         PreparedStatement statement = null;
         try {
-            Connect();
+            connect();
             statement = db_connection.prepareStatement("INSERT INTO " + configuration.getDatabaseTableName() + " (time, type, player_name, player_ip, player_hostname, player_port, world, session, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
             for (Log log : cache.toArray()) {
                 statement.setString(1, formatter.format(log.getTime()));
@@ -130,30 +130,30 @@ public class DatabaseHandler implements IDatabaseHandler
             logger.log(Level.SEVERE, "Failed to send cache to database: {0}", ex.toString());
             return false;
         } finally {
-            CloseObjects(db_connection, null, statement);
+            closeObjects(db_connection, null, statement);
         }
     }
 
     @Override
-    public void TestConnection()
+    public void testConnection()
     {
         logger.info("Testing connection to database...");
         try {
-            Connect();
+            connect();
             logger.info("Connection to database works!");
         } catch (Exception ex) {
             logger.log(Level.INFO, "Connection to database failed: {0}", ex.getMessage());
         } finally {
-            Disconnect();
+            disconnect();
         }
     }
 
     @Override
-    public void Clear()
+    public void clear()
     {
         PreparedStatement statement = null;
         try {
-            Connect();
+            connect();
             statement = db_connection.prepareStatement(
                     "UPDATE " + configuration.getDatabaseTableName() + " SET deleted=?"
             );
@@ -162,11 +162,11 @@ public class DatabaseHandler implements IDatabaseHandler
         } catch (Exception ex) {
             logger.severe("Failed to send SQL: " + ex.toString());
         } finally {
-            CloseObjects(db_connection, null, statement);
+            closeObjects(db_connection, null, statement);
         }
     }
 
-    private void Disconnect()
+    private void disconnect()
     {
         try {
             if (db_connection != null) {
@@ -183,7 +183,7 @@ public class DatabaseHandler implements IDatabaseHandler
         PreparedStatement statement = null;
         ResultSet result = null;
         try {
-            Connect();
+            connect();
             statement = db_connection.prepareStatement(
                     "SELECT * FROM " + configuration.getDatabaseTableName() + " WHERE time>=? AND deleted=0"
             );
@@ -209,12 +209,12 @@ public class DatabaseHandler implements IDatabaseHandler
         } catch (Exception ex) {
             logger.log(Level.SEVERE, "Failed to send SQL: {0}", ex.toString());
         } finally {
-            CloseObjects(db_connection, result, statement);
+            closeObjects(db_connection, result, statement);
         }
         return null;
     }
 
-    private void CloseObjects(Connection connection, ResultSet result, Statement statement)
+    private void closeObjects(Connection connection, ResultSet result, Statement statement)
     {
         try {
             if (result != null) {
@@ -224,7 +224,7 @@ public class DatabaseHandler implements IDatabaseHandler
                 statement.close();
             }
             if (connection != null) {
-                Disconnect();
+                disconnect();
             }
         } catch (SQLException ex) {
             logger.warning("Failed to close database statement: " + ex.toString());
@@ -232,20 +232,20 @@ public class DatabaseHandler implements IDatabaseHandler
     }
 
     @Override
-    public void Reload()
+    public void reload()
     {
-        Disconnect();
-        Init();
-        TestConnection();
+        disconnect();
+        init();
+        testConnection();
         if (!plugin.getCache().isEmpty()) {
             plugin.getCache().SendCache(false);
         }
     }
 
     @Override
-    public void Disable()
+    public void disable()
     {
-        Disconnect();
+        disconnect();
         if (dataSource != null) {
             dataSource.close();
         }

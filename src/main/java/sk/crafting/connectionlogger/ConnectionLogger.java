@@ -14,7 +14,6 @@ import sk.crafting.connectionlogger.handlers.DatabaseHandler;
 import sk.crafting.connectionlogger.handlers.IDatabaseHandler;
 import sk.crafting.connectionlogger.listeners.PlayerListener;
 import sk.crafting.connectionlogger.session.SessionManager;
-import sk.crafting.connectionlogger.utils.Utils;
 
 /**
  *
@@ -52,7 +51,7 @@ public class ConnectionLogger extends JavaPlugin
         }
         cache = new Cache(configHandler.getCacheSize());
         databaseHandler = new DatabaseHandler(this);
-        databaseHandler.TestConnection();
+        databaseHandler.testConnection();
         sessionManager = SessionManager.getInstance();
         sessionManager.StartSession();
         logger.info("Started new session with ID " + sessionManager.getSession().getHashHex());
@@ -62,25 +61,26 @@ public class ConnectionLogger extends JavaPlugin
     @Override
     public void onDisable()
     {
-        Disable();
+        disable();
     }
 
-    public void Reload()
+    public void reload()
     {
-        configHandler.SaveDefaultConfig();
+        configHandler.saveDefaultConfig();
+        configHandler.reloadConfig();
         cache.SendCache(false);
-        databaseHandler.Reload();
+        databaseHandler.reload();
         if (!cache.isEmpty()) {
             cache = new Cache(cache.getList());
             logger.log(Level.INFO, "Cache was not empty during reload - cache size was not changed");
         }
     }
 
-    private void  Disable()
+    private void disable()
     {
         cache.StopTimer();
         cache.SendCache(true);
-        databaseHandler.Disable();
+        databaseHandler.disable();
         sessionManager.CloseSession();
     }
 
@@ -90,7 +90,7 @@ public class ConnectionLogger extends JavaPlugin
             return false;
         }
         logger.log(Level.WARNING, "Setting custom database handler. This may cause nonfunctional logging. Name of requesting plugin: {0}", plugin.getName());
-        databaseHandler.Disable();
+        databaseHandler.disable();
         databaseHandler = handler;
         return true;
     }

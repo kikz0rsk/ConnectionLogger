@@ -14,13 +14,13 @@ public class CClear extends CLCommand
 
     public CClear()
     {
-        super("clear", "connectionlogger.cl.clear", true, "Clear all logs");
+        super("clear", "connectionlogger.cl.clear", true, "clear all logs");
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String string, String[] args)
     {
-        ConnectionLogger.getInstance().getDatabaseHandler().Clear();
+        ConnectionLogger.getInstance().getDatabaseHandler().clear();
         sender.sendMessage(ChatColor.GREEN + "Logs cleared");
         return true;
     }

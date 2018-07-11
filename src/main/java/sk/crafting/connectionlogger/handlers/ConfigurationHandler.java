@@ -42,10 +42,11 @@ public final class ConfigurationHandler
     {
         this.instance = instance;
         file = new File(ConnectionLogger.getInstance().getDataFolder(), "config.yml");
-        SaveDefaultConfig();
+        saveDefaultConfig();
+        reloadConfig();
     }
 
-    public void SaveDefaultConfig()
+    public void saveDefaultConfig()
     {
         file.getParentFile().mkdirs();
         if (!file.exists()) {
@@ -55,10 +56,9 @@ public final class ConfigurationHandler
                 instance.getPluginLogger().log(Level.SEVERE, "Failed to save default config file: {0}", ex.toString());
             }
         }
-        ReloadConfig();
     }
 
-    public void ReloadConfig()
+    public void reloadConfig()
     {
         conf = YamlConfiguration.loadConfiguration(file);
         logPlayerConnect = conf.getBoolean("logging.player-connect");
@@ -86,14 +86,14 @@ public final class ConfigurationHandler
         }
     }
 
-    public void SaveConfig()
+    public void saveConfig()
     {
         try {
             conf.save(file);
         } catch (IOException ex) {
             instance.getPluginLogger().log(Level.SEVERE, "Failed to save configuration file: {0}", ex.toString());
         }
-        ReloadConfig();
+        reloadConfig();
     }
 
     public FileConfiguration getConf()
