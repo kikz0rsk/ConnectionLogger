@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import sk.crafting.connectionlogger.ConnectionLogger;
+import sk.crafting.connectionlogger.cache.Log;
 
 /**
  *
@@ -41,13 +42,13 @@ public class CPrint extends CLCommand
             }
         }
         calendar.add(Calendar.HOUR_OF_DAY, hours);
-        ArrayList<String> result = ConnectionLogger.getInstance().getDataSource().getLogs(calendar.getTimeInMillis());
+        ArrayList<Log> result = ConnectionLogger.getInstance().getDataSource().getLogs(calendar.getTimeInMillis());
         if (result != null) {
             if(result.size() == 0) {
                 sender.sendMessage(ChatColor.RED + "No logs in specified time range (" + hours + ")");
                 return true;
             }
-            sender.sendMessage(result.toArray(new String[result.size()]));
+            // TODO print
         }
         return true;
     }
