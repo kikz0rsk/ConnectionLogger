@@ -41,7 +41,7 @@ public class CPrint extends CLCommand
             }
         }
         calendar.add(Calendar.HOUR_OF_DAY, hours);
-        ArrayList<String> result = ConnectionLogger.getInstance().getDatabaseHandler().getLogs(calendar.getTimeInMillis());
+        ArrayList<String> result = ConnectionLogger.getInstance().getDataSource().getLogs(calendar.getTimeInMillis());
         if (result != null) {
             if(result.size() == 0) {
                 sender.sendMessage(ChatColor.RED + "No logs in specified time range (" + hours + ")");

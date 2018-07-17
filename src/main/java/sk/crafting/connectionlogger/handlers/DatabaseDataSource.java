@@ -9,12 +9,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import sk.crafting.connectionlogger.ConnectionLogger;
 import sk.crafting.connectionlogger.cache.Cache;
+import sk.crafting.connectionlogger.cache.EventType;
 import sk.crafting.connectionlogger.cache.Log;
 import sk.crafting.connectionlogger.session.SessionManager;
 import sk.crafting.connectionlogger.utils.Utils;
@@ -23,13 +23,13 @@ import sk.crafting.connectionlogger.utils.Utils;
  *
  * @author Red-Eye~kikz0r_sk
  */
-public class DatabaseHandler implements IDatabaseHandler
+public class DatabaseDataSource implements DataSource
 {
 
     private final SimpleDateFormat formatter = new SimpleDateFormat(Utils.getDatabaseTimeFormat());
     private final SimpleDateFormat defaultFormatter = new SimpleDateFormat(Utils.getDefaultTimeFormat());
 
-    private Connection db_connection;
+    private Connection databseConnection;
     private HikariDataSource dataSource;
 
     private String connectSql;
@@ -38,7 +38,7 @@ public class DatabaseHandler implements IDatabaseHandler
     private ConfigurationHandler configuration;
     private Logger logger;
 
-    public DatabaseHandler(ConnectionLogger plugin)
+    public DatabaseDataSource(ConnectionLogger plugin)
     {
         this.plugin = plugin;
         configuration = plugin.getConfigHandler();
@@ -93,10 +93,10 @@ public class DatabaseHandler implements IDatabaseHandler
 
     private void connect() throws Exception
     {
-        if (db_connection == null || db_connection.isClosed()) {
-            db_connection = dataSource.getConnection();
+        if (databseConnection == null || databseConnection.isClosed()) {
+            databseConnection = dataSource.getConnection();
         }
-        PreparedStatement statement = db_connection.prepareStatement(connectSql);
+        PreparedStatement statement = databseConnection.prepareStatement(connectSql);
         statement.executeUpdate();
         closeObjects(null, null, statement);
     }
@@ -110,7 +110,7 @@ public class DatabaseHandler implements IDatabaseHandler
         PreparedStatement statement = null;
         try {
             connect();
-            statement = db_connection.prepareStatement("INSERT INTO " + configuration.getDatabaseTableName() + " (time, type, player_name, player_ip, player_hostname, player_port, world, session, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            statement = databseConnection.prepareStatement("INSERT INTO " + configuration.getDatabaseTableName() + " (time, type, player_name, player_ip, player_hostname, player_port, world, session, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
             for (Log log : cache.toArray()) {
                 statement.setString(1, formatter.format(log.getTime()));
                 statement.setString(2, log.getType().getMessage());
@@ -130,12 +130,12 @@ public class DatabaseHandler implements IDatabaseHandler
             logger.log(Level.SEVERE, "Failed to send cache to database: {0}", ex.toString());
             return false;
         } finally {
-            closeObjects(db_connection, null, statement);
+            closeObjects(databseConnection, null, statement);
         }
     }
 
     @Override
-    public void testConnection()
+    public void enable()
     {
         logger.info("Testing connection to database...");
         try {
@@ -154,7 +154,7 @@ public class DatabaseHandler implements IDatabaseHandler
         PreparedStatement statement = null;
         try {
             connect();
-            statement = db_connection.prepareStatement(
+            statement = databseConnection.prepareStatement(
                     "UPDATE " + configuration.getDatabaseTableName() + " SET deleted=?"
             );
             statement.setBoolean(1, true);
@@ -162,15 +162,15 @@ public class DatabaseHandler implements IDatabaseHandler
         } catch (Exception ex) {
             logger.severe("Failed to send SQL: " + ex.toString());
         } finally {
-            closeObjects(db_connection, null, statement);
+            closeObjects(databseConnection, null, statement);
         }
     }
 
     private void disconnect()
     {
         try {
-            if (db_connection != null) {
-                db_connection.close();
+            if (databseConnection != null) {
+                databseConnection.close();
             }
         } catch (Exception ex) {
             logger.warning("Failed to close connection to database: " + ex.toString());
@@ -178,25 +178,23 @@ public class DatabaseHandler implements IDatabaseHandler
     }
 
     @Override
-    public ArrayList<String> getLogs(long max)
+    public ArrayList<Log> getLogs(long max)
     {
         PreparedStatement statement = null;
         ResultSet result = null;
         try {
             connect();
-            statement = db_connection.prepareStatement(
+            statement = databseConnection.prepareStatement(
                     "SELECT * FROM " + configuration.getDatabaseTableName() + " WHERE time>=? AND deleted=0"
             );
             statement.setString(1, formatter.format(max));
             result = statement.executeQuery();
-            ArrayList<String> output = new ArrayList<>();
+            ArrayList<Log> output = new ArrayList<>();
             while (result.next()) {
-                Timestamp time = result.getTimestamp("time");
-                output.add(String.format(
-                        "ID: %s | Time: %s | Type: %s | Player Name: %s | Player IP: %s | Player Hostname: %s | Player Port: %d | World: %s | Session: %s",
-                        result.getString("id"),
-                        defaultFormatter.format(time.getTime()),
-                        result.getString("type"),
+                output.add(new Log(
+                        Integer.parseInt(result.getString("id")),
+                        result.getTimestamp("time").getTime(),
+                        EventType.getEventTypeByString(result.getString("type")),
                         result.getString("player_name"),
                         result.getString("player_ip"),
                         result.getString("player_hostname"),
@@ -209,7 +207,7 @@ public class DatabaseHandler implements IDatabaseHandler
         } catch (Exception ex) {
             logger.log(Level.SEVERE, "Failed to send SQL: {0}", ex.toString());
         } finally {
-            closeObjects(db_connection, result, statement);
+            closeObjects(databseConnection, result, statement);
         }
         return null;
     }
@@ -234,9 +232,9 @@ public class DatabaseHandler implements IDatabaseHandler
     @Override
     public void reload()
     {
-        disconnect();
+        disable();
         init();
-        testConnection();
+        enable();
         if (!plugin.getCache().isEmpty()) {
             plugin.getCache().SendCache(false);
         }

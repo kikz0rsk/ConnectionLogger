@@ -10,8 +10,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import sk.crafting.connectionlogger.cache.Cache;
 import sk.crafting.connectionlogger.commands.CommandRouter;
 import sk.crafting.connectionlogger.handlers.ConfigurationHandler;
-import sk.crafting.connectionlogger.handlers.DatabaseHandler;
-import sk.crafting.connectionlogger.handlers.IDatabaseHandler;
+import sk.crafting.connectionlogger.handlers.DatabaseDataSource;
+import sk.crafting.connectionlogger.handlers.DataSource;
 import sk.crafting.connectionlogger.listeners.PlayerListener;
 import sk.crafting.connectionlogger.session.SessionManager;
 
@@ -25,7 +25,7 @@ public class ConnectionLogger extends JavaPlugin
     private static ConnectionLogger instance;
     private CommandRouter commandRouter;
 
-    private IDatabaseHandler databaseHandler;
+    private DataSource dataSource;
     private SessionManager sessionManager;
 
     private Logger logger;
@@ -50,8 +50,8 @@ public class ConnectionLogger extends JavaPlugin
             logger.setLevel(Level.INFO);
         }
         cache = new Cache(configHandler.getCacheSize());
-        databaseHandler = new DatabaseHandler(this);
-        databaseHandler.testConnection();
+        dataSource = new DatabaseDataSource(this);
+        dataSource.enable();
         sessionManager = SessionManager.getInstance();
         sessionManager.StartSession();
         logger.info("Started new session with ID " + sessionManager.getSession().getHashHex());
@@ -69,7 +69,7 @@ public class ConnectionLogger extends JavaPlugin
         configHandler.saveDefaultConfig();
         configHandler.reloadConfig();
         cache.SendCache(false);
-        databaseHandler.reload();
+        dataSource.reload();
         if (!cache.isEmpty()) {
             cache = new Cache(cache.getList());
             logger.log(Level.INFO, "Cache was not empty during reload - cache size was not changed");
@@ -80,18 +80,18 @@ public class ConnectionLogger extends JavaPlugin
     {
         cache.StopTimer();
         cache.SendCache(true);
-        databaseHandler.disable();
+        dataSource.disable();
         sessionManager.CloseSession();
     }
 
-    public boolean setCustomDatabaseHandler(IDatabaseHandler handler, Plugin plugin)
+    public boolean setCustomDataSource(DataSource handler, Plugin plugin)
     {
         if (handler == null || configHandler.isSafeMode()) {
             return false;
         }
         logger.log(Level.WARNING, "Setting custom database handler. This may cause nonfunctional logging. Name of requesting plugin: {0}", plugin.getName());
-        databaseHandler.disable();
-        databaseHandler = handler;
+        dataSource.disable();
+        dataSource = handler;
         return true;
     }
 
@@ -110,9 +110,9 @@ public class ConnectionLogger extends JavaPlugin
         return configHandler;
     }
 
-    public IDatabaseHandler getDatabaseHandler()
+    public DataSource getDataSource()
     {
-        return databaseHandler;
+        return dataSource;
     }
 
     public Cache getCache()

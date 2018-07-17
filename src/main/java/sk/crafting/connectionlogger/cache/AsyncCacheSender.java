@@ -24,7 +24,7 @@ public class AsyncCacheSender {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (ConnectionLogger.getInstance().getDatabaseHandler() != null) {
+                if (ConnectionLogger.getInstance().getDataSource() != null) {
                     cache.SendCache(false);
                     Logging.verbose("Cache sent");
                 }

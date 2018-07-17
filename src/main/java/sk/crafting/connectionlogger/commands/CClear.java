@@ -20,7 +20,7 @@ public class CClear extends CLCommand
     @Override
     public boolean onCommand(CommandSender sender, Command command, String string, String[] args)
     {
-        ConnectionLogger.getInstance().getDatabaseHandler().clear();
+        ConnectionLogger.getInstance().getDataSource().clear();
         sender.sendMessage(ChatColor.GREEN + "Logs cleared");
         return true;
     }

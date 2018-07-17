@@ -7,6 +7,7 @@ package sk.crafting.connectionlogger.cache;
 public class Log
 {
 
+    private final int id;
     private final long time;
     private final EventType type;
     private final String playerName;
@@ -16,8 +17,14 @@ public class Log
     private final String world;
     private final String session;
 
-    public Log(long time, EventType type, String playerName, String playerIp, String playerHostname, int playerPort, String world, String session)
+    public Log(int time, EventType type, String playerName, String playerIp, String playerHostname, int playerPort, String world, String session)
     {
+        this(-1, time, type, playerName, playerIp, playerHostname, playerPort, world, session);
+    }
+
+    public Log(int id, long time, EventType type, String playerName, String playerIp, String playerHostname, int playerPort, String world, String session)
+    {
+        this.id = id;
         this.time = time;
         this.type = type;
         this.playerName = playerName;
@@ -61,6 +68,10 @@ public class Log
     public String getWorld()
     {
         return world;
+    }
+
+    public int getId() {
+        return id;
     }
 
 }

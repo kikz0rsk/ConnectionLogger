@@ -2,7 +2,7 @@ package sk.crafting.connectionlogger.api;
 
 import org.bukkit.plugin.Plugin;
 import sk.crafting.connectionlogger.ConnectionLogger;
-import sk.crafting.connectionlogger.handlers.IDatabaseHandler;
+import sk.crafting.connectionlogger.handlers.DataSource;
 
 /**
  *
@@ -27,9 +27,9 @@ public class API
         return instance;
     }
 
-    public boolean setCustomDatabaseHandler(IDatabaseHandler handler, Plugin caller)
+    public boolean setCustomDataSource(DataSource handler, Plugin caller)
     {
-        return this.plugin.setCustomDatabaseHandler(handler, caller);
+        return this.plugin.setCustomDataSource(handler, caller);
     }
 
 }

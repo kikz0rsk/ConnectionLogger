@@ -76,7 +76,7 @@ public class Cache {
     }
 
     public synchronized void SendCache(boolean useFallback) {
-        if(instance.getDatabaseHandler().send(this)) {
+        if(instance.getDataSource().send(this)) {
             StopTimer();
             return;
         }

@@ -21,4 +21,13 @@ public enum EventType
         return msg;
     }
 
+    public static EventType getEventTypeByString(String type) {
+        for (EventType e : EventType.values()) {
+            if(e.getMessage().equalsIgnoreCase(type)) {
+                return e;
+            }
+        }
+        return null;
+    }
+
 }
