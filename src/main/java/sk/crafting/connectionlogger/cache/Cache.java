@@ -31,18 +31,18 @@ public class Cache {
         cache = new ArrayList<>(collection);
     }
 
-    public synchronized void Add(Log log) {
+    public synchronized void add(Log log) {
         cache.add(log);
 
         // If it is full, send immediately
-        if (cache.size() >= instance.getConfigHandler().getCacheSize()) {
-            SendCache(true);
+        if (cache.size() >= instance.getConfiguration().getCacheSize()) {
+            sendCache(true);
         } else if(!(isEmpty() || isScheduled())) {
-            StartTimer();
+            startTimer();
         }
     }
 
-    public synchronized void DumpCacheToFile() {
+    public synchronized void dumpCacheToFile() {
         file.getParentFile().mkdirs();
         PrintWriter out = null;
         try {
@@ -64,7 +64,7 @@ public class Cache {
             }
             out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
             out.println(builder.toString());
-            Clear();
+            clear();
             instance.getPluginLogger().log(Level.INFO, "{0}Successfully dumped to file", ChatColor.GREEN);
         } catch (IOException ex) {
             instance.getPluginLogger().log(Level.SEVERE, "IOException while dumping cache to file: {0}", ex.toString());
@@ -75,13 +75,13 @@ public class Cache {
         }
     }
 
-    public synchronized void SendCache(boolean useFallback) {
+    public synchronized void sendCache(boolean useFallback) {
         if(instance.getDataSource().send(this)) {
-            StopTimer();
+            stopTimer();
             return;
         }
         if(useFallback) {
-            DumpCacheToFile();
+            dumpCacheToFile();
         }
     }
 
@@ -97,7 +97,7 @@ public class Cache {
         return cache.isEmpty();
     }
 
-    public synchronized void Clear() {
+    public synchronized void clear() {
         cache.clear();
     }
 
@@ -105,11 +105,11 @@ public class Cache {
         return cache;
     }
 
-    public void StartTimer() {
+    public void startTimer() {
         cacheSender.startTimer();
     }
 
-    public void StopTimer() {
+    public void stopTimer() {
         cacheSender.stopTimer();
     }
 

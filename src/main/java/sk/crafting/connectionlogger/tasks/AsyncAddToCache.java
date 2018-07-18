@@ -28,7 +28,7 @@ public class AsyncAddToCache extends BukkitRunnable
     @Override
     public void run()
     {
-        ConnectionLogger.getInstance().getCache().Add(log);
+        ConnectionLogger.getInstance().getCache().add(log);
     }
 
 }

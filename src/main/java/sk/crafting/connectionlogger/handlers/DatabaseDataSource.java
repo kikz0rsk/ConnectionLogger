@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import sk.crafting.connectionlogger.Configuration;
 import sk.crafting.connectionlogger.ConnectionLogger;
 import sk.crafting.connectionlogger.cache.Cache;
 import sk.crafting.connectionlogger.cache.EventType;
@@ -35,13 +36,13 @@ public class DatabaseDataSource implements DataSource
     private String connectSql;
 
     private ConnectionLogger plugin;
-    private ConfigurationHandler configuration;
+    private Configuration configuration;
     private Logger logger;
 
     public DatabaseDataSource(ConnectionLogger plugin)
     {
         this.plugin = plugin;
-        configuration = plugin.getConfigHandler();
+        configuration = plugin.getConfiguration();
         logger = plugin.getLogger();
         init();
     }
@@ -60,7 +61,7 @@ public class DatabaseDataSource implements DataSource
         dataSource.setPassword(configuration.getDatabasePassword());
         dataSource.setMaximumPoolSize(configuration.getDatabasePools());
 //        dataSource.setConnectionInitSql(
-//                "CREATE TABLE IF NOT EXISTS " + ConnectionLogger.getConfigHandler().getDatabaseTableName() + ""
+//                "CREATE TABLE IF NOT EXISTS " + ConnectionLogger.getConfiguration().getDatabaseTableName() + ""
 //                + "("
 //                + "id int NOT NULL AUTO_INCREMENT, "
 //                + "time datetime NOT NULL, "
@@ -124,7 +125,7 @@ public class DatabaseDataSource implements DataSource
                 statement.addBatch();
             }
             statement.executeBatch();
-            cache.Clear();
+            cache.clear();
             return true;
         } catch (Exception ex) {
             logger.log(Level.SEVERE, "Failed to send cache to database: {0}", ex.toString());
@@ -236,7 +237,7 @@ public class DatabaseDataSource implements DataSource
         init();
         enable();
         if (!plugin.getCache().isEmpty()) {
-            plugin.getCache().SendCache(false);
+            plugin.getCache().sendCache(false);
         }
     }
 

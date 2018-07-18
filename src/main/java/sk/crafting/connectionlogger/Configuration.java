@@ -1,4 +1,4 @@
-package sk.crafting.connectionlogger.handlers;
+package sk.crafting.connectionlogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import sk.crafting.connectionlogger.ConnectionLogger;
  *
  * @author Red-Eye~kikz0r_sk
  */
-public final class ConfigurationHandler
+public final class Configuration
 {
 
     private YamlConfiguration conf;
@@ -23,7 +23,6 @@ public final class ConfigurationHandler
 
     private boolean logPlayerConnect,
             logPlayerDisconnect,
-            logPluginShutdown,
             safeMode, verbose;
 
     private String databaseHost,
@@ -38,7 +37,7 @@ public final class ConfigurationHandler
 
     private ConnectionLogger instance;
 
-    public ConfigurationHandler(ConnectionLogger instance)
+    public Configuration(ConnectionLogger instance)
     {
         this.instance = instance;
         file = new File(ConnectionLogger.getInstance().getDataFolder(), "config.yml");
@@ -61,25 +60,24 @@ public final class ConfigurationHandler
     public void reloadConfig()
     {
         conf = YamlConfiguration.loadConfiguration(file);
-        logPlayerConnect = conf.getBoolean("logging.player-connect");
-        logPlayerDisconnect = conf.getBoolean("logging.player-disconnect");
-        logPluginShutdown = conf.getBoolean("logging.plugin-shutdown");
-        cacheSize = conf.getInt("cache.cache-size-trigger");
+        logPlayerConnect = conf.getBoolean("logging.player-connect", true);
+        logPlayerDisconnect = conf.getBoolean("logging.player-disconnect", true);
+        cacheSize = conf.getInt("cache.cache-size-trigger", 20);
         if (cacheSize < 2) {
             instance.getPluginLogger().info("Cache size is smaller than required value. Setting to 2");
             cacheSize = 2;
         }
-        delayBeforeSend = conf.getInt("cache.delay-before-send");
-        databaseHost = conf.getString("database.host");
-        databasePort = conf.getString("database.port");
+        delayBeforeSend = conf.getInt("cache.delay-before-send", 5000);
+        databaseHost = conf.getString("database.host", "localhost");
+        databasePort = conf.getString("database.port", "3306");
         databaseUser = conf.getString("database.user");
         databasePassword = conf.getString("database.password");
         databaseName = conf.getString("database.database-name");
-        databaseTableName = conf.getString("database.table-name");
-        databasePools = conf.getInt("database.pool-size");
-        timeout = conf.getInt("database.timeout");
-        safeMode = conf.getBoolean("secure-mode");
-        verbose = conf.getBoolean("verbose");
+        databaseTableName = conf.getString("database.table-name", "connectionlogger");
+        databasePools = conf.getInt("database.pool-size", 1);
+        timeout = conf.getInt("database.timeout", 5000);
+        safeMode = conf.getBoolean("secure-mode", false);
+        verbose = conf.getBoolean("verbose", false);
         if (databasePools < 1) {
             instance.getPluginLogger().info("Pool size is smaller than required value. Setting to 1");
             databasePools = 1;
@@ -149,11 +147,6 @@ public final class ConfigurationHandler
     public int getDatabasePools()
     {
         return databasePools;
-    }
-
-    public boolean isLogPluginShutdown()
-    {
-        return logPluginShutdown;
     }
 
     public int getCacheSize()

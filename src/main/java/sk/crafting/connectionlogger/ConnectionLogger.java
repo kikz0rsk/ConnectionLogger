@@ -9,7 +9,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import sk.crafting.connectionlogger.cache.Cache;
 import sk.crafting.connectionlogger.commands.CommandRouter;
-import sk.crafting.connectionlogger.handlers.ConfigurationHandler;
 import sk.crafting.connectionlogger.handlers.DatabaseDataSource;
 import sk.crafting.connectionlogger.handlers.DataSource;
 import sk.crafting.connectionlogger.listeners.PlayerListener;
@@ -29,32 +28,34 @@ public class ConnectionLogger extends JavaPlugin
     private SessionManager sessionManager;
 
     private Logger logger;
-    private ConfigurationHandler configHandler;
+    private Configuration configuration;
     private Cache cache;
+
+    @Override
+    public void onLoad() {
+        instance = this;
+    }
 
     @Override
     public void onEnable()
     {
         // Set logging level
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "warn");
-           
-        commandRouter = new CommandRouter();
-        getCommand("cl").setExecutor(commandRouter);
-        instance = this;
 
         logger = getLogger();
-        configHandler = new ConfigurationHandler(this);
-        if(configHandler.isVerbose()) {
-            logger.setLevel(Level.FINEST);
-        } else {
-            logger.setLevel(Level.INFO);
-        }
-        cache = new Cache(configHandler.getCacheSize());
+
+        commandRouter = new CommandRouter();
+        getCommand("cl").setExecutor(commandRouter);
+
+        configuration = new Configuration(this);
+        cache = new Cache(configuration.getCacheSize());
+
         dataSource = new DatabaseDataSource(this);
         dataSource.enable();
+
         sessionManager = SessionManager.getInstance();
-        sessionManager.StartSession();
-        logger.info("Started new session with ID " + sessionManager.getSession().getHashHex());
+        sessionManager.startSession();
+
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
     }
 
@@ -66,9 +67,9 @@ public class ConnectionLogger extends JavaPlugin
 
     public void reload()
     {
-        configHandler.saveDefaultConfig();
-        configHandler.reloadConfig();
-        cache.SendCache(false);
+        configuration.saveDefaultConfig();
+        configuration.reloadConfig();
+        cache.sendCache(false);
         dataSource.reload();
         if (!cache.isEmpty()) {
             cache = new Cache(cache.getList());
@@ -78,15 +79,15 @@ public class ConnectionLogger extends JavaPlugin
 
     private void disable()
     {
-        cache.StopTimer();
-        cache.SendCache(true);
+        cache.stopTimer();
+        cache.sendCache(true);
         dataSource.disable();
-        sessionManager.CloseSession();
+        sessionManager.closeSession();
     }
 
     public boolean setCustomDataSource(DataSource handler, Plugin plugin)
     {
-        if (handler == null || configHandler.isSafeMode()) {
+        if (handler == null || configuration.isSafeMode()) {
             return false;
         }
         logger.log(Level.WARNING, "Setting custom database handler. This may cause nonfunctional logging. Name of requesting plugin: {0}", plugin.getName());
@@ -105,9 +106,9 @@ public class ConnectionLogger extends JavaPlugin
         return logger;
     }
 
-    public ConfigurationHandler getConfigHandler()
+    public Configuration getConfiguration()
     {
-        return configHandler;
+        return configuration;
     }
 
     public DataSource getDataSource()

@@ -24,7 +24,7 @@ public class CDumpcache extends CLCommand
             sender.sendMessage(ChatColor.GRAY + "Cache is empty");
             return true;
         }
-        ConnectionLogger.getInstance().getCache().SendCache(true);
+        ConnectionLogger.getInstance().getCache().sendCache(true);
         sender.sendMessage(ChatColor.GREEN + "Cache dumped");
         return true;
     }

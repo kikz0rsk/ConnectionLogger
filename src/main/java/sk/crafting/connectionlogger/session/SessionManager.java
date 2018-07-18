@@ -25,12 +25,12 @@ public class SessionManager {
         return instance;
     }
 
-    public void StartSession() {
+    public void startSession() {
         Session session = new Session();
         this.session = session;
 
-        if(Files.exists(lockFile)) {
-            ConnectionLogger.getInstance().getLogger().warning("Previous session have not ended up correctly (server might have crashed). This means logs from previous session may be incomplete.");
+        if(Files.exists(lockFile) && !sessionRunning) {
+            ConnectionLogger.getInstance().getLogger().warning("Previous session has not ended up correctly (server might have crashed). This means logs from previous session may be incomplete.");
         } else {
             try {
                 Files.createFile(lockFile);
@@ -38,10 +38,11 @@ public class SessionManager {
                 ConnectionLogger.getInstance().getLogger().warning("Failed to create temporary session file: " + e.getMessage());
             }
         }
+        ConnectionLogger.getInstance().getLogger().info("Started new session with ID " + session.getHashHex());
         sessionRunning = true;
     }
 
-    public void CloseSession() {
+    public void closeSession() {
         try {
             Files.delete(lockFile);
         } catch (IOException e) {
@@ -52,10 +53,6 @@ public class SessionManager {
 
     public Session getSession() {
         return session;
-    }
-
-    public Path getLockFile() {
-        return lockFile;
     }
 
 }

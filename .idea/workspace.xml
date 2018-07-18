@@ -7,17 +7,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="21381bf7-23bc-4517-9384-7b8195c9b4aa" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/utils/TimeUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dependency-reduced-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/dependency-reduced-pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/ConnectionLogger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/ConnectionLogger.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/cache/AsyncCacheSender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/cache/AsyncCacheSender.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/cache/Cache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/cache/Cache.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/cache/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/cache/Log.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/commands/CPrint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/commands/CPrint.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/commands/CPrintcache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/commands/CPrintcache.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/commands/CDumpcache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/commands/CDumpcache.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/handlers/ConfigurationHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/Configuration.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/handlers/DatabaseDataSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/handlers/DatabaseDataSource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/utils/Utils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/listeners/PlayerListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/listeners/PlayerListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/session/SessionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/session/SessionManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/tasks/AsyncAddToCache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/tasks/AsyncAddToCache.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/utils/Logging.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/utils/Logging.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -58,26 +58,30 @@
       <file leaf-file-name="ConnectionLogger.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/ConnectionLogger.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1258">
-              <caret line="90" column="9" selection-start-line="90" selection-start-column="9" selection-end-line="90" selection-end-column="9" />
+            <state relative-caret-position="428">
+              <caret line="49" column="34" lean-forward="true" selection-start-line="49" selection-start-column="34" selection-end-line="49" selection-end-column="34" />
+              <folding>
+                <element signature="e#953#954#0" expanded="true" />
+                <element signature="e#983#984#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CPrint.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="SessionManager.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/session/SessionManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="799">
+              <caret line="52" lean-forward="true" selection-start-line="52" selection-end-line="52" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CPrint.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/commands/CPrint.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="348">
-              <caret line="53" column="42" selection-start-line="53" selection-start-column="42" selection-end-line="53" selection-end-column="42" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DatabaseDataSource.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/handlers/DatabaseDataSource.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="35" selection-start-line="35" selection-end-line="35" />
+            <state relative-caret-position="748">
+              <caret line="55" column="9" lean-forward="true" selection-start-line="55" selection-start-column="9" selection-end-line="55" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -116,8 +120,17 @@
       <file leaf-file-name="Cache.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/cache/Cache.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="41" column="9" selection-start-line="41" selection-start-column="9" selection-end-line="41" selection-end-column="9" />
+            <state relative-caret-position="1445">
+              <caret line="110" lean-forward="true" selection-start-line="110" selection-end-line="110" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Configuration.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/Configuration.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1652">
+              <caret line="149" column="5" selection-start-line="149" selection-start-column="5" selection-end-line="149" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -152,7 +165,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/listeners/EventType.java" />
-        <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/session/SessionManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/listeners/PlayerListener.java" />
         <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/tasks/AsyncAddToCache.java" />
         <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/session/Session.java" />
@@ -169,7 +181,6 @@
         <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/handlers/DatabaseHandler.java" />
         <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/handlers/DataSource.java" />
         <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/cache/EventType.java" />
-        <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/ConnectionLogger.java" />
         <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/api/API.java" />
         <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/utils/Utils.java" />
         <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/utils/TimeUtils.java" />
@@ -178,8 +189,12 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/commands/CPrintcache.java" />
         <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/cache/Log.java" />
-        <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/cache/Cache.java" />
         <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/commands/CPrint.java" />
+        <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/cache/Cache.java" />
+        <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/handlers/Configuration.java" />
+        <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/ConnectionLogger.java" />
+        <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/session/SessionManager.java" />
+        <option value="$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/Configuration.java" />
       </list>
     </option>
   </component>
@@ -216,8 +231,8 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="49" />
-    <option name="y" value="57" />
+    <option name="x" value="24" />
+    <option name="y" value="87" />
     <option name="width" value="1844" />
     <option name="height" value="959" />
   </component>
@@ -434,12 +449,12 @@
       <workItem from="1531328849617" duration="2305000" />
       <workItem from="1531345145582" duration="1268000" />
       <workItem from="1531683927095" duration="904000" />
-      <workItem from="1531909786458" duration="631000" />
+      <workItem from="1531909786458" duration="3059000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="64794000" />
+    <option name="totallyTimeSpent" value="67222000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -452,11 +467,12 @@
       <window_info anchor="right" auto_hide="true" id="Maven Projects" order="3" weight="0.13326226" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32897604" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3278867" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3278867" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Designer" order="2" />
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49891067" visible="true" weight="0.23614073" />
       <window_info anchor="right" id="Database" order="3" weight="0.2359375" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32897604" />
       <window_info id="Structure" order="1" sideWeight="0.50108933" side_tool="true" weight="0.23614073" />
       <window_info anchor="right" id="Ant Build" order="1" show_stripe_button="false" weight="0.25" />
       <window_info id="UI Designer" order="2" />
@@ -468,7 +484,6 @@
       <window_info anchor="bottom" id="Messages" order="7" weight="0.32943678" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32930845" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -589,13 +604,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="425">
           <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/session/SessionManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+          <folding>
+            <element signature="e#315#316#0" expanded="true" />
+            <element signature="e#406#407#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -617,13 +629,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="527">
           <caret line="31" column="17" selection-start-line="31" selection-start-column="17" selection-end-line="31" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/handlers/ConfigurationHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="88" column="26" selection-start-line="88" selection-start-column="26" selection-end-line="88" selection-end-column="26" />
         </state>
       </provider>
     </entry>
@@ -679,7 +684,7 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/handlers/DatabaseDataSource.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
-          <caret line="35" selection-start-line="35" selection-end-line="35" />
+          <caret line="36" selection-start-line="36" selection-end-line="36" />
         </state>
       </provider>
     </entry>
@@ -697,13 +702,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/ConnectionLogger.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1258">
-          <caret line="90" column="9" selection-start-line="90" selection-start-column="9" selection-end-line="90" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/cache/Log.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
@@ -715,13 +713,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
           <caret line="6" column="23" selection-start-line="6" selection-start-column="23" selection-end-line="6" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/cache/Cache.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="41" column="9" selection-start-line="41" selection-start-column="9" selection-end-line="41" selection-end-column="9" />
         </state>
       </provider>
     </entry>
@@ -752,8 +743,40 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/commands/CPrint.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="348">
-          <caret line="53" column="42" selection-start-line="53" selection-start-column="42" selection-end-line="53" selection-end-column="42" />
+        <state relative-caret-position="748">
+          <caret line="55" column="9" lean-forward="true" selection-start-line="55" selection-start-column="9" selection-end-line="55" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/cache/Cache.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1445">
+          <caret line="110" lean-forward="true" selection-start-line="110" selection-end-line="110" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/session/SessionManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="799">
+          <caret line="52" lean-forward="true" selection-start-line="52" selection-end-line="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/ConnectionLogger.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="428">
+          <caret line="49" column="34" lean-forward="true" selection-start-line="49" selection-start-column="34" selection-end-line="49" selection-end-column="34" />
+          <folding>
+            <element signature="e#953#954#0" expanded="true" />
+            <element signature="e#983#984#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/sk/crafting/connectionlogger/Configuration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1652">
+          <caret line="149" column="5" selection-start-line="149" selection-start-column="5" selection-end-line="149" selection-end-column="5" />
         </state>
       </provider>
     </entry>

@@ -25,12 +25,12 @@ public class AsyncCacheSender {
             @Override
             public void run() {
                 if (ConnectionLogger.getInstance().getDataSource() != null) {
-                    cache.SendCache(false);
+                    cache.sendCache(false);
                     Logging.verbose("Cache sent");
                 }
                 setScheduled(false);
             }
-        }, ConnectionLogger.getInstance().getConfigHandler().getDelayBeforeSend());
+        }, ConnectionLogger.getInstance().getConfiguration().getDelayBeforeSend());
         setScheduled(true);
     }
 
