@@ -2,7 +2,7 @@ package sk.crafting.connectionlogger.cache;
 
 import org.bukkit.ChatColor;
 import sk.crafting.connectionlogger.ConnectionLogger;
-import sk.crafting.connectionlogger.utils.Utils;
+import sk.crafting.connectionlogger.utils.TimeUtils;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -19,7 +19,7 @@ public class Cache {
     private final List<Log> cache;
     private final AsyncCacheSender cacheSender = new AsyncCacheSender(this);
     private final File file = new File(ConnectionLogger.getInstance().getDataFolder(), "cache_dump.log");
-    private final SimpleDateFormat formatter = new SimpleDateFormat(Utils.getDatabaseTimeFormat());
+    private final SimpleDateFormat formatter = new SimpleDateFormat(TimeUtils.DATABASE_TIME_FORMAT);
 
     private ConnectionLogger instance = ConnectionLogger.getInstance();
 

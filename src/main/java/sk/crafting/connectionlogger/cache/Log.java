@@ -17,7 +17,7 @@ public class Log
     private final String world;
     private final String session;
 
-    public Log(int time, EventType type, String playerName, String playerIp, String playerHostname, int playerPort, String world, String session)
+    public Log(long time, EventType type, String playerName, String playerIp, String playerHostname, int playerPort, String world, String session)
     {
         this(-1, time, type, playerName, playerIp, playerHostname, playerPort, world, session);
     }
@@ -72,6 +72,10 @@ public class Log
 
     public int getId() {
         return id;
+    }
+
+    public String getSession() {
+        return session;
     }
 
 }

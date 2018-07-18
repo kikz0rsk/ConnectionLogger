@@ -5,7 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import sk.crafting.connectionlogger.ConnectionLogger;
 import sk.crafting.connectionlogger.cache.Log;
-import sk.crafting.connectionlogger.utils.Utils;
+import sk.crafting.connectionlogger.utils.TimeUtils;
 
 /**
  *
@@ -22,7 +22,7 @@ public class CPrintcache extends CLCommand
     @Override
     public boolean onCommand(CommandSender sender, Command command, String string, String[] args)
     {
-        SimpleDateFormat formatter = new SimpleDateFormat(Utils.getDefaultTimeFormat());
+        SimpleDateFormat formatter = new SimpleDateFormat(TimeUtils.DEFAULT_TIME_FORMAT);
         for (Log log : ConnectionLogger.getInstance().getCache().getList()) {
             sender.sendMessage(String.format("Time: %s | Type: %s | Player Name: %s | Player IP: %s | Player Hostname: %s | Player Port: %d | World: %s",
                     //log.getTime().substring(0, log.getTime().lastIndexOf(".")),

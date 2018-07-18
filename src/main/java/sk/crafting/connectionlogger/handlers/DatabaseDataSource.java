@@ -17,7 +17,7 @@ import sk.crafting.connectionlogger.cache.Cache;
 import sk.crafting.connectionlogger.cache.EventType;
 import sk.crafting.connectionlogger.cache.Log;
 import sk.crafting.connectionlogger.session.SessionManager;
-import sk.crafting.connectionlogger.utils.Utils;
+import sk.crafting.connectionlogger.utils.TimeUtils;
 
 /**
  *
@@ -26,8 +26,8 @@ import sk.crafting.connectionlogger.utils.Utils;
 public class DatabaseDataSource implements DataSource
 {
 
-    private final SimpleDateFormat formatter = new SimpleDateFormat(Utils.getDatabaseTimeFormat());
-    private final SimpleDateFormat defaultFormatter = new SimpleDateFormat(Utils.getDefaultTimeFormat());
+    private final SimpleDateFormat formatter = new SimpleDateFormat(TimeUtils.DATABASE_TIME_FORMAT);
+    private final SimpleDateFormat defaultFormatter = new SimpleDateFormat(TimeUtils.DEFAULT_TIME_FORMAT);
 
     private Connection databseConnection;
     private HikariDataSource dataSource;
