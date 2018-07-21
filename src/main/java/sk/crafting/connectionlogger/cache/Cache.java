@@ -59,6 +59,7 @@ public class Cache {
                 builder.append("Player Hostname: ").append(log.getPlayerHostname()).append(System.lineSeparator());
                 builder.append("Player Port: ").append(log.getPlayerPort()).append(System.lineSeparator());
                 builder.append("World: ").append(log.getWorld()).append(System.lineSeparator());
+                builder.append("Session: ").append(log.getSession()).append(System.lineSeparator());
                 builder.append("=========================================================================").append(System.lineSeparator());
                 builder.append(System.lineSeparator());
             }
