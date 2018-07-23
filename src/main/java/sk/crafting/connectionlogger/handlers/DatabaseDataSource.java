@@ -44,21 +44,20 @@ public class DatabaseDataSource implements DataSource
         this.plugin = plugin;
         configuration = plugin.getConfiguration();
         logger = plugin.getLogger();
-        init();
+        initDataSource();
     }
 
-    private void init()
+    private void initDataSource()
     {
         dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl(String.format(
-                "jdbc:mysql://%s:%s/%s",
-                configuration.getDatabaseHost(),
-                configuration.getDatabasePort(),
-                configuration.getDatabaseName()
-        ));
-        dataSource.addDataSourceProperty("useSSL", "false");
-        dataSource.setUsername(configuration.getDatabaseUser());
-        dataSource.setPassword(configuration.getDatabasePassword());
+        dataSource.setDataSourceClassName("org.mariadb.jdbc.MariaDbDataSource");
+
+        dataSource.addDataSourceProperty("user", configuration.getDatabaseUser());
+        dataSource.addDataSourceProperty("password", configuration.getDatabasePassword());
+        dataSource.addDataSourceProperty("portNumber", configuration.getDatabasePort());
+        dataSource.addDataSourceProperty("serverName", configuration.getDatabaseHost());
+        dataSource.addDataSourceProperty("databaseName", configuration.getDatabaseName());
+
         dataSource.setMaximumPoolSize(configuration.getDatabasePools());
 //        dataSource.setConnectionInitSql(
 //                "CREATE TABLE IF NOT EXISTS " + ConnectionLogger.getConfiguration().getDatabaseTableName() + ""
@@ -234,7 +233,7 @@ public class DatabaseDataSource implements DataSource
     public void reload()
     {
         disable();
-        init();
+        initDataSource();
         enable();
         if (!plugin.getCache().isEmpty()) {
             plugin.getCache().sendCache(false);

@@ -28,6 +28,7 @@
                   <include>org.slf4j:slf4j-simple</include>
                   <include>org.slf4j:slf4j-api</include>
                   <include>commons-codec:commons-codec</include>
+                  <include>org.mariadb.jdbc:mariadb-java-client</include>
                 </includes>
               </artifactSet>
             </configuration>

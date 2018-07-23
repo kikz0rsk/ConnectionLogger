@@ -1,4 +1,4 @@
-# If enabled, CL will disable custom database handling
+# If enabled, CL will disable custom data source handling
 secure-mode: false
 
 # Level of information printed to console
