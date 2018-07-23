@@ -11,9 +11,9 @@ import sk.crafting.connectionlogger.ConnectionLogger;
 public class ClearCommand extends Command
 {
 
-    public ClearCommand()
+    ClearCommand()
     {
-        super("clear", "connectionlogger.cl.clear", true, "clear all logs");
+        super("clear", "connectionlogger.cl.clear", true, "Clear all logs");
     }
 
     @Override

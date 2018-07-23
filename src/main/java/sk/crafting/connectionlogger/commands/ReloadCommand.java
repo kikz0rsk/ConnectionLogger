@@ -11,9 +11,9 @@ import sk.crafting.connectionlogger.ConnectionLogger;
 public class ReloadCommand extends Command
 {
 
-    public ReloadCommand()
+    ReloadCommand()
     {
-        super("reload", "connectionlogger.cl.reload", true, "reload ConnectionLogger");
+        super("reload", "connectionlogger.cl.reload", true, "Reload ConnectionLogger");
     }
 
     @Override

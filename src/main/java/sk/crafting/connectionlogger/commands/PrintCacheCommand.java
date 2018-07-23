@@ -14,7 +14,7 @@ import sk.crafting.connectionlogger.utils.TimeUtils;
 public class PrintCacheCommand extends Command
 {
 
-    public PrintCacheCommand()
+    PrintCacheCommand()
     {
         super("printcache", "connectionlogger.cl.printcache", true, "Print current cached logs");
     }

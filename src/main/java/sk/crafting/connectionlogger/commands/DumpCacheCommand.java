@@ -11,7 +11,7 @@ import sk.crafting.connectionlogger.ConnectionLogger;
 public class DumpCacheCommand extends Command
 {
 
-    public DumpCacheCommand()
+    DumpCacheCommand()
     {
         super("dumpcache", "connectionlogger.cl.dumpcache", true, "Force to dump cache to database");
     }

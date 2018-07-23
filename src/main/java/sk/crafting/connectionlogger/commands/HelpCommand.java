@@ -11,7 +11,7 @@ import sk.crafting.connectionlogger.ConnectionLogger;
 public class HelpCommand extends Command
 {
 
-    public HelpCommand()
+    HelpCommand()
     {
         super("help", "connectionlogger.cl.help", true, "Show commands");
     }

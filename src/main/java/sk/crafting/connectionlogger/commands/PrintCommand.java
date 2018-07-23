@@ -15,7 +15,7 @@ import sk.crafting.connectionlogger.utils.TimeUtils;
 public class PrintCommand extends Command
 {
 
-    public PrintCommand()
+    PrintCommand()
     {
         super("print", "connectionlogger.cl.print", true, "Print logs");
     }
