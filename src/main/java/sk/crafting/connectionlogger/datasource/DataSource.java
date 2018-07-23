@@ -1,4 +1,4 @@
-package sk.crafting.connectionlogger.handlers;
+package sk.crafting.connectionlogger.datasource;
 
 import java.util.ArrayList;
 import sk.crafting.connectionlogger.cache.Cache;

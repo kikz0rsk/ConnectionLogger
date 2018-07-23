@@ -22,8 +22,8 @@ public class HelpCommand extends Command
         sender.sendMessage(String.format(
                 "%s%s %sv%s by kikz0r_sk", ChatColor.RED, ConnectionLogger.getInstance().getDescription().getName(), ChatColor.AQUA, ConnectionLogger.getInstance().getDescription().getVersion()
         ));
-        for(Command cmd : ConnectionLogger.getInstance().getCommandRouter().getCommands().values()) {
-            sender.sendMessage(String.format("%s%s %s- %s", ChatColor.GOLD, cmd.getName(), ChatColor.LIGHT_PURPLE, cmd.getDescription()));
+        for(Command cmd : ConnectionLogger.getInstance().getMainCommand().getCommands().values()) {
+            sender.sendMessage(String.format("%s%s %s- %s", ChatColor.GOLD, cmd.getCommand(), ChatColor.LIGHT_PURPLE, cmd.getDescription()));
         }
         return true;
     }

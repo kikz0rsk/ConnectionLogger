@@ -2,7 +2,7 @@ package sk.crafting.connectionlogger.api;
 
 import org.bukkit.plugin.Plugin;
 import sk.crafting.connectionlogger.ConnectionLogger;
-import sk.crafting.connectionlogger.handlers.DataSource;
+import sk.crafting.connectionlogger.datasource.DataSource;
 
 /**
  *

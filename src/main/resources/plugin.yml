@@ -6,7 +6,7 @@ version: 1.7
 commands:
     cl:
         description: Main command with subcommands
-        usage: /cl <print|reload|clear|help|dumpcache|printcache>
+        usage: /cl <print|reload|clear|help|cache>
         permission: connectionlogger.cl
 permissions:
     connectionlogger.cl.*:
@@ -15,9 +15,9 @@ permissions:
             connectionlogger.cl: true
             connectionlogger.cl.print: true
             connectionlogger.cl.clear: true
-            connectionlogger.cl.dumpcache: true
+            connectionlogger.cl.cache.send: true
             connectionlogger.cl.help: true
-            connectionlogger.cl.printcache: true
+            connectionlogger.cl.cache.show: true
             connectionlogger.cl.reload: true
     connectionlogger.cl:
         description: Gives access to CL command
@@ -25,11 +25,11 @@ permissions:
         description: Allows to show logs in specified time range
     connectionlogger.cl.clear:
         description: Allows to remove logs
-    connectionlogger.cl.dumpcache:
+    connectionlogger.cl.cache.send:
         description: Allows to force dump cache
     connectionlogger.cl.help:
         description: Gives access to help
-    connectionlogger.cl.printcache:
+    connectionlogger.cl.cache.show:
         description: Allows to print cache
     connectionlogger.cl.reload:
         description: Allows to reload ConnectionLogger

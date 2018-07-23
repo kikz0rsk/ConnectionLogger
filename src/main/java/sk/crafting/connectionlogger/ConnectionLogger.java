@@ -8,9 +8,9 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import sk.crafting.connectionlogger.cache.Cache;
-import sk.crafting.connectionlogger.commands.CommandRouter;
-import sk.crafting.connectionlogger.handlers.DatabaseDataSource;
-import sk.crafting.connectionlogger.handlers.DataSource;
+import sk.crafting.connectionlogger.commands.MainCommand;
+import sk.crafting.connectionlogger.datasource.DatabaseDataSource;
+import sk.crafting.connectionlogger.datasource.DataSource;
 import sk.crafting.connectionlogger.listeners.PlayerListener;
 import sk.crafting.connectionlogger.session.SessionManager;
 
@@ -22,7 +22,7 @@ public class ConnectionLogger extends JavaPlugin
 {
 
     private static ConnectionLogger instance;
-    private CommandRouter commandRouter;
+    private MainCommand mainCommand;
 
     private DataSource dataSource;
     private SessionManager sessionManager;
@@ -44,8 +44,8 @@ public class ConnectionLogger extends JavaPlugin
 
         logger = getLogger();
 
-        commandRouter = new CommandRouter();
-        getCommand("cl").setExecutor(commandRouter);
+        mainCommand = new MainCommand();
+        getCommand("cl").setExecutor(mainCommand);
 
         configuration = new Configuration(this);
         cache = new Cache(configuration.getCacheSize());
@@ -121,9 +121,9 @@ public class ConnectionLogger extends JavaPlugin
         return cache;
     }
 
-    public CommandRouter getCommandRouter()
+    public MainCommand getMainCommand()
     {
-        return commandRouter;
+        return mainCommand;
     }
 
 }

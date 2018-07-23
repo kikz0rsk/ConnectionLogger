@@ -36,8 +36,7 @@ public class PrintCommand extends Command
                 sender.sendMessage(ChatColor.RED + "Invalid number");
                 return true;
             }
-            if (hours < 0);
-            {
+            if (hours < 0) {
                 hours = -hours;
             }
         }
