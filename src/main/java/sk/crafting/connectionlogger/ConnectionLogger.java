@@ -72,7 +72,7 @@ public class ConnectionLogger extends JavaPlugin
         cache.sendCache(false);
         dataSource.reload();
         if (!cache.isEmpty()) {
-            cache = new Cache(cache.getList());
+            cache = new Cache(cache.getLogs());
             logger.log(Level.INFO, "Cache was not empty during reload - cache size was not changed");
         }
     }

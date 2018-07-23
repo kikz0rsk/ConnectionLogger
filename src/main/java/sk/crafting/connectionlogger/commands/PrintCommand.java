@@ -24,7 +24,7 @@ public class PrintCommand extends Command
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String string, String[] args)
     {
         Calendar calendar = Calendar.getInstance();
-        int hours = -24;
+        int hours = 24;
         if (args.length >= 2) {
             try {
                 hours = Integer.parseInt(args[1]);
@@ -36,16 +36,16 @@ public class PrintCommand extends Command
                 sender.sendMessage(ChatColor.RED + "Invalid number");
                 return true;
             }
-            if (hours > 0);
+            if (hours < 0);
             {
                 hours = -hours;
             }
         }
-        calendar.add(Calendar.HOUR_OF_DAY, hours);
+        calendar.add(Calendar.HOUR_OF_DAY, -hours);
         ArrayList<Log> result = ConnectionLogger.getInstance().getDataSource().getLogs(calendar.getTimeInMillis());
         if (result != null) {
             if(result.size() == 0) {
-                sender.sendMessage(ChatColor.RED + "No logs in specified time range (" + hours + ")");
+                sender.sendMessage(ChatColor.RED + "No logs in last " + hours + " hours");
                 return true;
             }
             sender.sendMessage(String.format("%sID | %sTime | %sType | %sPlayer name | %sPlayer IP | %sPlayer hostname | %sPlayer port | %sWorld | %sSession",
@@ -58,11 +58,7 @@ public class PrintCommand extends Command
     private static ArrayList<String> format(ArrayList<Log> logs) {
         ArrayList<String> output = new ArrayList<>(logs.size());
         for (Log log : logs) {
-            output.add(String.format(
-                    "%s%s | %s%s | %s%s | %s%s | %s%s | %s%s | %s%s | %s%s | %s%s",
-                    ChatColor.LIGHT_PURPLE, log.getId(), ChatColor.AQUA, TimeUtils.format(log.getTime()), ChatColor.BLUE, log.getType(), ChatColor.YELLOW, log.getPlayerName(), ChatColor.WHITE,
-                    log.getPlayerIp(), ChatColor.RED, log.getPlayerHostname(), ChatColor.GREEN, log.getPlayerPort(), ChatColor.GRAY, log.getWorld(), ChatColor.GOLD, log.getSession()
-            ));
+            output.add(log.toString());
         }
         return output;
     }

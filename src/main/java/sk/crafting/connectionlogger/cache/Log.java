@@ -1,5 +1,8 @@
 package sk.crafting.connectionlogger.cache;
 
+import org.bukkit.ChatColor;
+import sk.crafting.connectionlogger.utils.TimeUtils;
+
 /**
  *
  * @author Red-Eye~kikz0r_sk
@@ -78,4 +81,12 @@ public class Log
         return session;
     }
 
+    @Override
+    public String toString() {
+        return String.format(
+                "%s%s | %s%s | %s%s | %s%s | %s%s | %s%s | %s%s | %s%s | %s%s",
+                ChatColor.LIGHT_PURPLE, id, ChatColor.AQUA, TimeUtils.format(time), ChatColor.BLUE, type, ChatColor.YELLOW, playerName, ChatColor.WHITE,
+                playerIp, ChatColor.RED, playerHostname, ChatColor.GREEN, playerPort, ChatColor.GRAY, world, ChatColor.GOLD, session
+        );
+    }
 }

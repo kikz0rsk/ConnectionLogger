@@ -51,7 +51,7 @@ public class Cache {
         builder.append("-------------------------------------------------------------------------").append(System.lineSeparator());
         builder.append("---------- ConnectionLogger ").append(ConnectionLogger.getInstance().getDescription().getVersion()).append(" CACHE DUMP ").append(formatter.format(Calendar.getInstance().getTimeInMillis())).append(" ----------").append(System.lineSeparator());
         builder.append("-------------------------------------------------------------------------").append(System.lineSeparator());
-        for (Log log : getList()) {
+        for (Log log : getLogs()) {
             builder.append("Time: ").append(formatter.format(log.getTime())).append(System.lineSeparator());
             builder.append("Type: ").append(log.getType()).append(System.lineSeparator());
             builder.append("Player Name: ").append(log.getPlayerName()).append(System.lineSeparator());
@@ -99,7 +99,7 @@ public class Cache {
         cache.clear();
     }
 
-    public synchronized List<Log> getList() {
+    public synchronized List<Log> getLogs() {
         return cache;
     }
 

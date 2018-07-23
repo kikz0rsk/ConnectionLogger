@@ -26,10 +26,6 @@ import sk.crafting.connectionlogger.utils.TimeUtils;
  */
 public class DatabaseDataSource implements DataSource
 {
-
-    private final SimpleDateFormat formatter = new SimpleDateFormat(TimeUtils.DATABASE_TIME_FORMAT);
-    private final SimpleDateFormat defaultFormatter = new SimpleDateFormat(TimeUtils.DEFAULT_TIME_FORMAT);
-
     private Connection databseConnection;
     private HikariDataSource dataSource;
 
@@ -112,7 +108,7 @@ public class DatabaseDataSource implements DataSource
             connect();
             statement = databseConnection.prepareStatement("INSERT INTO " + configuration.getDatabaseTableName() + " (time, type, player_name, player_ip, player_hostname, player_port, world, session, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
             for (Log log : cache.toArray()) {
-                statement.setString(1, formatter.format(log.getTime()));
+                statement.setString(1, TimeUtils.databaseFormat(log.getTime()));
                 statement.setString(2, log.getType().getMessage());
                 statement.setString(3, log.getPlayerName());
                 statement.setString(4, log.getPlayerIp());
@@ -187,7 +183,7 @@ public class DatabaseDataSource implements DataSource
             statement = databseConnection.prepareStatement(
                     "SELECT * FROM " + configuration.getDatabaseTableName() + " WHERE time>=? AND deleted=0"
             );
-            statement.setString(1, formatter.format(max));
+            statement.setString(1, TimeUtils.databaseFormat(max));
             result = statement.executeQuery();
             ArrayList<Log> output = new ArrayList<>();
             while (result.next()) {
