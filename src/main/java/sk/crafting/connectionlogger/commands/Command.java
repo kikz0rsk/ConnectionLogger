@@ -6,7 +6,7 @@ import org.bukkit.command.CommandExecutor;
  *
  * @author Red-Eye~kikz0r_sk
  */
-public abstract class CLCommand implements CommandExecutor
+public abstract class Command implements CommandExecutor
 {
 
     protected String name;
@@ -14,7 +14,7 @@ public abstract class CLCommand implements CommandExecutor
     protected boolean hasPermission;
     protected String description;
 
-    public CLCommand(String name, String permission, boolean hasPermission, String description)
+    public Command(String name, String permission, boolean hasPermission, String description)
     {
         this.name = name;
         this.permission = permission;

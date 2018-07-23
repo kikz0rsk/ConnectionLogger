@@ -2,42 +2,41 @@ package sk.crafting.connectionlogger.commands;
 
 import java.util.HashMap;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 /**
  *
  * @author Red-Eye~kikz0r_sk
  */
-public class CommandRouter extends CLCommand
+public class CommandRouter extends Command
 {
 
-    private final HashMap<String, CLCommand> commands = new HashMap<>();
+    private final HashMap<String, Command> commands = new HashMap<>();
 
     public CommandRouter()
     {
         super("cl", "connectionlogger.cl", true, "Main command with subcommands");
-        CLCommand command = new CClear();
+        Command command = new ClearCommand();
         commands.put(command.getName(), command);
-        command = new CHelp();
+        command = new HelpCommand();
         commands.put(command.getName(), command);
-        command = new CReload();
+        command = new ReloadCommand();
         commands.put(command.getName(), command);
-        command = new CPrint();
+        command = new PrintCommand();
         commands.put(command.getName(), command);
-        command = new CPrintcache();
+        command = new PrintCacheCommand();
         commands.put(command.getName(), command);
-        command = new CDumpcache();
+        command = new DumpCacheCommand();
         commands.put(command.getName(), command);
     }
 
-    public HashMap<String, CLCommand> getCommands()
+    public HashMap<String, Command> getCommands()
     {
         return commands;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String string, String[] args)
+    public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String string, String[] args)
     {
         if (!sender.hasPermission(permission)) {
             sender.sendMessage(ChatColor.RED + "You haven't got permission to do this!");
@@ -47,7 +46,7 @@ public class CommandRouter extends CLCommand
             return commands.get("help").onCommand(sender, command, string, args);
         }
 
-        CLCommand cmd = commands.get(args[0].toLowerCase());
+        Command cmd = commands.get(args[0].toLowerCase());
         if (cmd == null) {
             return false;
         }
